@@ -1,34 +1,17 @@
-import type {NextConfig} from 'next';
+import type { NextConfig } from 'next';
 
 const nextConfig: NextConfig = {
-  /* config options here */
+  // Empacota só o necessário para rodar, em vez da node_modules inteira:
+  // a imagem Docker do EasyPanel fica bem menor.
+  output: 'standalone',
+
+  // O projeto vinha com `ignoreBuildErrors: true`, o que deixava erros de tipo
+  // e de lint passarem direto para produção. Um build que falha é o objetivo.
   typescript: {
-    ignoreBuildErrors: true,
+    ignoreBuildErrors: false,
   },
   eslint: {
-    ignoreDuringBuilds: true,
-  },
-  images: {
-    remotePatterns: [
-      {
-        protocol: 'https',
-        hostname: 'placehold.co',
-        port: '',
-        pathname: '/**',
-      },
-      {
-        protocol: 'https',
-        hostname: 'images.unsplash.com',
-        port: '',
-        pathname: '/**',
-      },
-      {
-        protocol: 'https',
-        hostname: 'picsum.photos',
-        port: '',
-        pathname: '/**',
-      },
-    ],
+    ignoreDuringBuilds: false,
   },
 };
 

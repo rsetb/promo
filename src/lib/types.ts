@@ -1,41 +1,37 @@
-export type Review = {
-  id: string;
-  author: string;
-  avatarUrl: string;
-  rating: number; // 1-5
-  comment: string;
-};
+import type { Category, SiteInfo } from '@/db/schema';
 
-export type Category = {
-  id: string;
-  name: string;
-};
+export type { Category } from '@/db/schema';
 
-export type Product = {
-  id: string;
+/**
+ * Produto como a UI consome: já com o nome da categoria resolvido pelo join,
+ * em vez do category_id cru.
+ *
+ * `price` é null quando não há preço definido — a UI mostra "Consulte".
+ */
+export type ProductView = {
+  id: number;
   name: string;
   description: string;
-  price: number;
-  category: string; // This is now just a string, not a type union
+  price: number | null;
+  categoryId: number;
+  category: string;
 };
 
-export type NewProduct = {
-  name: string;
-  description: string;
-  price: number;
-  category: string; // This is now just a string
-};
+/** site_info sem as colunas de controle (id, updatedAt). */
+export type SiteInfoView = Omit<SiteInfo, 'id' | 'updatedAt'>;
 
+/** Campos de site_info editáveis inline pelo admin. */
+export type EditableSiteField = keyof Pick<
+  SiteInfoView,
+  | 'siteName'
+  | 'heroTitle1'
+  | 'heroTitle2'
+  | 'heroSlogan'
+  | 'heroLocation'
+  | 'heroPhoneDisplay'
+  | 'heroLocation2'
+  | 'heroPhoneDisplay2'
+>;
 
-export type SiteInfo = {
-  siteName: string;
-  heroTitle1: string;
-  heroTitle2: string;
-  heroLocation: string;
-  heroSlogan: string;
-  heroPhone: string;
-  heroPhoneDisplay: string;
-  heroLocation2: string;
-  heroPhone2: string;
-  heroPhoneDisplay2: string;
-};
+/** Retorno padrão das Server Actions, consumido pela UI para exibir erros. */
+export type ActionResult = { ok: true } | { ok: false; error: string };

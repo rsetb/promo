@@ -4,14 +4,6 @@
 /node_modules
 /.pnp
 .pnp.*
-.yarn/*
-!.yarn/patches
-!.yarn/plugins
-!.yarn/releases
-!.yarn/versions
-
-# testing
-/coverage
 
 # next.js
 /.next/
@@ -30,16 +22,16 @@ yarn-debug.log*
 yarn-error.log*
 .pnpm-debug.log*
 
-# vercel
-.vercel
-
 # typescript
 *.tsbuildinfo
 next-env.d.ts
 
-.genkit/*
-.env*
+# segredos: ADMIN_PASSWORD e SESSION_SECRET nunca vão para o repositório.
+# .env.example é a exceção — é ele que documenta quais variáveis existem.
+.env
+.env.*
+!.env.example
 
-# firebase
-firebase-debug.log
-firestore-debug.log
+# Banco local do `npm run dev:db` (arquivos binários do PGlite).
+# data/firestore-export.json É versionado: é a origem dos dados em Postgres.
+/data/dev-db

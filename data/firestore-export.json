@@ -1,0 +1,2397 @@
+{
+  "exportedAt": "2026-07-16T18:52:01.544Z",
+  "products": [
+    {
+      "description": "",
+      "price": 28.9,
+      "name": "PANDORA VERMELHO ",
+      "category": "CIGARRO NACIONAL",
+      "id": "07UkBlGdKbkePoEpt7of"
+    },
+    {
+      "description": "",
+      "name": "FANTA LARANJA MINI",
+      "category": "REFRIGERANTES MINI ",
+      "price": 21.9,
+      "id": "0a1N2bLiSyZ4TWhGFa2x"
+    },
+    {
+      "description": "",
+      "name": "BIC MAX 12UND",
+      "category": "ISQUEIROS",
+      "price": 47.9,
+      "id": "1PfD9UD6IdFGpwaOt9tD"
+    },
+    {
+      "description": "",
+      "price": 15.9,
+      "category": "ÁGUAS",
+      "name": "NATURAGUA 1L C/GAS ",
+      "id": "2Zt9TZBvWOF0IE9X1YYT"
+    },
+    {
+      "price": 36.5,
+      "name": "IMPERIO ULTRA 12X350ML",
+      "category": "CERVEJAS LATAS",
+      "description": "",
+      "id": "3UApJZqpZvcUbw7YxA2H"
+    },
+    {
+      "price": null,
+      "category": "REFRIGERANTES MINI ",
+      "name": "SPRIT MINI",
+      "description": "",
+      "id": "3lwBDBqI4t2N9nKiUEx0"
+    },
+    {
+      "description": "",
+      "price": 22.5,
+      "name": "TOTAL SABOR 2L",
+      "category": "REFRIGERANTES 2L",
+      "id": "3tYP9q9XjnGG93QpB1il"
+    },
+    {
+      "description": "",
+      "name": "GUARANÁ 1L ZERO",
+      "category": "REFRIGERANTES 1L",
+      "price": 51.9,
+      "id": "47dypGwUp3W8rCDCi8Ja"
+    },
+    {
+      "price": null,
+      "name": "PURAZUL 1,5ml",
+      "category": "ÁGUAS",
+      "description": "",
+      "id": "4WSnn1bjMabDC8Juocfc"
+    },
+    {
+      "price": 0,
+      "category": "REFRIGERANTES 2L",
+      "name": "MAIS SABOR CAJU 2L",
+      "description": "",
+      "id": "4mUe3DraQiABMBch8AET"
+    },
+    {
+      "description": "",
+      "price": 44.9,
+      "name": "BUSCA BRISA 1L",
+      "category": "DESTILADOS",
+      "id": "521CeJSi0ghJ90OE2yDe"
+    },
+    {
+      "description": "",
+      "name": "ROTHMANS GLOBAL AZUL",
+      "category": "CIGARROS SOUSA CRUZ",
+      "price": 75.2,
+      "id": "6Hma93Zn8xWCOyeMWezy"
+    },
+    {
+      "description": "",
+      "name": "LICOR AMARULA 700ML",
+      "category": "LICORES",
+      "price": 86.9,
+      "id": "6pfeccRrrDXYY5IFKoTV"
+    },
+    {
+      "price": 35.9,
+      "category": "REFRIGERANTES LATA ",
+      "name": "SÃO GERALDO LATA ZERO",
+      "description": "",
+      "id": "7MkvmtK82NmQsNzFT5JE"
+    },
+    {
+      "description": "",
+      "name": "COCA COLA RETORNÁVEL 2L (REFPET)",
+      "category": "REFRIGERANTES 2L",
+      "price": null,
+      "id": "7wLMtahfMrUxGiXDO4sB"
+    },
+    {
+      "price": null,
+      "category": "REFRIGERANTES MINI ",
+      "name": "GUARANÁ ZERO MINI",
+      "description": "",
+      "id": "7y538UGzx8lkhjbdQ70s"
+    },
+    {
+      "description": "",
+      "name": "BEATS GREEN MIX ",
+      "category": "LONG NECKS",
+      "price": null,
+      "id": "9xpQq1ZCQHIAmV1XQ34V"
+    },
+    {
+      "price": 47.9,
+      "name": "COCA COLA 600ML ",
+      "category": "REFRIGERANTES 1L",
+      "description": "",
+      "id": "AN79N3g321jYrrCqdYGF"
+    },
+    {
+      "price": 33.9,
+      "name": "NIGHT POWER LATA 6X473ML",
+      "category": "ENERGÉTICOS",
+      "description": "",
+      "id": "AXALqvUO5irTUj3guEIu"
+    },
+    {
+      "description": "",
+      "name": "DUNHILL DOUBLE ",
+      "category": "CIGARROS SOUSA CRUZ",
+      "price": 142.5,
+      "id": "CA3dmzzNsmzDs4AIaBJw"
+    },
+    {
+      "price": 31.4,
+      "name": "SPRIT LATA ",
+      "category": "REFRIGERANTES LATA ",
+      "description": "",
+      "id": "CyXfejNEcSPrAt46yb5j"
+    },
+    {
+      "description": "",
+      "price": 37.9,
+      "category": "REFRIGERANTES LATA ",
+      "name": "COCA COLA LATA ORIGINAL ",
+      "id": "DQhCRuDgI5x7Q3qZHyew"
+    },
+    {
+      "description": "",
+      "price": 58.3,
+      "name": "COCA COLA 2L ORIGINAL ",
+      "category": "REFRIGERANTES 2L",
+      "id": "E0fwZ7XdDcWzVsru4Uvm"
+    },
+    {
+      "price": 31.4,
+      "name": "FANTA LARANJA LATA ",
+      "category": "REFRIGERANTES LATA ",
+      "description": "",
+      "id": "EVVw3LgBFLi21XurordK"
+    },
+    {
+      "price": 50.9,
+      "category": "REFRIGERANTES 1L",
+      "name": "SUKITA LARANJA 1L",
+      "description": "",
+      "id": "FkfWo6i48dx8tksILIS9"
+    },
+    {
+      "price": 11.4,
+      "name": "ILUMINAGUA 1,5ml ",
+      "category": "ÁGUAS",
+      "description": "",
+      "id": "GdZUCQgqBX4c7jCeTy3N"
+    },
+    {
+      "description": "",
+      "price": null,
+      "name": "IMPERIO ULTRA LONG NECK 12X275ML",
+      "category": "LONG NECKS",
+      "id": "H48rF5cQnOOJDD0pxPrY"
+    },
+    {
+      "price": 9,
+      "name": "PURAZUL 500ml ",
+      "category": "ÁGUAS",
+      "description": "",
+      "id": "I2tHDgK486IUFfSgI2DK"
+    },
+    {
+      "name": "COCA COLA COM CAFÉ LATA 220ML",
+      "category": "REFRIGERANTES LATA ",
+      "price": null,
+      "description": "",
+      "id": "IcIcXNZx3WrycOCTt2na"
+    },
+    {
+      "description": "",
+      "price": null,
+      "category": "CIGARRO NACIONAL",
+      "name": "G VERMELHO ",
+      "id": "IddflfVLKUbTA96wob0U"
+    },
+    {
+      "name": "COCA COLA 1L ZERO",
+      "category": "REFRIGERANTES 1L",
+      "price": 36.9,
+      "description": "",
+      "id": "JCs20sJRy4oZbaifmVmd"
+    },
+    {
+      "price": 12.5,
+      "name": "TOTAL SABOR MINI",
+      "category": "REFRIGERANTES MINI ",
+      "description": "",
+      "id": "JYxQABt3fFmwmiVGMsqr"
+    },
+    {
+      "description": "",
+      "price": 139.7,
+      "name": "MICHELOB LONG NECK",
+      "category": "LONG NECKS",
+      "id": "JgwoOIAzpKYnCE1DC6ck"
+    },
+    {
+      "description": "",
+      "name": "LUCKY STRIKE VERMELHO BOX ",
+      "category": "CIGARROS SOUSA CRUZ",
+      "price": 79.9,
+      "id": "JnrnwIPDYQJ4WOAZqYzd"
+    },
+    {
+      "description": "",
+      "price": 44.9,
+      "category": "SUCOS ",
+      "name": "NESCAU PRONTINHO 180ML",
+      "id": "Jx0JHPllZbfFhetXMCEc"
+    },
+    {
+      "description": "",
+      "name": "YPORAN 500ML",
+      "category": "ÁGUAS",
+      "price": 9.6,
+      "id": "Kza6kfildBCW0WuByI18"
+    },
+    {
+      "description": "",
+      "price": 35.4,
+      "name": "SÃO GERALDO 1L",
+      "category": "REFRIGERANTES 1L",
+      "id": "MPByNje3xbRudLiKqwAM"
+    },
+    {
+      "name": "NISE VERMELHO BOX ",
+      "category": "CIGARRO NACIONAL",
+      "price": 30.9,
+      "description": "",
+      "id": "NqkXY0O8bovLulECy4Ht"
+    },
+    {
+      "price": 16.7,
+      "category": "ÁGUAS",
+      "name": "NATURAGUA 500ML C/GAS ",
+      "description": "",
+      "id": "O4btUf3Qpp11Ibr9dHfm"
+    },
+    {
+      "description": "",
+      "category": "REFRIGERANTES 2L",
+      "name": "MAIS SABOR 2L (GUARANÁ, LARANJA E UVA)",
+      "price": 23.8,
+      "id": "QeofzgF8CaNblQgsrdKg"
+    },
+    {
+      "description": "",
+      "price": null,
+      "name": "PEPSI MINI",
+      "category": "REFRIGERANTES MINI ",
+      "id": "QslHXH5zaSN5g6WhjXGz"
+    },
+    {
+      "description": "",
+      "name": "YPIOCA EMPALHADA PRATA 700ML",
+      "category": "CACHAÇAS 1L",
+      "price": null,
+      "id": "R4LJyOc7v1zGq8IyDlSm"
+    },
+    {
+      "price": 30.9,
+      "name": "NISE BRANCO BOX ",
+      "category": "CIGARRO NACIONAL",
+      "description": "",
+      "id": "RE8Ht22DA836yp1FQEqR"
+    },
+    {
+      "category": "ISQUEIROS",
+      "name": "GTI 10UND",
+      "price": 20.9,
+      "description": "",
+      "id": "Rn5oMghBNZDv9D6XcMI6"
+    },
+    {
+      "price": 44.9,
+      "name": "SPRIT FRESH LIMÃO 510ml",
+      "category": "ÁGUAS",
+      "description": "",
+      "id": "TSnwE5vZLBS45lu8ylDE"
+    },
+    {
+      "price": 59.5,
+      "category": "LONG NECKS",
+      "name": "SKOL LITRINHO 23X300ML",
+      "description": "",
+      "id": "TpGzwrL0D6vwWLr3eMmN"
+    },
+    {
+      "description": "",
+      "price": 48.9,
+      "name": "H2O LIMONETO",
+      "category": "ÁGUAS",
+      "id": "UGPZXN4rEBpv7fMzUklB"
+    },
+    {
+      "price": 41.9,
+      "category": "SUCOS ",
+      "name": "TAMPICO 2L",
+      "description": "",
+      "id": "UJCr8HReyFJwScJcg8fb"
+    },
+    {
+      "description": "",
+      "price": 111.25,
+      "category": "CIGARROS SOUSA CRUZ",
+      "name": "ROTHMANS INTER 2CAPS ",
+      "id": "Uw7JIM2aCFEb050owVxF"
+    },
+    {
+      "price": 57.9,
+      "name": "COCA COLA 2L ZERO",
+      "category": "REFRIGERANTES 2L",
+      "description": "",
+      "id": "V0MKBongw9Cs3JjFUPHi"
+    },
+    {
+      "price": 124.5,
+      "name": "LUCKY STRIKE DOUBLEICE",
+      "category": "CIGARROS SOUSA CRUZ",
+      "description": "",
+      "id": "VFAqYiw9D7EAEUTWgRX8"
+    },
+    {
+      "price": null,
+      "name": "SPRIT LATA ZERO ",
+      "category": "REFRIGERANTES LATA ",
+      "description": "",
+      "id": "VaMXopR9rDho7U1VL8VI"
+    },
+    {
+      "name": "MAIS SABOR MINI COLA",
+      "category": "REFRIGERANTES MINI ",
+      "price": 14.3,
+      "description": "",
+      "id": "WIn1RJdjPc7PNjFQwWAn"
+    },
+    {
+      "description": "",
+      "price": 13.5,
+      "category": "REFRIGERANTES MINI ",
+      "name": "MAIS SABOR MINI (GUARANÁ, LARANJA E UVA)",
+      "id": "WKMIxMaFi3rVFPIboF5v"
+    },
+    {
+      "description": "",
+      "price": 88.2,
+      "name": "MARLBORO GOLD BOX",
+      "category": "CIGARROS SOUSA CRUZ",
+      "id": "XIY0ircheDjrwB7IGoL3"
+    },
+    {
+      "description": "",
+      "price": 15.9,
+      "name": "DEL VALLE UVA 250ml",
+      "category": "SUCOS ",
+      "id": "Xq7ceEU0QiLmCQL23goc"
+    },
+    {
+      "description": "",
+      "price": 33.9,
+      "name": "NIGHT POWER ZERO LATA 6X473ML",
+      "category": "ENERGÉTICOS",
+      "id": "YlQeOLHLg7XBDoRWW1je"
+    },
+    {
+      "category": "REFRIGERANTES MINI ",
+      "name": "GUARÁNA MINI",
+      "price": 21.5,
+      "description": "",
+      "id": "ZWqS23gPxVc2RnJlfWGM"
+    },
+    {
+      "description": "",
+      "name": "NATURAGUA 5L ",
+      "category": "ÁGUAS",
+      "price": 8.5,
+      "id": "ZhXzRzpvJPlYyJqm5Q2P"
+    },
+    {
+      "description": "",
+      "price": null,
+      "category": "CERVEJAS LATAS",
+      "name": "MICHELOB ULTRA 8X350ML",
+      "id": "a0rCfJSSgDDM123sVogH"
+    },
+    {
+      "name": "JANDAIA UVA KIDS 200ML",
+      "category": "SUCOS ",
+      "price": 0,
+      "description": "",
+      "id": "aKGDB3T6BWBFiPnOCsD6"
+    },
+    {
+      "description": "",
+      "price": null,
+      "name": "SPRIT MINI ZERO",
+      "category": "REFRIGERANTES MINI ",
+      "id": "at6LFcmHIIrYk6P3tMwz"
+    },
+    {
+      "name": "CAJUÍNA SÃO GERALDO MINI",
+      "category": "REFRIGERANTES MINI ",
+      "price": 22.5,
+      "description": "",
+      "id": "blQKBXGyhQXk2OlbpMoM"
+    },
+    {
+      "price": 31.9,
+      "category": "REFRIGERANTES LATA ",
+      "name": "PEPSI LATA ",
+      "description": "",
+      "id": "btWcgfDc0mSEOqshoWLn"
+    },
+    {
+      "description": "",
+      "name": "GUARANÁ LATA ZERO ",
+      "category": "REFRIGERANTES LATA ",
+      "price": 27.5,
+      "id": "eHcD3gJUQRNinbc8bdFi"
+    },
+    {
+      "name": "FANTA LARANJA 2L",
+      "category": "REFRIGERANTES 2L",
+      "price": null,
+      "description": "",
+      "id": "f8jpGcECfr95Sidge4Oz"
+    },
+    {
+      "description": "",
+      "price": 35.4,
+      "category": "REFRIGERANTES 1L",
+      "name": "CAJUINA ZERO 1L",
+      "id": "fCzoNiGM7e6omOwv95fA"
+    },
+    {
+      "description": "",
+      "category": "CIGARROS SOUSA CRUZ",
+      "name": "DUNHIL INSÍGNIA RED ",
+      "price": 115.5,
+      "id": "fg5289Yx9v2zywCYOYmb"
+    },
+    {
+      "description": "",
+      "category": "ÁGUAS",
+      "name": "ILUMINAGUA 500ML C/GÁS ",
+      "price": 14.4,
+      "id": "gWHYYoXfoYIwl6hWnwiG"
+    },
+    {
+      "price": 28.9,
+      "name": "PANDORA BRANCO",
+      "category": "CIGARRO NACIONAL",
+      "description": "",
+      "id": "h4N6bjA9asFLVB1kJvYo"
+    },
+    {
+      "price": 41.9,
+      "name": "NIGHT POWER ZERO 2L ",
+      "category": "ENERGÉTICOS",
+      "description": "",
+      "id": "hAmX54e1DXlxZXxDzsE5"
+    },
+    {
+      "description": "",
+      "name": "FANTA UVA 2L",
+      "category": "REFRIGERANTES 2L",
+      "price": 45.9,
+      "id": "iSCAQZzn1yxCG6x5cDSD"
+    },
+    {
+      "description": "",
+      "price": 28.9,
+      "name": "NISE BRANCO MAÇO ",
+      "category": "CIGARRO NACIONAL",
+      "id": "iajnwk3dqdz0YZ4410ig"
+    },
+    {
+      "description": "",
+      "name": "SÃO GERALDO ZERO 2L",
+      "category": "REFRIGERANTES 2L",
+      "price": 54.9,
+      "id": "ilKqqnYkHFqdEVdhOCo9"
+    },
+    {
+      "category": "ENERGÉTICOS",
+      "name": "BALY TADALA 2L ",
+      "price": 66.9,
+      "description": "",
+      "id": "irOKbMllPV9vtaO2nxIZ"
+    },
+    {
+      "description": "",
+      "price": null,
+      "name": "KAPO UVA 200ml",
+      "category": "SUCOS ",
+      "id": "jHKJhx4RlM94qxgrWM6C"
+    },
+    {
+      "description": "",
+      "name": "NISE VERMELHO MAÇO ",
+      "category": "CIGARRO NACIONAL",
+      "price": 28.9,
+      "id": "kFG0gLT20EFUJeJbI74S"
+    },
+    {
+      "description": "",
+      "price": 128.9,
+      "name": "VODKA GREY GOOSE",
+      "category": "VODKAS",
+      "id": "kcqo3Iv5cjUcqwGh2e0D"
+    },
+    {
+      "description": "",
+      "price": 44.7,
+      "name": "PAPELIN TREVO 35UNI",
+      "category": "FUMOS",
+      "id": "l7StagrYntlV4mZDTAQS"
+    },
+    {
+      "price": 51.9,
+      "name": "PEPSI 12X1L ",
+      "category": "REFRIGERANTES 1L",
+      "description": "",
+      "id": "lPxLjt5PW8VSHrDSGDUy"
+    },
+    {
+      "description": "",
+      "name": "FANTA UVA MINI ",
+      "category": "REFRIGERANTES MINI ",
+      "price": null,
+      "id": "lZs6ntCrwdyUEs1lM4f6"
+    },
+    {
+      "price": null,
+      "name": "INDAIÁ 500ml C/GÁS ",
+      "category": "ÁGUAS",
+      "description": "",
+      "id": "lgyWwYT3BmQzxS59oF0d"
+    },
+    {
+      "description": "",
+      "name": "SMIRNOFF ICE ORIGINAL LATA 6X269ML ",
+      "category": "CERVEJAS LATAS",
+      "price": 31.9,
+      "id": "lu4BWZykUiNGgCl0bBOF"
+    },
+    {
+      "price": 44.9,
+      "category": "REFRIGERANTES 2L",
+      "name": "PEPSI 2L",
+      "description": "",
+      "id": "nncNcvX3x35BfiKfs92Q"
+    },
+    {
+      "price": 47.5,
+      "category": "REFRIGERANTES 2L",
+      "name": "GUARANÁ ANTÁRTICA 2L",
+      "description": "",
+      "id": "nskTcCERN0sxdFajvxfl"
+    },
+    {
+      "description": "",
+      "price": null,
+      "name": "COCA COLA ZERO 600ML",
+      "category": "REFRIGERANTES 1L",
+      "id": "oFpn2Mfk1VRj4B3yYrOS"
+    },
+    {
+      "description": "",
+      "price": 19.9,
+      "category": "REFRIGERANTES LATA ",
+      "name": "SCHWEPPES CÍTRUS 6X350ML",
+      "id": "oGCe2cf4453GDU3xOAwp"
+    },
+    {
+      "description": "",
+      "price": 27.5,
+      "name": "G BRANCO ",
+      "category": "CIGARRO NACIONAL",
+      "id": "oLr6IILaPOP5w60fAAXY"
+    },
+    {
+      "name": "KAPO MORAGO 200ML",
+      "category": "SUCOS ",
+      "price": null,
+      "description": "",
+      "id": "pIGazOcsRwrqHof4PZma"
+    },
+    {
+      "description": "",
+      "category": "CIGARROS NACIONAL",
+      "name": "CIGARRO BLACK CARTEIRA",
+      "price": 24,
+      "id": "pMr5i7VDUmOXy8WBqiX3"
+    },
+    {
+      "name": "DUNHILL",
+      "category": "CIGARROS SOUSA CRUZ",
+      "id": "prod-1",
+      "description": "Maço de cigarros Dunhill.",
+      "price": 137.8
+    },
+    {
+      "name": "ROTHMANS AZUL",
+      "category": "CIGARROS SOUSA CRUZ",
+      "id": "prod-10",
+      "description": "Maço de cigarros Rothmans Azul.",
+      "price": 89.3
+    },
+    {
+      "price": 145.9,
+      "name": "CACHAÇA 51 OURO",
+      "category": "CACHAÇAS 1L",
+      "id": "prod-100",
+      "description": "Garrafa de Cachaça 51 Ouro 1L."
+    },
+    {
+      "description": "Garrafa de Cachaça 51 Prata 1L.",
+      "name": "CACHAÇA 51 PRATA",
+      "category": "CACHAÇAS 1L",
+      "id": "prod-101",
+      "price": 126.9
+    },
+    {
+      "description": "Meiota de Cachaça Ypioca Prata.",
+      "name": "YPIOCA PRATA",
+      "category": "CACHAÇAS MEIOTAS",
+      "id": "prod-104",
+      "price": 0
+    },
+    {
+      "price": 117.9,
+      "description": "Meiota de Cachaça Ypioca Ouro.",
+      "category": "CACHAÇAS MEIOTAS",
+      "name": "YPIOCA OURO",
+      "id": "prod-105"
+    },
+    {
+      "id": "prod-106",
+      "category": "CACHAÇAS MEIOTAS",
+      "name": "DOURADINHA OURO",
+      "description": "Meiota de Cachaça Douradinha Ouro.",
+      "price": 42.9
+    },
+    {
+      "price": null,
+      "id": "prod-107",
+      "category": "CACHAÇAS MEIOTAS",
+      "name": "DOURADINHA PRATA",
+      "description": "Meiota de Cachaça Douradinha Prata."
+    },
+    {
+      "name": "D’OURO PRATA",
+      "category": "CACHAÇAS MEIOTAS",
+      "id": "prod-108",
+      "description": "Meiota de Cachaça D’Ouro Prata.",
+      "price": 33.3
+    },
+    {
+      "category": "CACHAÇAS MEIOTAS",
+      "name": "D’OURO OURO",
+      "id": "prod-109",
+      "description": "Meiota de Cachaça D’Ouro Ouro.",
+      "price": null
+    },
+    {
+      "category": "CIGARROS SOUSA CRUZ",
+      "name": "ROTHMANS PRATA",
+      "id": "prod-11",
+      "description": "Maço de cigarros Rothmans Prata.",
+      "price": 89.3
+    },
+    {
+      "description": "Meiota de Cachaça Vale Real Prata.",
+      "category": "CACHAÇAS MEIOTAS",
+      "name": "VALE REAL PRATA",
+      "id": "prod-111",
+      "price": 25.9
+    },
+    {
+      "price": 0,
+      "description": "Meiota de Cachaça Vale Real Ouro.",
+      "id": "prod-112",
+      "category": "CACHAÇAS MEIOTAS",
+      "name": "VALE REAL OURO"
+    },
+    {
+      "price": 34.9,
+      "name": "SMIRNOFF",
+      "category": "VODKAS",
+      "id": "prod-113",
+      "description": "Garrafa de Vodka Smirnoff."
+    },
+    {
+      "description": "Garrafa de Vodka Slova Tradicional.",
+      "category": "VODKAS",
+      "name": "SLOVA TRADICIONAL",
+      "id": "prod-114",
+      "price": 123.9
+    },
+    {
+      "price": 123.9,
+      "id": "prod-115",
+      "category": "VODKAS",
+      "name": "SLOVA SABORES",
+      "description": "Garrafa de Vodka Slova Sabores."
+    },
+    {
+      "name": "ORLOFF",
+      "category": "VODKAS",
+      "id": "prod-116",
+      "description": "Garrafa de Vodka Orloff.",
+      "price": 24.9
+    },
+    {
+      "category": "VODKAS",
+      "name": "ABSOLUT",
+      "id": "prod-117",
+      "description": "Garrafa de Vodka Absolut.",
+      "price": 66.9
+    },
+    {
+      "price": 33.9,
+      "category": "VODKAS",
+      "name": "SKYY",
+      "id": "prod-118",
+      "description": "Garrafa de Vodka Skyy."
+    },
+    {
+      "price": 133.9,
+      "category": "VODKAS",
+      "name": "CIROC",
+      "id": "prod-119",
+      "description": "Garrafa de Vodka Ciroc."
+    },
+    {
+      "id": "prod-12",
+      "category": "CIGARROS SOUSA CRUZ",
+      "name": "ROTHMANS VERMELHO",
+      "description": "Maço de cigarros Rothmans Vermelho.",
+      "price": 89.3
+    },
+    {
+      "price": 90.9,
+      "id": "prod-120",
+      "category": "GIN",
+      "name": "TANQUERAY",
+      "description": "Garrafa de Gin Tanqueray."
+    },
+    {
+      "description": "Garrafa de Gin Beefeater.",
+      "category": "GIN",
+      "name": "BEEFEATER",
+      "id": "prod-121",
+      "price": 73.9
+    },
+    {
+      "price": 81.9,
+      "description": "Garrafa de Gin Beefeater Pink.",
+      "category": "GIN",
+      "name": "BEEFEATER PINK",
+      "id": "prod-122"
+    },
+    {
+      "id": "prod-123",
+      "category": "GIN",
+      "name": "BOMBAY",
+      "description": "Garrafa de Gin Bombay.",
+      "price": 77.9
+    },
+    {
+      "description": "Garrafa de Gin Rock’s.",
+      "category": "GIN",
+      "name": "ROCK’S",
+      "id": "prod-124",
+      "price": 24.9
+    },
+    {
+      "category": "GIN",
+      "name": "INTENCION",
+      "id": "prod-125",
+      "description": "Garrafa de Gin Intencion.",
+      "price": 0
+    },
+    {
+      "price": 77.95,
+      "id": "prod-126",
+      "category": "GIN",
+      "name": "GIN BULLDOG",
+      "description": "Garrafa de Gin Bulldog."
+    },
+    {
+      "category": "GIN",
+      "name": "GIN TUDO",
+      "id": "prod-127",
+      "description": "Garrafa de Gin Tudo.",
+      "price": 22.9
+    },
+    {
+      "price": 57.9,
+      "id": "prod-128",
+      "category": "GIN",
+      "name": "GIN GORDONS",
+      "description": "Garrafa de Gin Gordons."
+    },
+    {
+      "name": "BLUE LABEL",
+      "category": "WHISKYS",
+      "id": "prod-129",
+      "description": "Garrafa de Whisky Blue Label.",
+      "price": 0
+    },
+    {
+      "price": 72.8,
+      "description": "Maço de cigarros Rothmans Global Azul.",
+      "category": "CIGARROS SOUSA CRUZ",
+      "name": "ROTHMANS GLOBAL AZUL",
+      "id": "prod-13"
+    },
+    {
+      "price": 778.9,
+      "id": "prod-130",
+      "category": "WHISKYS",
+      "name": "ROYAL SALUTE",
+      "description": "Garrafa de Whisky Royal Salute."
+    },
+    {
+      "price": 0,
+      "description": "Garrafa de Whisky Double Black.",
+      "name": "DOUBLE BLACK",
+      "category": "WHISKYS",
+      "id": "prod-131"
+    },
+    {
+      "price": 150.9,
+      "category": "WHISKYS",
+      "name": "BUCHANANS",
+      "id": "prod-132",
+      "description": "Garrafa de Whisky Buchanans."
+    },
+    {
+      "name": "GOLD LABEL ED. LIMITADA",
+      "category": "WHISKYS",
+      "id": "prod-133",
+      "description": "Garrafa de Whisky Gold Label Edição Limitada.",
+      "price": 207.9
+    },
+    {
+      "category": "WHISKYS",
+      "name": "GOLD LABEL TRAD (c/ caixa)",
+      "id": "prod-134",
+      "description": "Garrafa de Whisky Gold Label Tradicional com caixa.",
+      "price": 225.9
+    },
+    {
+      "price": 0,
+      "description": "Garrafa de Whisky Green Label.",
+      "category": "WHISKYS",
+      "name": "GREEN LABEL",
+      "id": "prod-135"
+    },
+    {
+      "price": 122.9,
+      "description": "Garrafa de Whisky Jack Daniel’s Tradicional.",
+      "name": "JACK DANIEL’S TRADICIONAL",
+      "category": "WHISKYS",
+      "id": "prod-136"
+    },
+    {
+      "price": 123.9,
+      "category": "WHISKYS",
+      "name": "JACK DANIEL’S MAÇÃ VERDE",
+      "id": "prod-137",
+      "description": "Garrafa de Whisky Jack Daniel’s Maçã Verde."
+    },
+    {
+      "description": "Garrafa de Whisky Jack Daniel’s Honey.",
+      "name": "JACK DANIEL’S HONEY",
+      "category": "WHISKYS",
+      "id": "prod-138",
+      "price": 0
+    },
+    {
+      "price": 122.9,
+      "category": "WHISKYS",
+      "name": "JACK DANIEL’S FIRE",
+      "id": "prod-139",
+      "description": "Garrafa de Whisky Jack Daniel’s Fire."
+    },
+    {
+      "name": "ROTHMANS GLOBAL VERMELHO",
+      "category": "CIGARROS SOUSA CRUZ",
+      "id": "prod-14",
+      "description": "Maço de cigarros Rothmans Global Vermelho.",
+      "price": 72.8
+    },
+    {
+      "price": 0,
+      "name": "BLACK LABEL",
+      "category": "WHISKYS",
+      "id": "prod-140",
+      "description": "Garrafa de Whisky Black Label."
+    },
+    {
+      "price": 120.9,
+      "id": "prod-141",
+      "category": "WHISKYS",
+      "name": "OLD PAR",
+      "description": "Garrafa de Whisky Old Par."
+    },
+    {
+      "price": 103.9,
+      "description": "Garrafa de Whisky Chivas.",
+      "category": "WHISKYS",
+      "name": "CHIVAS",
+      "id": "prod-142"
+    },
+    {
+      "description": "Garrafa de Whisky Ballantines.",
+      "category": "WHISKYS",
+      "name": "BALLANTINES",
+      "id": "prod-143",
+      "price": 66.9
+    },
+    {
+      "category": "WHISKYS",
+      "name": "CAVALO BRANCO",
+      "id": "prod-144",
+      "description": "Garrafa de Whisky Cavalo Branco.",
+      "price": 58.9
+    },
+    {
+      "price": 76.9,
+      "description": "Garrafa de Whisky Red Label.",
+      "name": "RED LABEL",
+      "category": "WHISKYS",
+      "id": "prod-145"
+    },
+    {
+      "price": 55.9,
+      "name": "BLACK WHITE",
+      "category": "WHISKYS",
+      "id": "prod-146",
+      "description": "Garrafa de Whisky Black & White."
+    },
+    {
+      "price": 0,
+      "name": "OLD EIGHT",
+      "category": "WHISKYS",
+      "id": "prod-147",
+      "description": "Garrafa de Whisky Old Eight."
+    },
+    {
+      "price": 37.9,
+      "name": "APEROL",
+      "category": "DESTILADOS",
+      "id": "prod-148",
+      "description": "Garrafa de Aperol."
+    },
+    {
+      "price": 49.5,
+      "description": "Garrafa de Campari.",
+      "category": "DESTILADOS",
+      "name": "CAMPARI",
+      "id": "prod-149"
+    },
+    {
+      "price": 108.3,
+      "description": "Maço de cigarros Rothmans Melancia.",
+      "name": "ROTHMANS MELANCIA",
+      "category": "CIGARROS SOUSA CRUZ",
+      "id": "prod-15"
+    },
+    {
+      "id": "prod-150",
+      "category": "DESTILADOS",
+      "name": "CONHAQUE DREHER",
+      "description": "Garrafa de Conhaque Dreher.",
+      "price": 199.9
+    },
+    {
+      "description": "Garrafa de Rum Montilla.",
+      "name": "RUM MONTILLA",
+      "category": "DESTILADOS",
+      "id": "prod-151",
+      "price": 0
+    },
+    {
+      "price": 0,
+      "description": "Garrafa de Conhaque São João da Barra.",
+      "id": "prod-152",
+      "category": "DESTILADOS",
+      "name": "CONHAQUE SÃO JOÃO DA BARRA"
+    },
+    {
+      "price": 98.9,
+      "name": "TEQUILA JOSÉ CUERVO",
+      "category": "DESTILADOS",
+      "id": "prod-153",
+      "description": "Garrafa de Tequila José Cuervo."
+    },
+    {
+      "description": "Garrafa de Tequila Teqpar.",
+      "id": "prod-154",
+      "category": "DESTILADOS",
+      "name": "TEQUILA TEQPAR",
+      "price": 21.9
+    },
+    {
+      "description": "Garrafa de Martini Rosso.",
+      "category": "DESTILADOS",
+      "name": "MARTINI ROSSO",
+      "id": "prod-155",
+      "price": 35.4
+    },
+    {
+      "description": "Garrafa de Licor Ballena Morango.",
+      "id": "prod-156",
+      "category": "LICORES",
+      "name": "BALLENA MORANGO",
+      "price": 118.9
+    },
+    {
+      "description": "Garrafa de Licor Ballena Chocolate.",
+      "id": "prod-157",
+      "category": "LICORES",
+      "name": "BALLENA CHOCOLATE",
+      "price": 119.9
+    },
+    {
+      "price": 0,
+      "description": "Garrafa de Licor Ballena Coco.",
+      "id": "prod-158",
+      "category": "LICORES",
+      "name": "BALLENA COCO"
+    },
+    {
+      "price": 0,
+      "category": "DESTILADOS",
+      "name": "LICOR 43",
+      "id": "prod-159",
+      "description": "Garrafa de Licor 43."
+    },
+    {
+      "description": "Maço de cigarros Rothmans Internacional.",
+      "name": "ROTHMANS INTERNACIONAL",
+      "category": "CIGARROS SOUSA CRUZ",
+      "id": "prod-16",
+      "price": 104.25
+    },
+    {
+      "description": "Garrafa de Xarope Monin.",
+      "category": "DESTILADOS",
+      "name": "XAROPE MONIN",
+      "id": "prod-160",
+      "price": 55.9
+    },
+    {
+      "category": "DESTILADOS",
+      "name": "EL JIMADOR",
+      "id": "prod-161",
+      "description": "Garrafa de Tequila El Jimador.",
+      "price": 0
+    },
+    {
+      "price": 271.9,
+      "category": "VINHOS",
+      "name": "VINHO PÉRGULA",
+      "id": "prod-162",
+      "description": "Garrafa de Vinho Pérgula."
+    },
+    {
+      "price": 141.9,
+      "description": "Garrafa de Vinho Quinta do Morgado.",
+      "name": "QUINTA DO MORGADO",
+      "category": "VINHOS",
+      "id": "prod-163"
+    },
+    {
+      "price": 0,
+      "description": "Garrafa de Vinho O Gaúcho.",
+      "category": "VINHOS",
+      "name": "O GAÚCHO",
+      "id": "prod-164"
+    },
+    {
+      "description": "Garrafa de Vinho São Braz.",
+      "name": "SÃO BRAZ",
+      "category": "VINHOS",
+      "id": "prod-165",
+      "price": 59.9
+    },
+    {
+      "category": "VINHOS",
+      "name": "SÃO BRAZ PINK",
+      "id": "prod-166",
+      "description": "Garrafa de Vinho São Braz Pink.",
+      "price": 0
+    },
+    {
+      "description": "Garrafa de Vinho Vale Real.",
+      "category": "VINHOS",
+      "name": "VALE REAL",
+      "id": "prod-167",
+      "price": 0
+    },
+    {
+      "description": "Garrafa de Vinho Campestre.",
+      "category": "VINHOS",
+      "name": "CAMPESTRE",
+      "id": "prod-168",
+      "price": 41.9
+    },
+    {
+      "price": 52.9,
+      "description": "Garrafa de Vinho Casal Garcia.",
+      "category": "VINHOS",
+      "name": "CASAL GARCIA",
+      "id": "prod-169"
+    },
+    {
+      "price": 28.9,
+      "category": "CIGARROS NACIONAL",
+      "name": "G BRANCO",
+      "id": "prod-17",
+      "description": "Maço de cigarros G Branco."
+    },
+    {
+      "description": "Garrafa de Vinho Casal Garcia Sweet.",
+      "name": "CASAL GARCIA SWEET",
+      "category": "VINHOS",
+      "id": "prod-170",
+      "price": 54.6
+    },
+    {
+      "description": "Garrafa de Vinho Chileno Santa Helena.",
+      "category": "VINHOS",
+      "name": "VINHO CHILENO STA HELENA",
+      "id": "prod-171",
+      "price": 28.9
+    },
+    {
+      "name": "RED BULL TRADICIONAL",
+      "category": "ENERGÉTICOS",
+      "id": "prod-172",
+      "description": "Lata de Red Bull Tradicional.",
+      "price": 0
+    },
+    {
+      "price": 171.9,
+      "id": "prod-173",
+      "category": "ENERGÉTICOS",
+      "name": "RED BULL MELANCIA",
+      "description": "Lata de Red Bull Melancia."
+    },
+    {
+      "price": 0,
+      "description": "Lata de Red Bull Tropical.",
+      "category": "ENERGÉTICOS",
+      "name": "RED BULL TROPICAL",
+      "id": "prod-174"
+    },
+    {
+      "price": 159.9,
+      "category": "ENERGÉTICOS",
+      "name": "RED BULL ZERO",
+      "id": "prod-175",
+      "description": "Lata de Red Bull Zero."
+    },
+    {
+      "price": 46.9,
+      "category": "ENERGÉTICOS",
+      "name": "MONSTER TRADICIONAL",
+      "id": "prod-176",
+      "description": "Lata de Monster Tradicional."
+    },
+    {
+      "description": "Lata de Monster Zero.",
+      "category": "ENERGÉTICOS",
+      "name": "MONSTER ZERO",
+      "id": "prod-177",
+      "price": 46.9
+    },
+    {
+      "id": "prod-178",
+      "category": "ENERGÉTICOS",
+      "name": "MONSTER SABORES",
+      "description": "Lata de Monster Sabores.",
+      "price": 46.9
+    },
+    {
+      "price": 0,
+      "description": "Lata de Night Power.",
+      "category": "ENERGÉTICOS",
+      "name": "NIGHT POWER LATA",
+      "id": "prod-179"
+    },
+    {
+      "description": "Maço de cigarros G Vermelho.",
+      "id": "prod-18",
+      "category": "CIGARROS NACIONAL",
+      "name": "G VERMELHO",
+      "price": 28.9
+    },
+    {
+      "price": 0,
+      "description": "Garrafa de Night Power Tradicional 2L.",
+      "id": "prod-180",
+      "category": "ENERGÉTICOS",
+      "name": "NIGHT POWER TRADICIONAL 2L"
+    },
+    {
+      "price": 0,
+      "description": "Garrafa de Night Power Sabores 2L.",
+      "name": "NIGHT POWER SABORES 2L",
+      "category": "ENERGÉTICOS",
+      "id": "prod-181"
+    },
+    {
+      "description": "Garrafa de Baly 2L.",
+      "category": "ENERGÉTICOS",
+      "name": "BALY 2L",
+      "id": "prod-182",
+      "price": 66.9
+    },
+    {
+      "category": "CIGARROS NACIONAL",
+      "name": "PANDORA BRANCO",
+      "id": "prod-19",
+      "description": "Maço de cigarros Pandora Branco.",
+      "price": 28.9
+    },
+    {
+      "description": "Maço de cigarros Dunhill Double.",
+      "id": "prod-2",
+      "category": "CIGARROS SOUSA CRUZ",
+      "name": "DUNHILL DOUBLE",
+      "price": 136.8
+    },
+    {
+      "price": 28.9,
+      "description": "Maço de cigarros Pandora Vermelho.",
+      "category": "CIGARROS NACIONAL",
+      "name": "PANDORA VERMELHO",
+      "id": "prod-20"
+    },
+    {
+      "name": "NISE VERMELHO",
+      "category": "CIGARROS NACIONAL",
+      "id": "prod-21",
+      "description": "Maço de cigarros Nise Vermelho.",
+      "price": 28.9
+    },
+    {
+      "description": "Maço de cigarros Nise Branco.",
+      "category": "CIGARROS NACIONAL",
+      "name": "NISE BRANCO",
+      "id": "prod-22",
+      "price": 28.9
+    },
+    {
+      "category": "CIGARROS NACIONAL",
+      "name": "K-LINT SILVER",
+      "id": "prod-23",
+      "description": "Maço de cigarros K-Lint Silver.",
+      "price": 0
+    },
+    {
+      "price": 0,
+      "category": "CIGARROS NACIONAL",
+      "name": "GUDANG GARAM (1 CART)",
+      "id": "prod-24",
+      "description": "Cartão de cigarros Gudang Garam."
+    },
+    {
+      "price": 63.9,
+      "description": "Pacote de fumo Meliá.",
+      "id": "prod-25",
+      "category": "FUMOS",
+      "name": "FUMO MELIÁ"
+    },
+    {
+      "description": "Pacote de fumo Trevo.",
+      "category": "FUMOS",
+      "name": "FUMO TREVO",
+      "id": "prod-26",
+      "price": 81.9
+    },
+    {
+      "category": "SEDA",
+      "name": "SEDA ZOMO CHOCOLATE",
+      "id": "prod-27",
+      "description": "Seda Zomo sabor Chocolate.",
+      "price": 29.9
+    },
+    {
+      "description": "Seda Zomo Pink.",
+      "name": "SEDA ZOMO PINK",
+      "category": "SEDA",
+      "id": "prod-28",
+      "price": 27.9
+    },
+    {
+      "id": "prod-29",
+      "category": "SEDA",
+      "name": "SEDA ORGÂNICA",
+      "description": "Seda Orgânica.",
+      "price": 25.9
+    },
+    {
+      "id": "prod-3",
+      "category": "CIGARROS SOUSA CRUZ",
+      "name": "DUNHILL RED",
+      "description": "Maço de cigarros Dunhill Red.",
+      "price": 110.6
+    },
+    {
+      "name": "SEDA BEM BOLADO",
+      "category": "SEDA",
+      "id": "prod-30",
+      "description": "Seda Bem Bolado.",
+      "price": 89.9
+    },
+    {
+      "name": "PAPEL PARA CIGARRO TREVO CAIXA",
+      "category": "SEDA",
+      "id": "prod-31",
+      "description": "Caixa de papel para cigarro Trevo.",
+      "price": 44.7
+    },
+    {
+      "description": "Isqueiro BIC.",
+      "category": "ISQUEIROS",
+      "name": "BIC",
+      "id": "prod-32",
+      "price": 46.5
+    },
+    {
+      "category": "ISQUEIROS",
+      "name": "CRICKET",
+      "id": "prod-33",
+      "description": "Isqueiro Cricket.",
+      "price": 26.9
+    },
+    {
+      "id": "prod-34",
+      "category": "ISQUEIROS",
+      "name": "GTI",
+      "description": "Isqueiro GTI.",
+      "price": 20.7
+    },
+    {
+      "price": 0,
+      "category": "LONG NECKS",
+      "name": "BEATS SENSE",
+      "id": "prod-35",
+      "description": "Long neck Beats Sense."
+    },
+    {
+      "description": "Pack com 12 unidades de Beats Red Mix.",
+      "category": "LONG NECKS",
+      "name": "BEATS RED MIX 12UNI",
+      "id": "prod-36",
+      "price": 0
+    },
+    {
+      "description": "Long neck Beats GT.",
+      "category": "LONG NECKS",
+      "name": "BEATS GT",
+      "id": "prod-37",
+      "price": 135.9
+    },
+    {
+      "price": 0,
+      "description": "Long neck Beats Tropical.",
+      "category": "LONG NECKS",
+      "name": "BEATS TROPICAL",
+      "id": "prod-38"
+    },
+    {
+      "name": "CABARÉ ICE LIMÃO",
+      "category": "LONG NECKS",
+      "id": "prod-39",
+      "description": "Cabaré Ice sabor Limão.",
+      "price": 73.9
+    },
+    {
+      "category": "CIGARROS SOUSA CRUZ",
+      "name": "KENT AZUL",
+      "id": "prod-4",
+      "description": "Maço de cigarros Kent Azul.",
+      "price": 112.9
+    },
+    {
+      "price": 73.9,
+      "category": "LONG NECKS",
+      "name": "CABARÉ FRUT VERMELHA",
+      "id": "prod-40",
+      "description": "Cabaré Ice sabor Frutas Vermelhas."
+    },
+    {
+      "description": "Long neck Smirnoff Ice.",
+      "name": "SMIRNOFF ICE",
+      "category": "LONG NECKS",
+      "id": "prod-41",
+      "price": 136.9
+    },
+    {
+      "price": 0,
+      "name": "SMIRNOFF ICE SABORES",
+      "category": "LONG NECKS",
+      "id": "prod-42",
+      "description": "Long neck Smirnoff Ice com sabores variados."
+    },
+    {
+      "description": "Long neck Spaten.",
+      "category": "LONG NECKS",
+      "name": "SPATEN",
+      "id": "prod-43",
+      "price": 120.9
+    },
+    {
+      "description": "Long neck Budweiser.",
+      "category": "LONG NECKS",
+      "name": "BUDWEISER",
+      "id": "prod-44",
+      "price": 122.9
+    },
+    {
+      "price": 130.9,
+      "name": "STELLA ARTOIS",
+      "category": "LONG NECKS",
+      "id": "prod-45",
+      "description": "Long neck Stella Artois."
+    },
+    {
+      "price": 149.9,
+      "category": "LONG NECKS",
+      "name": "CORONA EXTRA",
+      "id": "prod-46",
+      "description": "Long neck Corona Extra."
+    },
+    {
+      "price": 137.9,
+      "name": "HEINEKEN",
+      "category": "LONG NECKS",
+      "id": "prod-47",
+      "description": "Long neck Heineken."
+    },
+    {
+      "price": 138.9,
+      "id": "prod-48",
+      "category": "LONG NECKS",
+      "name": "STELLA GOLD",
+      "description": "Long neck Stella Gold."
+    },
+    {
+      "description": "Long neck Brahma.",
+      "id": "prod-49",
+      "category": "LONG NECKS",
+      "name": "BRAHMA",
+      "price": 0
+    },
+    {
+      "name": "KENT PRATA",
+      "category": "CIGARROS SOUSA CRUZ",
+      "id": "prod-5",
+      "description": "Maço de cigarros Kent Prata.",
+      "price": 112.9
+    },
+    {
+      "price": 131.5,
+      "name": "MICHELOB ULTRA",
+      "category": "LONG NECKS",
+      "id": "prod-50",
+      "description": "Long neck Michelob Ultra."
+    },
+    {
+      "price": 0,
+      "description": "Long neck Corona Extra Zero Álcool.",
+      "category": "LONG NECKS",
+      "name": "CORONA EXTRA ZERO",
+      "id": "prod-51"
+    },
+    {
+      "price": 0,
+      "description": "Long neck Heineken Zero Álcool.",
+      "id": "prod-52",
+      "category": "LONG NECKS",
+      "name": "HEINEKEN ZERO"
+    },
+    {
+      "price": 112.9,
+      "name": "BUDWEISER ZERO",
+      "category": "LONG NECKS",
+      "id": "prod-53",
+      "description": "Long neck Budweiser Zero Álcool."
+    },
+    {
+      "description": "Long neck Brahma Zero Álcool.",
+      "id": "prod-54",
+      "category": "LONG NECKS",
+      "name": "BRAHMA ZERO",
+      "price": 106.9
+    },
+    {
+      "price": 37.9,
+      "description": "Pack com 8 latas de Beats Green Mix 269ml.",
+      "id": "prod-55",
+      "category": "CERVEJAS LATAS",
+      "name": "BEATS GREEN MIX (8x269ml)"
+    },
+    {
+      "price": 37.9,
+      "name": "BEATS GT (8x269ml)",
+      "category": "CERVEJAS LATAS",
+      "id": "prod-56",
+      "description": "Pack com 8 latas de Beats GT 269ml."
+    },
+    {
+      "name": "BEATS TROPICAL (8x269ml)",
+      "category": "CERVEJAS LATAS",
+      "id": "prod-57",
+      "description": "Pack com 8 latas de Beats Tropical 269ml.",
+      "price": 37.9
+    },
+    {
+      "price": 0,
+      "description": "Lata de Beats Red Mix.",
+      "category": "CERVEJAS LATAS",
+      "name": "BEATS RED MIX",
+      "id": "prod-58"
+    },
+    {
+      "description": "Lata de Beats Caipirinha.",
+      "category": "CERVEJAS LATAS",
+      "name": "BEATS CAIPIRINHA",
+      "id": "prod-59",
+      "price": 0
+    },
+    {
+      "description": "Maço de cigarros Lucky Strike Doble Ice.",
+      "category": "CIGARROS SOUSA CRUZ",
+      "name": "LUCKY STRIKE DOBLE ICE",
+      "id": "prod-6",
+      "price": 121.2
+    },
+    {
+      "price": 0,
+      "description": "Lata de Beats Sense.",
+      "category": "CERVEJAS LATAS",
+      "name": "BEATS SENSE (Lata)",
+      "id": "prod-60"
+    },
+    {
+      "name": "SMIRNOFF ICE SABORES (6x269ml)",
+      "category": "CERVEJAS LATAS",
+      "id": "prod-61",
+      "description": "Pack com 6 latas de Smirnoff Ice sabores 269ml.",
+      "price": 28.9
+    },
+    {
+      "description": "Lata de Skol Puro Malte.",
+      "category": "CERVEJAS LATAS",
+      "name": "SKOL PURO MALTE",
+      "id": "prod-62",
+      "price": 0
+    },
+    {
+      "price": 36.4,
+      "category": "CERVEJAS LATAS",
+      "name": "SKOL (12 und)",
+      "id": "prod-63",
+      "description": "Pack com 12 latas de Skol."
+    },
+    {
+      "price": 0,
+      "description": "Pack com 18 latas de Skol.",
+      "name": "SKOL (18 und)",
+      "category": "CERVEJAS LATAS",
+      "id": "prod-64"
+    },
+    {
+      "category": "CERVEJAS LATAS",
+      "name": "BRAHMA DUPLO MALTE",
+      "id": "prod-65",
+      "description": "Lata de Brahma Duplo Malte.",
+      "price": 41.7
+    },
+    {
+      "price": 0,
+      "description": "Lata de Brahma Chopp.",
+      "category": "CERVEJAS LATAS",
+      "name": "BRAHMA CHOPP",
+      "id": "prod-66"
+    },
+    {
+      "description": "Lata de Budweiser.",
+      "category": "CERVEJAS LATAS",
+      "name": "BUDWEISER (Lata)",
+      "id": "prod-67",
+      "price": 42.5
+    },
+    {
+      "price": 44.9,
+      "category": "CERVEJAS LATAS",
+      "name": "SPATEN (Lata)",
+      "id": "prod-68",
+      "description": "Lata de Spaten."
+    },
+    {
+      "description": "Lata de Stella Artois.",
+      "category": "CERVEJAS LATAS",
+      "name": "STELLA",
+      "id": "prod-69",
+      "price": 0
+    },
+    {
+      "price": 73.8,
+      "description": "Maço de cigarros Lucky Strike Vermelho.",
+      "id": "prod-7",
+      "category": "CIGARROS SOUSA CRUZ",
+      "name": "LUCKY STRIKE VERMELHO"
+    },
+    {
+      "price": 39.9,
+      "description": "Lata de Stella Gold.",
+      "category": "CERVEJAS LATAS",
+      "name": "STELLA GOLD (Lata)",
+      "id": "prod-70"
+    },
+    {
+      "price": 54.9,
+      "description": "Lata de Heineken.",
+      "name": "HEINEKEN (Lata)",
+      "category": "CERVEJAS LATAS",
+      "id": "prod-71"
+    },
+    {
+      "description": "Lata de Corona Extra.",
+      "name": "CORONA EXTRA (Lata)",
+      "category": "CERVEJAS LATAS",
+      "id": "prod-72",
+      "price": 39.9
+    },
+    {
+      "id": "prod-73",
+      "category": "CERVEJAS LATAS",
+      "name": "AMSTEL",
+      "description": "Lata de Amstel.",
+      "price": 35.7
+    },
+    {
+      "id": "prod-74",
+      "category": "CERVEJAS LATAS",
+      "name": "BOHEMIA",
+      "description": "Lata de Bohemia.",
+      "price": 33.4
+    },
+    {
+      "price": 0,
+      "category": "CERVEJAS LATAS",
+      "name": "PETRA",
+      "id": "prod-75",
+      "description": "Lata de Petra."
+    },
+    {
+      "price": 32.9,
+      "description": "Lata de Devassa.",
+      "id": "prod-76",
+      "category": "CERVEJAS LATAS",
+      "name": "DEVASSA"
+    },
+    {
+      "price": 29.9,
+      "description": "Lata de Itaipava.",
+      "category": "CERVEJAS LATAS",
+      "name": "ITAIPAVA",
+      "id": "prod-77"
+    },
+    {
+      "category": "CERVEJAS LATAS",
+      "name": "CRISTAL",
+      "id": "prod-78",
+      "description": "Lata de Cristal.",
+      "price": 26.9
+    },
+    {
+      "name": "SCHIN",
+      "category": "CERVEJAS LATAS",
+      "id": "prod-79",
+      "description": "Lata de Schin.",
+      "price": 28.9
+    },
+    {
+      "category": "CIGARROS SOUSA CRUZ",
+      "name": "MARLBORO RED BOX",
+      "id": "prod-8",
+      "description": "Maço de cigarros Marlboro Red Box.",
+      "price": 85.9
+    },
+    {
+      "price": 25.8,
+      "description": "Lata de Lokal.",
+      "id": "prod-80",
+      "category": "CERVEJAS LATAS",
+      "name": "LOKAL"
+    },
+    {
+      "description": "Garrafa de Cachaça Ypioca Prata 1L.",
+      "category": "CACHAÇAS 1L",
+      "name": "YPIOCA PRATA (1L)",
+      "id": "prod-81",
+      "price": 126.9
+    },
+    {
+      "name": "YPIOCA OURO (1L)",
+      "category": "CACHAÇAS 1L",
+      "id": "prod-82",
+      "description": "Garrafa de Cachaça Ypioca Ouro 1L.",
+      "price": null
+    },
+    {
+      "description": "Garrafa de Cachaça Ypioca 150 Anos 1L.",
+      "category": "CACHAÇAS 1L",
+      "name": "YPIOCA 150 ANOS",
+      "id": "prod-83",
+      "price": 49.9
+    },
+    {
+      "price": null,
+      "category": "CACHAÇAS 1L",
+      "name": "YPIOCA 160 ANOS",
+      "id": "prod-84",
+      "description": "Garrafa de Cachaça Ypioca 160 Anos 1L."
+    },
+    {
+      "name": "YPIOCA 5 CHAVES",
+      "category": "CACHAÇAS 1L",
+      "id": "prod-85",
+      "description": "Garrafa de Cachaça Ypioca 5 Chaves 1L.",
+      "price": 79.9
+    },
+    {
+      "price": 426,
+      "description": "Garrafa de Cachaça Ypioca Empalhada Ouro 1L.",
+      "id": "prod-86",
+      "category": "CACHAÇAS 1L",
+      "name": "YPIOCA EMPALHADA OURO"
+    },
+    {
+      "name": "PINGO DE OURO OURO",
+      "category": "CACHAÇAS 1L",
+      "id": "prod-87",
+      "description": "Garrafa de Cachaça Pingo de Ouro Ouro 1L.",
+      "price": 119.9
+    },
+    {
+      "category": "CACHAÇAS 1L",
+      "name": "PINGO DE OURO PRATA",
+      "id": "prod-88",
+      "description": "Garrafa de Cachaça Pingo de Ouro Prata 1L.",
+      "price": 0
+    },
+    {
+      "description": "Garrafa de Cachaça Douradinha Ouro 1L.",
+      "id": "prod-89",
+      "category": "CACHAÇAS 1L",
+      "name": "DOURADINHA OURO (1L)",
+      "price": 78.9
+    },
+    {
+      "category": "CIGARROS SOUSA CRUZ",
+      "name": "MARLBORO RED MAÇO",
+      "id": "prod-9",
+      "description": "Maço de cigarros Marlboro Red.",
+      "price": 75.9
+    },
+    {
+      "price": 73.9,
+      "category": "CACHAÇAS 1L",
+      "name": "DOURADINHA PRATA (1L)",
+      "id": "prod-90",
+      "description": "Garrafa de Cachaça Douradinha Prata 1L."
+    },
+    {
+      "name": "YPIOCA GUARANÁ",
+      "category": "CACHAÇAS 1L",
+      "id": "prod-91",
+      "description": "Garrafa de Ypioca Guaraná 1L.",
+      "price": 217.9
+    },
+    {
+      "price": 215.9,
+      "description": "Garrafa de Ypioca Lima Limão 1L.",
+      "category": "CACHAÇAS 1L",
+      "name": "YPIOCA LIMA LIMÃO",
+      "id": "prod-92"
+    },
+    {
+      "price": 0,
+      "category": "CACHAÇAS 1L",
+      "name": "SAPUPARA OURO (1L)",
+      "id": "prod-96",
+      "description": "Garrafa de Cachaça Sapupara Ouro 1L."
+    },
+    {
+      "description": "Garrafa de Cachaça Sapupara Prata 1L.",
+      "category": "CACHAÇAS 1L",
+      "name": "SAPUPARA PRATA (1L)",
+      "id": "prod-97",
+      "price": 0
+    },
+    {
+      "price": 299.9,
+      "name": "YPIOCA MESTRE OURO",
+      "category": "CACHAÇAS 1L",
+      "id": "prod-98",
+      "description": "Garrafa de Cachaça Ypioca Mestre Ouro 1L."
+    },
+    {
+      "name": "YPIOCA MESTRE PRATA",
+      "category": "CACHAÇAS 1L",
+      "id": "prod-99",
+      "description": "Garrafa de Cachaça Ypioca Mestre Prata 1L.",
+      "price": 216.9
+    },
+    {
+      "description": "",
+      "price": 25,
+      "category": "REFRIGERANTES 2L",
+      "name": "MAIS SABOR COLA 2L",
+      "id": "qKWJO3ehVumwn5QU6r2R"
+    },
+    {
+      "description": "",
+      "name": "BEM BOLADO SLIM 50UNI",
+      "category": "SEDA",
+      "price": 93.9,
+      "id": "qLFxoUj0YiTh7bxPfnAn"
+    },
+    {
+      "price": 29.9,
+      "category": "SUCOS ",
+      "name": "SUCO JANDAIA CAJU 200ML",
+      "description": "",
+      "id": "qu4Z2jzVqOxF0QLYwAx3"
+    },
+    {
+      "price": 115.9,
+      "name": "BALLENA COCO",
+      "category": "LICORES",
+      "description": "",
+      "id": "rWldrzU5elonKwfgvXI1"
+    },
+    {
+      "description": "",
+      "name": "ILUMINAGUA 500ml ",
+      "category": "ÁGUAS",
+      "price": 9.5,
+      "id": "rdk1v2emkUc4NKr3e5Zk"
+    },
+    {
+      "description": "",
+      "category": "REFRIGERANTES 2L",
+      "name": "SPRIT 2L",
+      "price": 45.9,
+      "id": "rtGPnNXxQf94wC3bRyhQ"
+    },
+    {
+      "price": null,
+      "name": "AMSTEL ULTRA LONG NECK 12X275ML",
+      "category": "LONG NECKS",
+      "description": "",
+      "id": "s3UtikH87lokPF23xFXU"
+    },
+    {
+      "description": "",
+      "category": "CACHAÇAS 1L",
+      "name": "BANANAZINHA 900ML",
+      "price": null,
+      "id": "sAaixlb1DmL40OKmmXoM"
+    },
+    {
+      "description": "",
+      "name": "KENT PRATA ",
+      "category": "CIGARROS SOUSA CRUZ",
+      "price": 117.75,
+      "id": "sFgbT7WvBBhiDut7WT2c"
+    },
+    {
+      "description": "",
+      "price": 90.3,
+      "category": "FUMOS",
+      "name": "FUMO TREVO ",
+      "id": "t9RMfQ2if4QRJxufRLRL"
+    },
+    {
+      "description": "",
+      "price": 31.4,
+      "name": "FANTA UVA LATA ",
+      "category": "REFRIGERANTES LATA ",
+      "id": "tJN4rHaCIeikA13apQrR"
+    },
+    {
+      "name": "COCA COLA RETORNÁVEL 1L (LS)",
+      "category": "REFRIGERANTES 1L",
+      "price": null,
+      "description": "",
+      "id": "tPgxpNtNGZlXtzuCOZuw"
+    },
+    {
+      "description": "",
+      "name": "GKN ROCK'S UNI",
+      "category": "GIN",
+      "price": 25.9,
+      "id": "tVL118Y8Tvuzr2IL8Y3I"
+    },
+    {
+      "description": "",
+      "name": "TAMPICO 330ML",
+      "category": "SUCOS ",
+      "price": 23.9,
+      "id": "tuga3rzY7jIJeE6UOWSe"
+    },
+    {
+      "price": 34.9,
+      "name": "SÃO GERALDO LATA",
+      "category": "REFRIGERANTES LATA ",
+      "description": "",
+      "id": "u8T6bt5Sh2zG9twMKfyX"
+    },
+    {
+      "name": "COCA COLA MINI ZERO",
+      "category": "REFRIGERANTES MINI ",
+      "price": 24.5,
+      "description": "",
+      "id": "uBpIn7HwA0cRylNgxJWM"
+    },
+    {
+      "name": "GUARANÁ LATA ",
+      "category": "REFRIGERANTES LATA ",
+      "price": 27.9,
+      "description": "",
+      "id": "uTsMWZYNDqIKMY6ThLqY"
+    },
+    {
+      "name": "YPORAN 1,5ML",
+      "category": "ÁGUAS",
+      "price": 11.7,
+      "description": "",
+      "id": "uv9fYdOH3OGipTHxG2bi"
+    },
+    {
+      "name": "COCA COLA 1L ORIGINAL ",
+      "category": "REFRIGERANTES 1L",
+      "price": 38.4,
+      "description": "",
+      "id": "v6irUUzMDrgtA9tytF5B"
+    },
+    {
+      "name": "COCA COLA MINI NORMAL ",
+      "category": "REFRIGERANTES MINI ",
+      "price": 26.9,
+      "description": "",
+      "id": "vfd9oAOng96Lxrm9hauz"
+    },
+    {
+      "price": 54.9,
+      "name": "CAJUINA ZERO 2L",
+      "category": "REFRIGERANTES 2L",
+      "description": "",
+      "id": "wZPYiW44Yr3qp44FnyzP"
+    },
+    {
+      "description": "",
+      "name": "NATURAGUA 500ML",
+      "category": "ÁGUAS",
+      "price": 11.7,
+      "id": "xpzod48VUOekCS9Gf6Ov"
+    },
+    {
+      "price": null,
+      "name": "NATURAGUA 1,5ML",
+      "category": "ÁGUAS",
+      "description": "",
+      "id": "y4qNwWA9lll50EjKTkKn"
+    },
+    {
+      "price": 65.9,
+      "category": "ENERGÉTICOS",
+      "name": "BALY 2L (MELANCIA E MORANGO)",
+      "description": "",
+      "id": "yZtdSbJvsrDjhJim45Cm"
+    },
+    {
+      "price": 36.9,
+      "name": "COCA COLA LATA ZERO ",
+      "category": "REFRIGERANTES LATA ",
+      "description": "",
+      "id": "ytm8c57SBhGZ8gU05KZv"
+    },
+    {
+      "description": "",
+      "name": "H2O LIMÃO C/GÁS",
+      "category": "ÁGUAS",
+      "price": 48.9,
+      "id": "z3IT9xXwXakF6ahcP8Es"
+    },
+    {
+      "description": "",
+      "price": 54.9,
+      "name": "SÃO GERALDO 2L",
+      "category": "REFRIGERANTES 2L",
+      "id": "zCBP5VoB185pzBxucV0R"
+    },
+    {
+      "description": "",
+      "category": "REFRIGERANTES 1L",
+      "name": "GUARANÁ 12X1L",
+      "price": 52.5,
+      "id": "zPXwKg0U3riC8k4mKXy9"
+    }
+  ],
+  "categories": [
+    {
+      "name": "CACHAÇAS 1L",
+      "id": "11pOR0V0uQkjZzjXEAfB"
+    },
+    {
+      "name": "SUCOS ",
+      "id": "1onIRuC2eolUii8dfsT7"
+    },
+    {
+      "name": "ENERGÉTICOS",
+      "id": "3GLeaVercSNhTpImm8ys"
+    },
+    {
+      "name": "CACHAÇAS MEIOTAS",
+      "id": "3Wvi9gNrFRsNaECtQdZs"
+    },
+    {
+      "name": "ENERGÉTICOS",
+      "id": "3z8Gij48MQCmanPM919s"
+    },
+    {
+      "name": "REFRIGERANTES MINI ",
+      "id": "4JqIjG8agK0tm6ewgijR"
+    },
+    {
+      "name": "CERVEJAS LATAS",
+      "id": "4iBg9gEoaXL6Yqw0Ci6G"
+    },
+    {
+      "name": "REFRIGERANTES 2L",
+      "id": "5VrJ7SJ4MYs1p0sOlcsC"
+    },
+    {
+      "name": "ISQUEIROS",
+      "id": "5mBVmViIq2CUUTqvFsAh"
+    },
+    {
+      "name": "VODKAS",
+      "id": "6pzF5Y5Bh5oY8PCDeHKf"
+    },
+    {
+      "name": "CACHAÇAS MEIOTAS",
+      "id": "71SnAL7yhFM3mgrnmvND"
+    },
+    {
+      "name": "GIN",
+      "id": "8ZwC52AcyoQ3j2jwno83"
+    },
+    {
+      "name": "DESTILADOS",
+      "id": "93MdK3UWqLRFWtUZqFHd"
+    },
+    {
+      "name": "LONG NECKS",
+      "id": "9CPZB48Xbvx3k8n1vcFl"
+    },
+    {
+      "name": "GIN",
+      "id": "9MMPQnyivyhQu3nYJJiS"
+    },
+    {
+      "name": "CACHAÇAS 1L",
+      "id": "AItmiYhyOxZobzZUDOJz"
+    },
+    {
+      "name": "VINHOS",
+      "id": "BA3HAhijuJEWQbdXr6kx"
+    },
+    {
+      "name": "DESTILADOS",
+      "id": "BnesFSgP7YHqzjXuJdz5"
+    },
+    {
+      "name": "FUMOS",
+      "id": "Dk6RbF1GrAXFBIg0UOf6"
+    },
+    {
+      "name": "CERVEJAS LATAS",
+      "id": "EFyhGiGkxgb2DNyb7wXd"
+    },
+    {
+      "name": "SEDA",
+      "id": "EpYCFWD3B8iheIpLn0vY"
+    },
+    {
+      "name": "CIGARROS NACIONAL",
+      "id": "EzEA1uw5IgX3OByVVaRk"
+    },
+    {
+      "name": "WHISKYS",
+      "id": "F9Syqcpv23UsZXY5muOs"
+    },
+    {
+      "name": "CIGARROS NACIONAL",
+      "id": "FMN29XyRxKnPr4bC0x9F"
+    },
+    {
+      "name": "LICORES",
+      "id": "FVm9m801VuCOel6jzrqG"
+    },
+    {
+      "name": "ENERGÉTICOS",
+      "id": "G5tcg6IuCxIcVFMzoXs8"
+    },
+    {
+      "name": "Fumos",
+      "id": "HTm4O4ZZpcpBQtjUJjOC"
+    },
+    {
+      "name": "CIGARROS SOUSA CRUZ",
+      "id": "HTwZ333gYX2CmdjSinaP"
+    },
+    {
+      "name": "Cigarros Sousa Cruz",
+      "id": "Hd9AFYXryVUMQoRNrocc"
+    },
+    {
+      "name": "LICORES",
+      "id": "I6XImD2LASQkrOc80GTV"
+    },
+    {
+      "name": "LONG NECKS",
+      "id": "IAwS9cxXP185o0Fur53P"
+    },
+    {
+      "name": "Isqueiros",
+      "id": "KCOZc8ZmqjmqidM58nuT"
+    },
+    {
+      "name": "CACHAÇAS 1L",
+      "id": "L4GEjcWAkOKCDj6Y8NEn"
+    },
+    {
+      "name": "WHISKYS",
+      "id": "LGSXGIFXrYtSA6PzChXM"
+    },
+    {
+      "name": "ENERGÉTICOS",
+      "id": "MqWWLZOIUJXZu6O6nDL3"
+    },
+    {
+      "name": "SEDA",
+      "id": "NjuOMDvAtq3m0eelFggY"
+    },
+    {
+      "name": "VODKAS",
+      "id": "NowxFdvFDY8CF98z2mJq"
+    },
+    {
+      "name": "GIN",
+      "id": "ORxLQKam8xFZ98cZKitB"
+    },
+    {
+      "name": "ISQUEIROS",
+      "id": "PXJ9CJFb9IWRZ6glZef5"
+    },
+    {
+      "name": "CERVEJAS LATAS",
+      "id": "QCsksSHkUfkc5l3nNKvv"
+    },
+    {
+      "name": "DESTILADOS",
+      "id": "QLVeuIOvL2QStjAi8IMj"
+    },
+    {
+      "name": "REFRIGERANTES 1L",
+      "id": "Qg7lCmSfNHxDnJeQUDYI"
+    },
+    {
+      "name": "WHISKYS",
+      "id": "ROv10PP1Fgrdo89NEyiT"
+    },
+    {
+      "name": "CACHAÇAS 1L",
+      "id": "RblmjIKjaQ2U0kgoAstW"
+    },
+    {
+      "name": "LICORES",
+      "id": "RuZ4STzPB2Xn5iITu2wO"
+    },
+    {
+      "name": "VODKAS",
+      "id": "VBtzh2wMv3JC3IlcjjV9"
+    },
+    {
+      "name": "VODKAS",
+      "id": "VtRCVyzOxG2KSAFvSJyk"
+    },
+    {
+      "name": "SEDA",
+      "id": "XILwvvjdxk5z1ZIEVj9t"
+    },
+    {
+      "name": "LONG NECKS",
+      "id": "XSvIlyym1Oehs5z1p2ks"
+    },
+    {
+      "name": "DESTILADOS",
+      "id": "XexVUGeskt4JnXfFyw8G"
+    },
+    {
+      "name": "VINHOS",
+      "id": "XtidWgubJ29LRD6e4jlt"
+    },
+    {
+      "name": "CACHAÇAS MEIOTAS",
+      "id": "Y1UnZ9yul7PRiIRS6N1y"
+    },
+    {
+      "name": "VINHOS",
+      "id": "ZxWd0fkeK2Onv0u7JqaA"
+    },
+    {
+      "name": "LONG NECKS",
+      "id": "dvZxdgeOytblfqHJdeOk"
+    },
+    {
+      "name": "CERVEJAS LATAS",
+      "id": "dytTLv78v6YwmCFQWPhz"
+    },
+    {
+      "name": "CIGARROS SOUSA CRUZ",
+      "id": "eLWVVg9lgys0KU80DU3u"
+    },
+    {
+      "name": "DESTILADOS",
+      "id": "eXs35V8pqL5eE7CEJ8zt"
+    },
+    {
+      "name": "FUMOS",
+      "id": "f5TaF9gWkKE84z1D4JWl"
+    },
+    {
+      "name": "CIGARROS SOUSA CRUZ",
+      "id": "hDkdNc066kr7jy3evWEP"
+    },
+    {
+      "name": "SEDA",
+      "id": "iCTdBzXiSecIyDHPlCdR"
+    },
+    {
+      "name": "ÁGUAS",
+      "id": "iPKCi5m112B4iQeVJzRF"
+    },
+    {
+      "name": "CACHAÇAS 1L",
+      "id": "iidumPXeaUT5IxywtIkM"
+    },
+    {
+      "name": "WHISKYS",
+      "id": "k3TKdfeznhgr0aXYMUsQ"
+    },
+    {
+      "name": "Seda",
+      "id": "laxKxuYrUT2oXdNlbeHR"
+    },
+    {
+      "name": "FUMOS",
+      "id": "m32jDINA9Tgtsoy3qc2q"
+    },
+    {
+      "name": "VINHOS",
+      "id": "p6nYyFL7Dv7mJReuEIoW"
+    },
+    {
+      "name": "ENERGÉTICOS",
+      "id": "p7eye9NP8LyaLp2QhFdv"
+    },
+    {
+      "name": "ISQUEIROS",
+      "id": "pVjSXrgG3oMI3PphNQMG"
+    },
+    {
+      "name": "CIGARROS SOUSA CRUZ",
+      "id": "qaK3GxSoeyDqPI0o7Pgn"
+    },
+    {
+      "name": "ISQUEIROS",
+      "id": "qq0TDy06uk9Uj2tneQYa"
+    },
+    {
+      "name": "CERVEJAS LATAS",
+      "id": "rT8uMHznFSaJiiNBNcu7"
+    },
+    {
+      "name": "GIN",
+      "id": "sldzfIpjzJUo1VKnET7x"
+    },
+    {
+      "name": "FUMOS",
+      "id": "tDNeMzqjlVomltsj0Fu8"
+    },
+    {
+      "name": "REFRIGERANTES LATA ",
+      "id": "uFXqdIbCZ36h7KQchu4w"
+    },
+    {
+      "name": "CIGARROS NACIONAL",
+      "id": "wSsyDlJGUmBtZPdOvmXd"
+    },
+    {
+      "name": "GIN",
+      "id": "wXfNHPtKO6G0tzhENtWJ"
+    },
+    {
+      "name": "VINHOS",
+      "id": "xIeZvVVKOtv1J8bxC2D6"
+    },
+    {
+      "name": "CACHAÇAS MEIOTAS",
+      "id": "xbSaGy7V6IiTs6BbDAv4"
+    },
+    {
+      "name": "CIGARRO NACIONAL",
+      "id": "yXjdP3tDu6aianPIP5nP"
+    },
+    {
+      "name": "LONG NECKS",
+      "id": "ynjGhIW5JUldN8znS4lA"
+    }
+  ],
+  "siteInfo": {
+    "heroLocation2": "CUMBUCO",
+    "heroPhoneDisplay2": "(85) 99223-4683",
+    "heroTitle2": "DISTRIBUIDORA",
+    "heroSlogan": "Explore nossa seleção completa de tabacaria e bebidas premium",
+    "heroTitle1": "MR BEBIDAS",
+    "heroLocation": "FORTALEZA",
+    "siteName": "MR Bebidas",
+    "heroPhone": "5585994125603",
+    "heroPhoneDisplay": "(85) 99412-5603",
+    "heroPhone2": "5585992234683"
+  }
+}
