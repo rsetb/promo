@@ -1,0 +1,145 @@
+/**
+ * Core Philosophy: This ruleset implements a "Public Read, Authenticated Write" model.
+ * Product data is publicly visible to all users, including those not signed in.
+ * However, any write operations (creating, updating, or deleting products) are
+ * restricted to authenticated users. User profile data is strictly private and
+ * can only be accessed or modified by the user who owns it.
+ *
+ * Data Structure: The data is organized into three separate top-level collections:
+ * 1.  /products/{productId}: Contains all public product information.
+ * 2.  /users/{userId}: Contains private user profile information.
+ * 3.  /siteInfo/{docId}: Contains global site information, publicly readable and editable by authenticated users.
+ * This flat structure is simple and performant for the specified access patterns.
+ *
+ * Key Security Decisions:
+ * - Product and SiteInfo Visibility: All product and siteInfo documents are public and can be listed or
+ *   retrieved by anyone.
+ * - Product and SiteInfo Modification: Any user who is authenticated (including via anonymous
+ *   login) is granted permission to create, update, and delete any product or site information.
+ * - User Privacy: Users can only access their own document within the /users
+ *   collection. Listing users is explicitly disallowed to protect user privacy.
+ *
+ * Denormalization for Authorization: This ruleset does not require denormalization.
+ * Authorization for products and siteInfo is based solely on the user's authentication state
+ * (`request.auth != null`), and authorization for user documents is based on the
+ * document's path, avoiding the need for extra data fields or database reads.
+ *
+ * Structural Segregation: The use of separate top-level collections for public
+ * (`/products`, `/siteInfo`) and private (`/users`) data provides a clear and secure separation
+ * of concerns, making list queries on the public collections safe and efficient.
+ */
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // ----------------------------------------------------------------------
+    // Helper Functions
+    // ----------------------------------------------------------------------
+
+    /**
+     * Checks if the user is authenticated.
+     */
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    /**
+     * Checks if the currently authenticated user's UID matches the provided userId.
+     * This is the foundation for ownership-based security.
+     */
+    function isOwner(userId) {
+      return request.auth.uid == userId;
+    }
+
+    /**
+     * Checks if the document being accessed already exists in Firestore.
+     * CRITICAL for preventing updates or deletes on non-existent documents.
+     */
+    function docExists() {
+      return resource != null;
+    }
+
+    /**
+     * Ensures that when a user document is created, the user is creating their
+     * own document and the document's internal 'id' field matches their UID.
+     * This enforces relational integrity from the start.
+     */
+    function isCreatingOwnUserDoc(userId) {
+      return isOwner(userId) && request.resource.data.id == userId;
+    }
+
+    /**
+     * Ensures that when a user document is updated, the user is updating their
+     * own document and the internal 'id' field remains unchanged.
+     * This makes the ownership link immutable.
+     */
+    function isUpdatingOwnUserDoc(userId) {
+      return isOwner(userId) && docExists() && request.resource.data.id == resource.data.id;
+    }
+
+    /**
+     * Validates that an incoming Product document has an 'id' field that
+     * matches the document's ID in the path. This should only be enforced for
+     * client-side generated IDs.
+     */
+    function hasConsistentProductId(productId) {
+      // Not enforced on create, as we allow server-side ID generation with addDoc.
+      return true;
+    }
+    
+    /**
+     * Validates that an update to a Product does not change its immutable 'id'.
+     */
+    function hasImmutableProductId() {
+      return request.resource.data.id == resource.data.id;
+    }
+
+    // ----------------------------------------------------------------------
+    // Collection Rules
+    // ----------------------------------------------------------------------
+
+    /**
+     * @description Controls access to product documents. Products are public to read
+     *              but can only be written to by any authenticated user.
+     * @path /products/{productId}
+     */
+    match /products/{productId} {
+      allow get, list: if true;
+      allow create: if isSignedIn();
+      allow update: if isSignedIn() && docExists();
+      allow delete: if isSignedIn() && docExists();
+    }
+
+    /**
+     * @description Controls access to user profile documents. A user can only access
+     *              their own document.
+     * @path /users/{userId}
+     */
+    match /users/{userId} {
+      allow get: if isOwner(userId);
+      allow list: if false;
+      allow create: if isCreatingOwnUserDoc(userId);
+      allow update: if isUpdatingOwnUserDoc(userId);
+      allow delete: if isOwner(userId) && docExists();
+    }
+
+     /**
+     * @description Controls access to the site information document.
+     * @path /siteInfo/{docId}
+     */
+    match /siteInfo/{docId} {
+      allow get, list: if true;
+      allow create, update, delete: if isSignedIn();
+    }
+    
+    /**
+     * @description Controls access to the categories collection. Categories are public to read
+     *              but can only be written to by any authenticated user.
+     * @path /categories/{categoryId}
+     */
+    match /categories/{categoryId} {
+      allow get, list: if true;
+      allow create, update, delete: if isSignedIn();
+    }
+  }
+}

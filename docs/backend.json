@@ -1,0 +1,208 @@
+{
+  "entities": {
+    "Product": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "Product",
+      "type": "object",
+      "description": "Represents a product in the online showcase.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the Product entity."
+        },
+        "name": {
+          "type": "string",
+          "description": "The name of the product."
+        },
+        "description": {
+          "type": "string",
+          "description": "A detailed description of the product."
+        },
+        "price": {
+          "type": "number",
+          "description": "The price of the product."
+        },
+        "imageUrl": {
+          "type": "string",
+          "description": "URL of the product's main image.",
+          "format": "uri"
+        },
+        "category": {
+          "type": "string",
+          "description": "The category that the product belongs to."
+        },
+        "additionalImageUrls": {
+          "type": "array",
+          "description": "URLs of additional images for the product.",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "required": [
+        "id",
+        "name",
+        "description",
+        "price",
+        "imageUrl",
+        "category"
+      ]
+    },
+    "User": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "User",
+      "type": "object",
+      "description": "Represents a user who can log in and edit product prices.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the User entity."
+        },
+        "username": {
+          "type": "string",
+          "description": "The username of the user."
+        }
+      },
+      "required": [
+        "id",
+        "username"
+      ]
+    },
+    "SiteInfo": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "SiteInfo",
+      "type": "object",
+      "description": "Stores general site information and branding text.",
+      "properties": {
+        "siteName": {
+          "type": "string",
+          "description": "The name of the site, displayed in the header."
+        },
+        "heroTitle1": {
+          "type": "string",
+          "description": "The first line of the hero section title."
+        },
+        "heroTitle2": {
+          "type": "string",
+          "description": "The second line of the hero section title."
+        },
+        "heroLocation": {
+          "type": "string",
+          "description": "The location text displayed in the hero section."
+        },
+        "heroSlogan": {
+          "type": "string",
+          "description": "The slogan or tagline displayed in the hero section."
+        },
+        "heroPhone": {
+          "type": "string",
+          "description": "The phone number for WhatsApp, used to construct the link. Should only contain numbers."
+        },
+        "heroPhoneDisplay": {
+          "type": "string",
+          "description": "The formatted phone number to display on the page."
+        },
+        "heroLocation2": {
+          "type": "string",
+          "description": "The second location text displayed in the hero section."
+        },
+        "heroPhone2": {
+          "type": "string",
+          "description": "The second phone number for WhatsApp, used to construct the link. Should only contain numbers."
+        },
+        "heroPhoneDisplay2": {
+          "type": "string",
+          "description": "The second formatted phone number to display on the page."
+        }
+      }
+    },
+    "Category": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "Category",
+      "type": "object",
+      "description": "Represents a product category.",
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "The name of the category."
+        }
+      },
+      "required": ["name"]
+    }
+  },
+  "auth": {
+    "providers": [
+      "password",
+      "anonymous"
+    ]
+  },
+  "firestore": {
+    "structure": [
+      {
+        "path": "products/{productId}",
+        "definition": {
+          "entityName": "Product",
+          "schema": {
+            "$ref": "#/backend/entities/Product"
+          },
+          "description": "Stores product details. No denormalized authorization fields are needed as price editing is based on authentication.",
+          "params": [
+            {
+              "name": "productId",
+              "description": "The unique identifier for the product."
+            }
+          ]
+        }
+      },
+      {
+        "path": "users/{userId}",
+        "definition": {
+          "entityName": "User",
+          "schema": {
+            "$ref": "#/backend/entities/User"
+          },
+          "description": "Stores user information.",
+          "params": [
+            {
+              "name": "userId",
+              "description": "The unique identifier for the user."
+            }
+          ]
+        }
+      },
+      {
+        "path": "siteInfo/{docId}",
+        "definition": {
+          "entityName": "SiteInfo",
+          "schema": {
+            "$ref": "#/backend/entities/SiteInfo"
+          },
+          "description": "Stores site configuration and branding elements. It is intended to have only one document.",
+          "params": [
+            {
+              "name": "docId",
+              "description": "The unique identifier for the site info document."
+            }
+          ]
+        }
+      },
+      {
+        "path": "categories/{categoryId}",
+        "definition": {
+          "entityName": "Category",
+          "schema": {
+            "$ref": "#/backend/entities/Category"
+          },
+          "description": "Stores product categories.",
+          "params": [
+            {
+              "name": "categoryId",
+              "description": "The unique identifier for the category."
+            }
+          ]
+        }
+      }
+    ],
+    "reasoning": "The Firestore structure is designed to manage products and users with a focus on enabling authorized price editing. Products are stored in a top-level `products` collection. Users are stored in a top-level `users` collection. To enable price editing, the application provides authentication through password and anonymous login methods, as specified in the `auth` section.\n\nAuthorization Independence (CRITICAL): All products are accessible, but price editing should be limited to authenticated users. Therefore, the current structure relies on authentication rather than role-based authorization.\n\nQAPs (Rules are not Filters): The top-level `products` collection enables secure `list` operations because all products share the same security requirements.\n\nThe structure supports the integrity of ownership, timestamps, and denormalized data by storing all product-related data within the `products` documents. If roles were to be introduced (e.g., product managers), their role could be stored in their user document and then that user document could be checked when editing product prices."
+  }
+}
