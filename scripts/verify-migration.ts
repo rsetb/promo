@@ -3,8 +3,8 @@
  * (PGlite) — sem precisar de Docker ou de um servidor.
  *
  * Executa o mesmo SQL de drizzle/ e o mesmo scripts/lib/import-core.ts que a
- * migração de produção usa, com os dados reais exportados do Firestore, e então
- * confere o resultado e as restrições do schema.
+ * migração de produção usa, com os dados reais de data/catalog-export.json, e
+ * então confere o resultado e as restrições do schema.
  *
  * Uso: npx tsx scripts/verify-migration.ts
  */
@@ -12,7 +12,7 @@ import { PGlite } from '@electric-sql/pglite';
 import { readFileSync, readdirSync } from 'node:fs';
 import { join } from 'node:path';
 import { importData } from './lib/import-core';
-import type { FirestoreExport } from './lib/transform';
+import type { CatalogExport } from './lib/transform';
 
 let failures = 0;
 let checks = 0;
@@ -54,8 +54,8 @@ async function main() {
     console.log(`  aplicada: ${file}`);
   }
 
-  console.log('\n== import (dados reais do Firestore) ==');
-  const data: FirestoreExport = JSON.parse(readFileSync('data/firestore-export.json', 'utf8'));
+  console.log('\n== import (dados reais do catálogo) ==');
+  const data: CatalogExport = JSON.parse(readFileSync('data/catalog-export.json', 'utf8'));
   const stats = await importData((sql, params) => db.query(sql, params as any[]) as any, data);
   console.log(`  origem:  ${data.products.length} produtos, ${data.categories.length} categorias`);
   console.log(`  destino: ${stats.products} produtos, ${stats.categories} categorias`);

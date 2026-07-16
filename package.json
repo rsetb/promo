@@ -13,7 +13,6 @@
     "db:studio": "drizzle-kit studio",
     "db:import": "tsx scripts/import-to-postgres.ts",
     "db:verify": "tsx scripts/verify-migration.ts",
-    "firestore:export": "tsx scripts/export-firestore.ts",
     "dev:db": "tsx scripts/dev-db.ts"
   },
   "dependencies": {
@@ -46,7 +45,6 @@
     "@types/react-dom": "^19.2.1",
     "dotenv": "^17.4.2",
     "drizzle-kit": "^0.31.10",
-    "firebase": "^12.16.0",
     "postcss": "^8",
     "tailwindcss": "^3.4.1",
     "tsx": "^4.23.1",

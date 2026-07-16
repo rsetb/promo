@@ -1,5 +1,5 @@
 /**
- * Importa data/firestore-export.json para o Postgres apontado por DATABASE_URL.
+ * Importa data/catalog-export.json para o Postgres apontado por DATABASE_URL.
  *
  * Uso:
  *   npx tsx scripts/import-to-postgres.ts          # aborta se já houver dados
@@ -12,7 +12,7 @@ import { readFileSync } from 'node:fs';
 import { config } from 'dotenv';
 import { Pool } from 'pg';
 import { importData } from './lib/import-core';
-import type { FirestoreExport } from './lib/transform';
+import type { CatalogExport } from './lib/transform';
 
 config({ path: '.env' });
 
@@ -23,7 +23,7 @@ async function main() {
     throw new Error('DATABASE_URL não definida. Copie .env.example para .env.');
   }
 
-  const data: FirestoreExport = JSON.parse(readFileSync('data/firestore-export.json', 'utf8'));
+  const data: CatalogExport = JSON.parse(readFileSync('data/catalog-export.json', 'utf8'));
   console.log(`origem: ${data.products.length} produtos, ${data.categories.length} categorias`);
 
   const pool = new Pool({

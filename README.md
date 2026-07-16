@@ -25,7 +25,7 @@ controles de edição.
 | `src/db` | Schema Drizzle e conexão |
 | `src/lib` | `auth.ts` (sessão), `actions.ts` (escritas), `queries.ts` (leituras) |
 | `drizzle` | Migrations SQL versionadas |
-| `scripts` | Migração do Firestore, banco local, verificação |
+| `scripts` | Import do catálogo, banco local, verificação |
 
 ## Desenvolvimento
 
@@ -38,7 +38,7 @@ npm run dev:db           # Postgres local (PGlite/WASM) na porta 54329 — deixe
 npm run dev              # em outro terminal
 ```
 
-`dev:db` aplica as migrations e importa `data/firestore-export.json` na primeira
+`dev:db` aplica as migrations e importa `data/catalog-export.json` na primeira
 execução; os dados ficam em `data/dev-db/`.
 
 > **Limitação do `dev:db`:** o PGlite atende **uma conexão por vez**. Com o app
@@ -94,18 +94,14 @@ npx tsx scripts/import-to-postgres.ts          # aborta se já houver dados
 npx tsx scripts/import-to-postgres.ts --force  # apaga e reimporta
 ```
 
-Se você ainda estiver editando o catálogo no site antigo (Firestore), gere um
-export novo antes de migrar, para não perder as últimas alterações:
-
-```bash
-npm run firestore:export
-```
-
 ## Origem dos dados
 
-O catálogo veio do Firestore. `data/firestore-export.json` é o export bruto
-(294 produtos, 80 categorias) e fica versionado como prova de origem. A
-transformação, em `scripts/lib/transform.ts`, aplicou:
+O catálogo foi migrado de um banco anterior (Firestore, já descontinuado neste
+projeto). `data/catalog-export.json` é o export bruto — 294 produtos, 80
+categorias — e fica versionado como prova de origem: é dele que o
+`db:import` carrega o Postgres.
+
+A transformação, em `scripts/lib/transform.ts`, aplicou:
 
 - **80 → 22 categorias.** O seed antigo rodava no navegador e gravava com ID
   automático; abas simultâneas semeavam em paralelo e cada categoria virou ~5
@@ -117,3 +113,7 @@ transformação, em `scripts/lib/transform.ts`, aplicou:
   indistintamente; ambos exibiam "Consulte". Agora há uma representação só.
 - **Categoria `CIGARRO NACIONAL`** (digitação) foi unificada em
   `CIGARROS NACIONAL`.
+
+Esse export é um retrato do momento da migração e não é atualizável: as
+ferramentas do banco antigo foram removidas do projeto. A partir daqui, a fonte
+de verdade é o Postgres.

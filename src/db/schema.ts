@@ -4,9 +4,9 @@ import { relations, sql } from 'drizzle-orm';
 /**
  * Categorias do catálogo.
  *
- * `name` é UNIQUE: no Firestore as categorias eram criadas com ID automático e
- * sem verificação, o que produziu 80 registros para 23 categorias reais. Aqui o
- * banco recusa a duplicata.
+ * `name` é UNIQUE: no banco antigo as categorias eram criadas com ID automático
+ * e sem verificação, o que produziu 80 registros para 23 categorias reais. Aqui
+ * o banco recusa a duplicata.
  */
 export const categories = pgTable('categories', {
   id: serial('id').primaryKey(),
@@ -17,8 +17,8 @@ export const categories = pgTable('categories', {
 /**
  * Produtos.
  *
- * `price` é NULL quando não há preço definido — a UI mostra "Consulte". No
- * Firestore esse estado tinha duas representações (null e 0); aqui só existe uma.
+ * `price` é NULL quando não há preço definido — a UI mostra "Consulte". No banco
+ * antigo esse estado tinha duas representações (null e 0); aqui só existe uma.
  * Usamos numeric(10,2) em vez de float: preço em ponto flutuante acumula erro.
  */
 export const products = pgTable(

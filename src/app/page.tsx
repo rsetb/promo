@@ -5,8 +5,7 @@ import { getCategories, getProducts, getSiteInfo } from '@/lib/queries';
 
 /**
  * A home é um Server Component: os dados vêm do Postgres aqui, no servidor, e
- * chegam ao browser já renderizados. O navegador nunca fala com o banco — que
- * é justamente o que tornava as regras do Firestore a única linha de defesa.
+ * chegam ao browser já renderizados. O navegador nunca fala com o banco.
  */
 export default async function Home() {
   const [products, categories, siteInfo, admin] = await Promise.all([

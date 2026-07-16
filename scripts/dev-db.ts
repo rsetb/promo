@@ -2,8 +2,8 @@
  * Banco de desenvolvimento local, sem instalar Postgres nem Docker.
  *
  * Sobe um PGlite (Postgres compilado para WASM) falando o protocolo real do
- * Postgres numa porta TCP, aplica as migrations e importa o catálogo exportado
- * do Firestore. O app conecta nele como conectaria em qualquer Postgres.
+ * Postgres numa porta TCP, aplica as migrations e importa o catálogo de
+ * data/catalog-export.json. O app conecta nele como em qualquer Postgres.
  *
  * Uso:
  *   npm run dev:db          # deixe rodando neste terminal
@@ -17,7 +17,7 @@ import { PGLiteSocketServer } from '@electric-sql/pglite-socket';
 import { readFileSync, readdirSync, existsSync } from 'node:fs';
 import { join } from 'node:path';
 import { importData } from './lib/import-core';
-import type { FirestoreExport } from './lib/transform';
+import type { CatalogExport } from './lib/transform';
 
 // Porta alta: no Windows a 5432 costuma cair numa faixa reservada e o listen
 // falha com EACCES mesmo sem nenhum Postgres instalado.
@@ -39,13 +39,13 @@ async function main() {
       console.log(`  migration aplicada: ${file}`);
     }
 
-    const exportPath = 'data/firestore-export.json';
+    const exportPath = 'data/catalog-export.json';
     if (existsSync(exportPath)) {
-      const data: FirestoreExport = JSON.parse(readFileSync(exportPath, 'utf8'));
+      const data: CatalogExport = JSON.parse(readFileSync(exportPath, 'utf8'));
       const stats = await importData((sql, params) => db.query(sql, params as any[]) as any, data);
       console.log(`  importados: ${stats.products} produtos, ${stats.categories} categorias`);
     } else {
-      console.log('  (data/firestore-export.json não encontrado — banco vazio)');
+      console.log('  (data/catalog-export.json não encontrado — banco vazio)');
     }
   }
 

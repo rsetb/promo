@@ -5,7 +5,7 @@
  * com PGlite (Postgres em WASM, usado na verificação). Assim o teste exercita
  * exatamente o mesmo caminho de código da migração de produção.
  */
-import { buildCategories, buildProducts, type FirestoreExport, type DedupeDecision } from './transform';
+import { buildCategories, buildProducts, type CatalogExport, type DedupeDecision } from './transform';
 
 export type QueryFn = (sql: string, params?: unknown[]) => Promise<{ rows: any[] }>;
 
@@ -28,7 +28,7 @@ export type ImportStats = {
   decisions: DedupeDecision[];
 };
 
-export async function importData(query: QueryFn, data: FirestoreExport): Promise<ImportStats> {
+export async function importData(query: QueryFn, data: CatalogExport): Promise<ImportStats> {
   const categoryNames = buildCategories(data);
   const { products, decisions } = buildProducts(data);
 

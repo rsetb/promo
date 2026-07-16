@@ -27,9 +27,9 @@ function SubmitButton() {
 /**
  * Login de administrador.
  *
- * Não existe cadastro: a senha vem de ADMIN_PASSWORD no servidor. Antes, esta
- * tela criava uma conta para qualquer um que digitasse um usuário novo — e as
- * regras do Firestore davam a essa conta permissão de escrita no catálogo.
+ * Não existe cadastro: a senha vem de ADMIN_PASSWORD no servidor. A tela antiga
+ * criava uma conta para qualquer um que digitasse um usuário novo, e essa conta
+ * ganhava permissão de escrita no catálogo.
  */
 export default function LoginPage() {
   const [state, formAction] = useActionState(login, null);

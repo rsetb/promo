@@ -1,11 +1,12 @@
 /**
- * Transformação dos dados exportados do Firestore para o formato do Postgres.
+ * Transformação do catálogo exportado do sistema antigo para o formato do
+ * Postgres (data/catalog-export.json).
  *
  * Funções puras, sem I/O: o import e o teste de verificação usam exatamente o
  * mesmo código, então o que o teste aprova é o que roda na migração real.
  */
 
-export type FirestoreProduct = {
+export type ExportedProduct = {
   id: string;
   name: string;
   description?: string;
@@ -13,11 +14,11 @@ export type FirestoreProduct = {
   category: string;
 };
 
-export type FirestoreCategory = { id: string; name: string };
+export type ExportedCategory = { id: string; name: string };
 
-export type FirestoreExport = {
-  products: FirestoreProduct[];
-  categories: FirestoreCategory[];
+export type CatalogExport = {
+  products: ExportedProduct[];
+  categories: ExportedCategory[];
   siteInfo: Record<string, string> | null;
 };
 
@@ -47,8 +48,8 @@ export function normalizeCategory(name: string): string {
 }
 
 /**
- * No Firestore, "sem preço" tinha duas representações: null e 0 — ambas exibidas
- * como "Consulte". No Postgres passa a ser só NULL.
+ * No banco antigo, "sem preço" tinha duas representações: null e 0 — ambas
+ * exibidas como "Consulte". No Postgres passa a ser só NULL.
  */
 export function normalizePrice(price: number | null | undefined): number | null {
   if (price === null || price === undefined) return null;
@@ -57,10 +58,10 @@ export function normalizePrice(price: number | null | undefined): number | null 
 }
 
 /**
- * IDs no formato `prod-N` vieram da lista estática (src/lib/products.ts); os
- * demais foram gerados pelo Firestore quando o produto foi criado ou recriado
- * pela interface do site. Quando os dois existem para o mesmo nome, o do site é
- * o que o dono do catálogo editou por último.
+ * IDs no formato `prod-N` vieram da lista estática que semeava o banco antigo;
+ * os demais foram gerados automaticamente quando o produto foi criado ou
+ * recriado pela interface do site. Quando os dois existem para o mesmo nome, o
+ * do site é o que o dono do catálogo editou por último.
  */
 export function isSeedId(id: string): boolean {
   return /^prod-\d+$/.test(id);
@@ -68,19 +69,19 @@ export function isSeedId(id: string): boolean {
 
 export type DedupeDecision = {
   name: string;
-  kept: FirestoreProduct;
-  dropped: FirestoreProduct[];
+  kept: ExportedProduct;
+  dropped: ExportedProduct[];
 };
 
 /**
  * Remove produtos duplicados por nome, preferindo a versão editada no site.
  * Retorna também as decisões tomadas, para que o import possa registrá-las.
  */
-export function dedupeProducts(items: FirestoreProduct[]): {
-  products: FirestoreProduct[];
+export function dedupeProducts(items: ExportedProduct[]): {
+  products: ExportedProduct[];
   decisions: DedupeDecision[];
 } {
-  const groups = new Map<string, FirestoreProduct[]>();
+  const groups = new Map<string, ExportedProduct[]>();
   for (const item of items) {
     const key = normalizeName(item.name).toUpperCase();
     const group = groups.get(key);
@@ -88,7 +89,7 @@ export function dedupeProducts(items: FirestoreProduct[]): {
     else groups.set(key, [item]);
   }
 
-  const products: FirestoreProduct[] = [];
+  const products: ExportedProduct[] = [];
   const decisions: DedupeDecision[] = [];
 
   for (const [key, group] of groups) {
@@ -106,7 +107,7 @@ export function dedupeProducts(items: FirestoreProduct[]): {
 }
 
 /** Lista final de categorias: normalizadas, sem duplicatas, ordenadas. */
-export function buildCategories(data: FirestoreExport): string[] {
+export function buildCategories(data: CatalogExport): string[] {
   const names = new Set<string>();
   for (const category of data.categories) names.add(normalizeCategory(category.name));
   // Garante que toda categoria referenciada por um produto exista, mesmo que
@@ -115,7 +116,7 @@ export function buildCategories(data: FirestoreExport): string[] {
   return [...names].sort((a, b) => a.localeCompare(b, 'pt-BR'));
 }
 
-export function buildProducts(data: FirestoreExport): {
+export function buildProducts(data: CatalogExport): {
   products: CleanProduct[];
   decisions: DedupeDecision[];
 } {
