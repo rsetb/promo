@@ -42,19 +42,44 @@ export function ImagePicker({
 }: ImagePickerProps) {
   const inputRef = useRef<HTMLInputElement>(null);
   const [preview, setPreview] = useState<string | null>(null);
+  const [urlPreview, setUrlPreview] = useState<string | null>(null);
+  const [urlFailed, setUrlFailed] = useState(false);
 
   useEffect(() => {
     if (!file) {
       setPreview(null);
       return;
     }
-    const url = URL.createObjectURL(file);
-    setPreview(url);
-    return () => URL.revokeObjectURL(url);
+    const objectUrl = URL.createObjectURL(file);
+    setPreview(objectUrl);
+    return () => URL.revokeObjectURL(objectUrl);
   }, [file]);
 
+  /**
+   * Prévia do endereço colado.
+   *
+   * Carrega a URL direto no navegador — o servidor só baixa de verdade ao
+   * salvar. Sem isto, o admin cola um endereço longo e só descobre se pegou o
+   * link certo depois de salvar.
+   *
+   * O atraso evita disparar um pedido a cada tecla enquanto o endereço está
+   * sendo colado/digitado.
+   */
+  useEffect(() => {
+    const trimmed = url.trim();
+    setUrlFailed(false);
+
+    if (!trimmed || !/^https?:\/\//i.test(trimmed)) {
+      setUrlPreview(null);
+      return;
+    }
+
+    const timer = setTimeout(() => setUrlPreview(trimmed), 400);
+    return () => clearTimeout(timer);
+  }, [url]);
+
   const existing = !removed && currentFile ? imageUrl(currentFile) : null;
-  const shown = preview ?? existing;
+  const shown = preview ?? (urlFailed ? null : urlPreview) ?? existing;
 
   const clear = () => {
     onFileChange(null);
@@ -84,12 +109,14 @@ export function ImagePicker({
 
       {shown ? (
         <div className="relative">
-          {/* <img> e não next/image: a prévia é uma blob: URL local, que o
-              otimizador do Next não consegue processar. */}
+          {/* <img> e não next/image: a prévia pode ser uma blob: URL local ou um
+              endereço externo qualquer — nenhum dos dois passa pelo otimizador
+              do Next. */}
           <img
             src={shown}
             alt="Prévia da foto do produto"
             className="h-16 w-16 rounded-md border object-cover"
+            onError={() => setUrlFailed(true)}
           />
           <Button
             type="button"
@@ -149,9 +176,9 @@ export function ImagePicker({
       </div>
 
       {/*
-        A imagem da URL é baixada e guardada no volume, não apenas apontada:
-        um link quebra quando o site de origem sai do ar ou bloqueia hotlink.
-        Por isso não há prévia aqui — ela só aparece depois de salvar.
+        A imagem da URL é baixada e guardada no volume ao salvar, não apenas
+        apontada: um link quebra quando o site de origem sai do ar ou bloqueia
+        hotlink. A prévia acima carrega o endereço direto, só para conferência.
       */}
       <Input
         type="url"
@@ -169,6 +196,13 @@ export function ImagePicker({
         className="h-8 text-xs"
         aria-label="Endereço da imagem"
       />
+
+      {urlFailed && (
+        <p className="text-xs text-muted-foreground">
+          Não consegui mostrar a prévia — alguns sites bloqueiam a exibição fora deles. Salvar pode
+          funcionar mesmo assim.
+        </p>
+      )}
     </div>
   );
 }
