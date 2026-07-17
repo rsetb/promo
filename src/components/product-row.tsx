@@ -68,6 +68,21 @@ export function ProductRow({ product, categories, canEdit, onRequestDelete }: Pr
     });
   };
 
+  /**
+   * Enter salva, Escape cancela — nos dois campos de texto. Mesmo atalho do
+   * EditableText e da tela de categorias.
+   */
+  const handleKeyDown = (event: React.KeyboardEvent) => {
+    if (event.key === 'Enter') {
+      event.preventDefault();
+      save();
+    }
+    if (event.key === 'Escape') {
+      event.preventDefault();
+      setIsEditing(false);
+    }
+  };
+
   return (
     <Card className="border transition-all duration-300 hover:border-primary hover:shadow-lg">
       <CardHeader className="p-4">
@@ -78,8 +93,10 @@ export function ProductRow({ product, categories, canEdit, onRequestDelete }: Pr
                 <Input
                   value={name}
                   onChange={(e) => setName(e.target.value)}
+                  onKeyDown={handleKeyDown}
                   className="h-auto text-md font-semibold leading-none tracking-tight"
                   disabled={isPending}
+                  autoFocus
                   aria-label="Nome do produto"
                 />
                 <div className="mt-2">
@@ -111,6 +128,7 @@ export function ProductRow({ product, categories, canEdit, onRequestDelete }: Pr
                 <Input
                   value={price}
                   onChange={(e) => setPrice(maskPriceInput(e.target.value))}
+                  onKeyDown={handleKeyDown}
                   className="w-32 text-base"
                   placeholder="0,00"
                   disabled={isPending}
