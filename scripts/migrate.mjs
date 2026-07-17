@@ -50,7 +50,7 @@ export function seedIfEmpty(db, seedPath = './data/seed.json') {
   const insertCategory = db.prepare('INSERT OR IGNORE INTO categories (name) VALUES (?)');
   const findCategory = db.prepare('SELECT id FROM categories WHERE name = ?');
   const insertProduct = db.prepare(
-    'INSERT INTO products (name, description, price_pack_cents, price_unit_cents, category_id) VALUES (?, ?, ?, ?, ?)'
+    'INSERT INTO products (name, description, price_unit_cents, price_pack_cents, price_box_cents, pack_qty, box_qty, category_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?)'
   );
   const insertSiteInfo = db.prepare(`
     INSERT INTO site_info (
@@ -71,7 +71,7 @@ export function seedIfEmpty(db, seedPath = './data/seed.json') {
     for (const p of seed.products) {
       const categoryId = ids.get(p.category);
       if (!categoryId) throw new Error(`Categoria não encontrada: ${p.category}`);
-      insertProduct.run(p.name, p.description, p.pricePackCents, p.priceUnitCents, categoryId);
+      insertProduct.run(p.name, p.description, p.priceUnitCents, p.pricePackCents, p.priceBoxCents, p.packQty, p.boxQty, categoryId);
     }
 
     const s = seed.siteInfo;

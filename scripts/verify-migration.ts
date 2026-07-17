@@ -230,6 +230,19 @@ function main() {
     'preco de unidade negativo',
     `INSERT INTO products (name, category_id, price_unit_cents) VALUES ('X', ${catId}, -1)`
   );
+  checkRejects(
+    'preco de caixa negativo',
+    `INSERT INTO products (name, category_id, price_box_cents) VALUES ('X', ${catId}, -1)`
+  );
+  // "Fardo 0un" e sempre erro de digitacao, nao um estado valido.
+  checkRejects(
+    'fardo com 0 unidades',
+    `INSERT INTO products (name, category_id, pack_qty) VALUES ('X', ${catId}, 0)`
+  );
+  checkRejects(
+    'caixa com quantidade negativa',
+    `INSERT INTO products (name, category_id, box_qty) VALUES ('X', ${catId}, -3)`
+  );
   checkRejects('nome vazio', `INSERT INTO products (name, category_id) VALUES ('   ', ${catId})`);
   checkRejects('categoria inexistente', `INSERT INTO products (name, category_id) VALUES ('X', 999999)`);
   checkRejects('excluir categoria com produtos', `DELETE FROM categories WHERE id = ${catId}`);

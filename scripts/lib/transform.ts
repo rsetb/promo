@@ -26,8 +26,12 @@ export type CleanProduct = {
   name: string;
   description: string;
   /** Centavos (13780 = R$ 137,80), ou null. */
-  pricePackCents: number | null;
   priceUnitCents: number | null;
+  pricePackCents: number | null;
+  /** O export antigo nao tinha caixa nem quantidades: nascem vazios. */
+  priceBoxCents: number | null;
+  packQty: number | null;
+  boxQty: number | null;
   category: string;
 };
 
@@ -159,8 +163,11 @@ export function buildProducts(data: CatalogExport): {
         return {
           name: normalizeName(p.name),
           description: (p.description ?? '').trim(),
-          pricePackCents: unit ? null : cents,
           priceUnitCents: unit ? cents : null,
+          pricePackCents: unit ? null : cents,
+          priceBoxCents: null,
+          packQty: null,
+          boxQty: null,
           category,
         };
       })

@@ -33,10 +33,24 @@ export const products = sqliteTable(
     id: integer('id').primaryKey({ autoIncrement: true }),
     name: text('name').notNull(),
     description: text('description').notNull().default(''),
-    /** Preço do fardo/caixa, em centavos. NULL = não vendido assim. */
-    pricePackCents: integer('price_pack_cents'),
-    /** Preço da unidade avulsa, em centavos. NULL = não vendido assim. */
+    /**
+     * Os três jeitos de vender, em centavos. Cada um é NULL quando o produto
+     * não é vendido daquela forma; nenhum preenchido = "Consulte".
+     *
+     * São colunas, e não uma tabela de preços, porque o vocabulário é fixo do
+     * negócio (unidade, fardo, caixa) e não algo que o admin inventa. Uma
+     * tabela traria join e código a mais para flexibilidade que ninguém pediu.
+     */
     priceUnitCents: integer('price_unit_cents'),
+    pricePackCents: integer('price_pack_cents'),
+    priceBoxCents: integer('price_box_cents'),
+    /**
+     * Quantas unidades cabem no fardo e na caixa, para a vitrine dizer
+     * "Fardo 12un — R$ 35,70". NULL mostra só "Fardo": nem todo produto tem uma
+     * quantidade fixa, e inventar um número seria pior que omitir.
+     */
+    packQty: integer('pack_qty'),
+    boxQty: integer('box_qty'),
     /**
      * Nome do arquivo da foto no volume (ex.: "a1b2...f9.webp"), ou NULL.
      * Só o nome, nunca um caminho: quem resolve o diretório é src/lib/uploads.ts,
@@ -54,8 +68,13 @@ export const products = sqliteTable(
       .default(sql`(unixepoch())`),
   },
   (t) => [
-    check('price_pack_non_negative', sql`${t.pricePackCents} IS NULL OR ${t.pricePackCents} >= 0`),
     check('price_unit_non_negative', sql`${t.priceUnitCents} IS NULL OR ${t.priceUnitCents} >= 0`),
+    check('price_pack_non_negative', sql`${t.pricePackCents} IS NULL OR ${t.pricePackCents} >= 0`),
+    check('price_box_non_negative', sql`${t.priceBoxCents} IS NULL OR ${t.priceBoxCents} >= 0`),
+    // Quantidade zero ou negativa não existe: "Fardo 0un" é sempre um erro de
+    // digitação, não um estado válido.
+    check('pack_qty_positive', sql`${t.packQty} IS NULL OR ${t.packQty} > 0`),
+    check('box_qty_positive', sql`${t.boxQty} IS NULL OR ${t.boxQty} > 0`),
     check('name_not_empty', sql`length(trim(${t.name})) > 0`),
   ]
 );

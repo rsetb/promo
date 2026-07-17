@@ -23,7 +23,7 @@ import {
 import { ImagePicker } from '@/components/image-picker';
 import { useToast } from '@/hooks/use-toast';
 import { createProduct } from '@/lib/actions';
-import { maskPriceInput } from '@/lib/format';
+import { PriceFields, type PriceFormState } from '@/components/price-fields';
 import type { Category } from '@/lib/types';
 
 type AddProductDialogProps = {
@@ -34,8 +34,7 @@ type AddProductDialogProps = {
 
 export function AddProductDialog({ isOpen, onOpenChange, categories }: AddProductDialogProps) {
   const [name, setName] = useState('');
-  const [pricePack, setPricePack] = useState('');
-  const [priceUnit, setPriceUnit] = useState('');
+  const [prices, setPrices] = useState<PriceFormState>({});
   const [categoryId, setCategoryId] = useState('');
   const [image, setImage] = useState<File | null>(null);
   const [imageUrlInput, setImageUrlInput] = useState('');
@@ -45,8 +44,7 @@ export function AddProductDialog({ isOpen, onOpenChange, categories }: AddProduc
 
   const reset = () => {
     setName('');
-    setPricePack('');
-    setPriceUnit('');
+    setPrices({});
     setCategoryId('');
     setImage(null);
     setImageUrlInput('');
@@ -57,8 +55,7 @@ export function AddProductDialog({ isOpen, onOpenChange, categories }: AddProduc
     startTransition(async () => {
       const formData = new FormData();
       formData.set('name', name);
-      formData.set('pricePack', pricePack);
-      formData.set('priceUnit', priceUnit);
+      for (const [field, value] of Object.entries(prices)) formData.set(field, value);
       formData.set('categoryId', categoryId);
       if (image) formData.set('image', image);
       if (imageUrlInput.trim()) formData.set('imageUrl', imageUrlInput.trim());
@@ -104,30 +101,11 @@ export function AddProductDialog({ isOpen, onOpenChange, categories }: AddProduc
             />
           </div>
 
-          <div className="grid grid-cols-2 gap-3">
-            <div className="grid gap-2">
-              <Label htmlFor="price-pack">Preço do fardo</Label>
-              <Input
-                id="price-pack"
-                placeholder="0,00"
-                value={pricePack}
-                onChange={(e) => setPricePack(maskPriceInput(e.target.value))}
-                disabled={isPending}
-                inputMode="numeric"
-              />
-            </div>
-            <div className="grid gap-2">
-              <Label htmlFor="price-unit">Preço da unidade</Label>
-              <Input
-                id="price-unit"
-                placeholder="0,00"
-                value={priceUnit}
-                onChange={(e) => setPriceUnit(maskPriceInput(e.target.value))}
-                disabled={isPending}
-                inputMode="numeric"
-              />
-            </div>
-          </div>
+          <PriceFields
+            values={prices}
+            onChange={(field, value) => setPrices((p) => ({ ...p, [field]: value }))}
+            disabled={isPending}
+          />
 
           <div className="grid gap-2">
             <Label htmlFor="product-category">Categoria</Label>

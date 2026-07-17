@@ -114,7 +114,7 @@ test.describe('admin', () => {
     await expect(page.getByText('Consulte').first()).toBeVisible();
   });
 
-  test('produto pode ter os dois preços ao mesmo tempo', async ({ page }) => {
+  test('produto pode ter os três preços, com quantidade', async ({ page }) => {
     await entrar(page);
     await page.goto('/');
     await page.getByLabel('Buscar produtos').fill('AMSTEL ULTRA LONG NECK');
@@ -123,6 +123,9 @@ test.describe('admin', () => {
     const fardo = page.getByLabel('Preço do fardo').first();
     await fardo.fill('');
     await fardo.pressSequentially('9900');
+    const qtd = page.getByLabel('Unidades por fardo').first();
+    await qtd.fill('');
+    await qtd.pressSequentially('12');
     const un = page.getByLabel('Preço da unidade').first();
     await un.fill('');
     await un.pressSequentially('850');
@@ -130,12 +133,15 @@ test.describe('admin', () => {
 
     await expect(page.getByText('R$ 99,00').first()).toBeVisible({ timeout: 15_000 });
     await expect(page.getByText('R$ 8,50').first()).toBeVisible();
+    // A quantidade entra no rotulo: "Fardo 12un".
+    await expect(page.getByText('Fardo 12un')).toBeVisible();
 
     // Limpa: este produto é o "sem preço" de outro teste, e o banco é
     // compartilhado entre os projetos desktop e celular. Sem devolver ao
     // estado original, o outro teste falha por causa deste.
     await page.getByRole('button', { name: 'Editar produto' }).first().click();
     await page.getByLabel('Preço do fardo').first().fill('');
+    await page.getByLabel('Unidades por fardo').first().fill('');
     const un2 = page.getByLabel('Preço da unidade').first();
     await un2.fill('');
     await un2.press('Enter');

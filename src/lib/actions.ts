@@ -19,7 +19,7 @@ import {
 import { notifyCatalogChange } from '@/lib/events';
 import { parsePriceToCents } from '@/lib/format';
 import { deleteProductImage, saveProductImage, saveProductImageFromUrl } from '@/lib/uploads';
-import type { ActionResult } from '@/lib/types';
+import { PRICE_KINDS, type ActionResult } from '@/lib/types';
 
 /**
  * Toda ação de escrita passa por aqui.
@@ -181,36 +181,53 @@ export async function changePassword(
 
 const productSchema = z.object({
   name: z.string().trim().min(1, 'Nome é obrigatório.').max(200),
-  pricePack: z.string(),
-  priceUnit: z.string(),
   categoryId: z.coerce.number().int().positive('Selecione uma categoria.'),
 });
 
+/** "12" -> 12; vazio ou inválido -> null. Zero não é quantidade válida. */
+function parseQty(input: FormDataEntryValue | null): number | null {
+  const digits = String(input ?? '').replace(/\D/g, '');
+  if (!digits) return null;
+  const value = Number(digits);
+  return Number.isSafeInteger(value) && value > 0 ? value : null;
+}
+
+/**
+ * Lê nome, categoria e os preços/quantidades de todos os tipos.
+ *
+ * Percorre PRICE_KINDS em vez de listar os campos: quando um quarto jeito de
+ * vender for adicionado à lista, ele passa a ser lido aqui sozinho — em vez de
+ * ser gravado pela UI e ignorado em silêncio pelo servidor.
+ */
 function readProductForm(formData: FormData) {
-  return productSchema.safeParse({
+  const parsed = productSchema.safeParse({
     name: formData.get('name'),
-    pricePack: formData.get('pricePack') ?? '',
-    priceUnit: formData.get('priceUnit') ?? '',
     categoryId: formData.get('categoryId'),
   });
+  if (!parsed.success) return { ok: false as const, error: parsed.error.issues[0].message };
+
+  const prices: Record<string, number | null> = {};
+  for (const kind of PRICE_KINDS) {
+    prices[kind.priceKey] = parsePriceToCents(String(formData.get(kind.formField) ?? ''));
+    if (kind.qtyKey && kind.qtyFormField) {
+      prices[kind.qtyKey] = parseQty(formData.get(kind.qtyFormField));
+    }
+  }
+
+  return { ok: true as const, data: { ...parsed.data, ...prices } };
 }
 
 export async function createProduct(formData: FormData): Promise<ActionResult> {
   await requireAdmin();
 
   const parsed = readProductForm(formData);
-  if (!parsed.success) {
-    return { ok: false, error: parsed.error.issues[0].message };
-  }
+  if (!parsed.ok) return parsed;
 
   const incoming = await resolveIncomingImage(formData);
   if (!incoming.ok) return incoming;
 
   await db.insert(products).values({
-    name: parsed.data.name,
-    pricePackCents: parsePriceToCents(parsed.data.pricePack),
-    priceUnitCents: parsePriceToCents(parsed.data.priceUnit),
-    categoryId: parsed.data.categoryId,
+    ...parsed.data,
     description: '',
     imageFile: incoming.file,
   });
@@ -223,9 +240,7 @@ export async function updateProduct(id: number, formData: FormData): Promise<Act
   await requireAdmin();
 
   const parsed = readProductForm(formData);
-  if (!parsed.success) {
-    return { ok: false, error: parsed.error.issues[0].message };
-  }
+  if (!parsed.ok) return parsed;
 
   const [current] = await db
     .select({ imageFile: products.imageFile })
@@ -247,10 +262,7 @@ export async function updateProduct(id: number, formData: FormData): Promise<Act
   await db
     .update(products)
     .set({
-      name: parsed.data.name,
-      pricePackCents: parsePriceToCents(parsed.data.pricePack),
-      priceUnitCents: parsePriceToCents(parsed.data.priceUnit),
-      categoryId: parsed.data.categoryId,
+      ...parsed.data,
       imageFile,
       updatedAt: new Date(),
     })

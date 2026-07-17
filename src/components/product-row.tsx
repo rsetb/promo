@@ -24,8 +24,22 @@ import { ImagePicker } from '@/components/image-picker';
 import { useToast } from '@/hooks/use-toast';
 import { updateProduct } from '@/lib/actions';
 import { ProductPrices } from '@/components/product-prices';
-import { maskPriceInput, priceToInput } from '@/lib/format';
-import { imageUrl, type Category, type ProductView } from '@/lib/types';
+import { PriceFields, type PriceFormState } from '@/components/price-fields';
+import { priceToInput } from '@/lib/format';
+import { imageUrl, PRICE_KINDS, type Category, type ProductView } from '@/lib/types';
+
+/** Estado inicial dos campos de preço, a partir do produto salvo. */
+function priceFormFrom(product: ProductView): PriceFormState {
+  const state: PriceFormState = {};
+  for (const kind of PRICE_KINDS) {
+    state[kind.formField] = priceToInput(product[kind.priceKey] as number | null);
+    if (kind.qtyKey && kind.qtyFormField) {
+      const qty = product[kind.qtyKey] as number | null;
+      state[kind.qtyFormField] = qty === null ? '' : String(qty);
+    }
+  }
+  return state;
+}
 
 type ProductRowProps = {
   product: ProductView;
@@ -37,8 +51,7 @@ type ProductRowProps = {
 export function ProductRow({ product, categories, canEdit, onRequestDelete }: ProductRowProps) {
   const [isEditing, setIsEditing] = useState(false);
   const [name, setName] = useState(product.name);
-  const [pricePack, setPricePack] = useState(priceToInput(product.pricePackCents));
-  const [priceUnit, setPriceUnit] = useState(priceToInput(product.priceUnitCents));
+  const [prices, setPrices] = useState<PriceFormState>(() => priceFormFrom(product));
   const [categoryId, setCategoryId] = useState(String(product.categoryId));
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [imageUrlInput, setImageUrlInput] = useState('');
@@ -49,8 +62,7 @@ export function ProductRow({ product, categories, canEdit, onRequestDelete }: Pr
 
   const startEditing = () => {
     setName(product.name);
-    setPricePack(priceToInput(product.pricePackCents));
-    setPriceUnit(priceToInput(product.priceUnitCents));
+    setPrices(priceFormFrom(product));
     setCategoryId(String(product.categoryId));
     setImageFile(null);
     setImageUrlInput('');
@@ -62,8 +74,7 @@ export function ProductRow({ product, categories, canEdit, onRequestDelete }: Pr
     startTransition(async () => {
       const formData = new FormData();
       formData.set('name', name);
-      formData.set('pricePack', pricePack);
-      formData.set('priceUnit', priceUnit);
+      for (const [field, value] of Object.entries(prices)) formData.set(field, value);
       formData.set('categoryId', categoryId);
       if (imageFile) formData.set('image', imageFile);
       if (imageUrlInput.trim()) formData.set('imageUrl', imageUrlInput.trim());
@@ -170,28 +181,13 @@ export function ProductRow({ product, categories, canEdit, onRequestDelete }: Pr
           <div className="flex items-center gap-2 self-start text-right sm:self-center">
             {isEditing ? (
               <>
-                <div className="flex flex-col gap-1">
-                  <Input
-                    value={pricePack}
-                    onChange={(e) => setPricePack(maskPriceInput(e.target.value))}
-                    onKeyDown={handleKeyDown}
-                    className="w-32 text-base"
-                    placeholder="Fardo"
-                    disabled={isPending}
-                    inputMode="numeric"
-                    aria-label="Preço do fardo"
-                  />
-                  <Input
-                    value={priceUnit}
-                    onChange={(e) => setPriceUnit(maskPriceInput(e.target.value))}
-                    onKeyDown={handleKeyDown}
-                    className="w-32 text-base"
-                    placeholder="Unidade"
-                    disabled={isPending}
-                    inputMode="numeric"
-                    aria-label="Preço da unidade"
-                  />
-                </div>
+                <PriceFields
+                  values={prices}
+                  onChange={(field, value) => setPrices((p) => ({ ...p, [field]: value }))}
+                  disabled={isPending}
+                  onEnter={save}
+                  compact
+                />
                 <Button onClick={save} size="icon" className="h-9 w-9" disabled={isPending}>
                   <Save className="h-4 w-4" />
                 </Button>
