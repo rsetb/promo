@@ -13,6 +13,14 @@ type HeroProps = {
 /**
  * Uma unidade de atendimento: cidade + WhatsApp. Existem duas (Fortaleza e
  * Cumbuco) e antes elas eram dois blocos de JSX copiados com sufixo "2".
+ *
+ * Flexbox, não CSS Grid: uma tentativa anterior usava
+ * `sm:grid-cols-[auto,1fr]` (arbitrary value com vírgula) e o valor de
+ * `sm:` vazava para fora do media query no Chromium desta suíte de testes —
+ * `matchMedia('(min-width: 640px)')` confirmava `false` a 375px, mas o grid
+ * renderizava como se a regra tivesse aplicado mesmo assim. Não valia a pena
+ * investigar a fundo um bug de plataforma; flexbox simples não tem essa classe
+ * de problema.
  */
 function Branch({
   location,
@@ -29,15 +37,15 @@ function Branch({
   phoneDisplay: string;
   phoneField: 'heroPhoneDisplay' | 'heroPhoneDisplay2';
   canEdit: boolean;
-  /** Escurece a linha: unidade desligada do site, mas o admin ainda edita. */
+  /** Escurece o bloco: unidade desligada do site, mas o admin ainda edita. */
   dimmed?: boolean;
 }) {
   return (
-    <>
-      {/* min-w-0: sem isto a coluna não encolhe, e numa tela de 375px a soma de
-          ícone + texto + lápis (sempre visível desde que deixou de depender de
-          hover) passava da largura da tela — só não aparecia em telas ≥412px. */}
-      <div className={`flex min-w-0 items-center gap-1.5 justify-self-start text-left ${dimmed ? 'opacity-40' : ''}`}>
+    <div
+      className={`flex flex-col items-center gap-1 sm:w-full sm:flex-row sm:items-center sm:justify-between sm:gap-4 ${dimmed ? 'opacity-40' : ''}`}
+    >
+      {/* Mobile: local em cima, centralizado. Desktop: volta à esquerda. */}
+      <div className="flex min-w-0 items-center justify-center gap-1.5 text-center sm:justify-start sm:text-left">
         <MapPin className="h-4 w-4 flex-shrink-0 text-muted-foreground" />
         <EditableText
           field={locationField}
@@ -46,16 +54,21 @@ function Branch({
           className="truncate text-xs font-semibold text-muted-foreground sm:whitespace-nowrap sm:text-lg"
         />
       </div>
-      <div className={`flex min-w-0 items-center gap-1.5 justify-self-end text-right ${dimmed ? 'opacity-40' : ''}`}>
+      {/*
+        Telefone embaixo no mobile, um pouco maior que o local (pedido do
+        usuário) — text-base contra text-xs. No desktop os dois ficam iguais
+        (sm:text-lg), como já era antes.
+      */}
+      <div className="flex min-w-0 items-center justify-center gap-1.5 text-center sm:justify-end sm:text-right">
         <a
           href={`https://wa.me/${phone}`}
           target="_blank"
           rel="noopener noreferrer"
           className="group flex min-w-0 items-center gap-2"
         >
-          <WhatsappIcon className="h-4 w-4 shrink-0 text-green-500" />
+          <WhatsappIcon className="h-5 w-5 shrink-0 text-green-500 sm:h-4 sm:w-4" />
           {!canEdit && (
-            <span className="truncate text-xs font-semibold text-muted-foreground group-hover:underline sm:whitespace-nowrap sm:text-lg">
+            <span className="truncate text-base font-semibold text-muted-foreground group-hover:underline sm:whitespace-nowrap sm:text-lg">
               {phoneDisplay}
             </span>
           )}
@@ -65,11 +78,11 @@ function Branch({
             field={phoneField}
             value={phoneDisplay}
             canEdit
-            className="truncate text-xs font-semibold text-muted-foreground sm:whitespace-nowrap sm:text-lg"
+            className="truncate text-base font-semibold text-muted-foreground sm:whitespace-nowrap sm:text-lg"
           />
         )}
       </div>
-    </>
+    </div>
   );
 }
 
@@ -105,7 +118,12 @@ export function Hero({ siteInfo, canEdit }: HeroProps) {
       </div>
 
       <div className="mx-auto mt-4 max-w-md px-4">
-        <div className="grid grid-cols-[auto,1fr] items-center gap-x-4 gap-y-2">
+        {/*
+          Unidades sempre empilhadas verticalmente entre si (Fortaleza acima de
+          Cumbuco); é DENTRO de cada uma que local/telefone respondem ao
+          breakpoint — ver Branch acima.
+        */}
+        <div className="flex flex-col items-center gap-3 sm:gap-2">
           <Branch
             location={siteInfo.heroLocation}
             locationField="heroLocation"
