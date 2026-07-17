@@ -49,7 +49,7 @@ PRAGMA está ligado.
 ```bash
 npm install
 cp .env.example .env    # ajuste os valores
-npm run db:import       # cria data/app.db e carrega o catálogo
+npm run db:setup        # gera o seed, cria data/app.db e carrega o catálogo
 npm run dev
 ```
 
@@ -91,20 +91,22 @@ Gere os segredos com:
 node -e "console.log(require('crypto').randomBytes(24).toString('base64url'))"
 ```
 
-As migrations rodam sozinhas no start do container (`scripts/migrate.mjs`).
+### Carga inicial: automática
 
-### Carga inicial dos dados
+Não há passo manual. No start do container, `scripts/migrate.mjs`:
 
-No primeiro deploy o banco sobe vazio (só o schema). Para carregar o catálogo,
-rode uma vez no terminal do container:
+1. aplica as migrations pendentes;
+2. **se a tabela de produtos estiver vazia**, carrega o catálogo de
+   `data/seed.json`.
 
-```bash
-node scripts/migrate.mjs   # já roda no start, mas não custa
-npx tsx scripts/import-catalog.ts
-```
+O seed só roda com o banco vazio. Um redeploy num banco que já tem dados não
+toca em nada — senão cada deploy reverteria os preços que você editou pelo site.
+O `db:verify` testa exatamente isso (edita um preço, simula o redeploy, confere
+que sobreviveu).
 
-> O `db:import` aborta se já houver produtos. Use `--force` só para apagar tudo
-> e reimportar — ele **descarta as edições feitas pelo site**.
+`data/seed.json` é gerado durante o `npm run build` por `scripts/build-seed.ts`,
+que aplica a transformação sobre `data/catalog-export.json`. A imagem final não
+tem tsx nem os fontes TypeScript — só o JSON pronto e o `migrate.mjs`.
 
 ### Backup
 

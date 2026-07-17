@@ -18,6 +18,7 @@ FROM base AS builder
 WORKDIR /app
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
+# `npm run build` gera data/seed.json e depois compila o Next.
 # Sem DATABASE_PATH aqui: a conexão é preguiçosa (src/db/index.ts) e todas as
 # rotas são dinâmicas, então nada abre o banco durante o build.
 RUN npm run build
@@ -36,10 +37,12 @@ COPY --from=builder /app/public ./public
 COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
 COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
 
-# Migrations e catálogo inicial, aplicados no start.
+# Migrations e catálogo inicial, aplicados no start do container.
+# data/seed.json é gerado pelo `npm run build` (scripts/build-seed.ts), onde
+# existe tsx; a imagem final não precisa de tsx nem dos fontes TypeScript.
 COPY --from=builder --chown=nextjs:nodejs /app/drizzle ./drizzle
 COPY --from=builder --chown=nextjs:nodejs /app/scripts/migrate.mjs ./scripts/migrate.mjs
-COPY --from=builder --chown=nextjs:nodejs /app/data/catalog-export.json ./data/catalog-export.json
+COPY --from=builder --chown=nextjs:nodejs /app/data/seed.json ./data/seed.json
 # O build standalone só inclui os arquivos que o app importa; o migrator não é
 # um deles, então trazemos o pacote completo do drizzle-orm.
 COPY --from=deps --chown=nextjs:nodejs /app/node_modules/drizzle-orm ./node_modules/drizzle-orm

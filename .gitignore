@@ -37,3 +37,6 @@ next-env.d.ts
 /data/*.db
 /data/*.db-wal
 /data/*.db-shm
+
+# Gerado pelo build (scripts/build-seed.ts) a partir do catalog-export.
+/data/seed.json

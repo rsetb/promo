@@ -4,15 +4,15 @@
   "private": true,
   "scripts": {
     "dev": "next dev --turbopack",
-    "build": "next build",
+    "build": "tsx scripts/build-seed.ts && next build",
     "start": "next start",
     "lint": "next lint",
     "typecheck": "tsc --noEmit",
     "db:generate": "drizzle-kit generate",
-    "db:migrate": "node scripts/migrate.mjs",
     "db:studio": "drizzle-kit studio",
-    "db:import": "tsx scripts/import-catalog.ts",
-    "db:verify": "tsx scripts/verify-migration.ts"
+    "db:verify": "tsx scripts/verify-migration.ts",
+    "db:seed": "tsx scripts/build-seed.ts",
+    "db:setup": "tsx scripts/build-seed.ts && node scripts/migrate.mjs"
   },
   "dependencies": {
     "@radix-ui/react-alert-dialog": "^1.1.6",

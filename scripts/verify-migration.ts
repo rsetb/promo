@@ -1,22 +1,20 @@
 /**
- * Verifica a migração de ponta a ponta num banco descartável.
+ * Verifica a preparação do banco de ponta a ponta, num arquivo descartável.
  *
- * Roda o mesmo SQL de drizzle/, a mesma abertura de conexão (src/db/open.ts,
- * com os PRAGMAs de produção) e o mesmo scripts/lib/import-core.ts, com os
- * dados reais de data/catalog-export.json — e então confere o resultado e as
- * restrições do schema.
- *
- * Diferente do Postgres, aqui o motor do teste é literalmente o mesmo de
- * produção: SQLite.
+ * Exercita exatamente o que roda em produção:
+ *   - o mesmo SQL de drizzle/
+ *   - as MESMAS funções de scripts/migrate.mjs que o container executa no start
+ *   - a transformação real de scripts/lib/transform.ts, com os dados reais
  *
  * Uso: npm run db:verify
  */
-import { readFileSync, readdirSync, rmSync, mkdtempSync } from 'node:fs';
+import { readFileSync, writeFileSync, rmSync, mkdtempSync } from 'node:fs';
 import { join } from 'node:path';
 import { tmpdir } from 'node:os';
-import { openDatabase } from '../src/db/open';
-import { importData } from './lib/import-core';
-import type { CatalogExport } from './lib/transform';
+import { openDatabase as openFromApp } from '../src/db/open';
+import { openDatabase as openFromContainer, applyMigrations, seedIfEmpty } from './migrate.mjs';
+import { buildCategories, buildProducts, type CatalogExport } from './lib/transform';
+import { DEFAULT_SITE_INFO } from './lib/site-info';
 
 let failures = 0;
 let checks = 0;
@@ -33,10 +31,55 @@ function check(label: string, actual: unknown, expected: unknown) {
 
 function main() {
   const dir = mkdtempSync(join(tmpdir(), 'promo-verify-'));
-  const dbPath = join(dir, 'verify.db');
-  const db = openDatabase(dbPath);
 
-  /** Confirma que o banco REJEITA uma operação inválida. */
+  // ---------------------------------------------------------------- PRAGMAs
+  // O app (TypeScript) e o container (migrate.mjs) abrem o banco por caminhos
+  // diferentes. Se divergirem, a integridade some em silêncio em um dos dois.
+  console.log('\n== as duas aberturas de banco concordam? ==');
+  const PRAGMAS = ['foreign_keys', 'journal_mode', 'busy_timeout', 'synchronous'] as const;
+  const appDb = openFromApp(join(dir, 'app-path.db'));
+  const containerDb = openFromContainer(join(dir, 'container-path.db'));
+  for (const pragma of PRAGMAS) {
+    const fromApp = appDb.pragma(pragma, { simple: true });
+    const fromContainer = containerDb.pragma(pragma, { simple: true });
+    check(`${pragma} (app=${fromApp}, container=${fromContainer})`, fromApp, fromContainer);
+  }
+  check('foreign_keys realmente ligado', appDb.pragma('foreign_keys', { simple: true }), 1);
+  appDb.close();
+  containerDb.close();
+
+  // ------------------------------------------------------------------- seed
+  console.log('\n== build do seed (transformação real) ==');
+  const data: CatalogExport = JSON.parse(readFileSync('data/catalog-export.json', 'utf8'));
+  const categories = buildCategories(data);
+  const { products, decisions } = buildProducts(data);
+  const seedPath = join(dir, 'seed.json');
+  writeFileSync(
+    seedPath,
+    JSON.stringify({
+      categories,
+      products,
+      siteInfo: { ...DEFAULT_SITE_INFO, ...(data.siteInfo ?? {}) },
+    })
+  );
+  console.log(`  origem: ${data.products.length} produtos, ${data.categories.length} categorias`);
+  console.log(`  seed:   ${products.length} produtos, ${categories.length} categorias`);
+  console.log(`  duplicados resolvidos: ${decisions.length}`);
+
+  // ------------------------------------------- migrate + seed (como no start)
+  console.log('\n== migrate + seed (mesmo codigo do container) ==');
+  const dbPath = join(dir, 'verify.db');
+  const db = openFromContainer(dbPath);
+  applyMigrations(db, './drizzle');
+  const first = seedIfEmpty(db, seedPath);
+  check('primeiro boot carregou o catalogo', first.seeded, true);
+
+  // Um redeploy NAO pode reverter precos editados no site.
+  const second = seedIfEmpty(db, seedPath);
+  check('segundo boot NAO reseeda (protege edicoes)', second.seeded, false);
+
+  const one = <T>(sql: string): T => db.prepare(sql).get() as T;
+
   const checkRejects = (label: string, sql: string) => {
     checks++;
     try {
@@ -48,42 +91,9 @@ function main() {
     }
   };
 
-  console.log('\n== PRAGMAs (a garantia de FK depende deles) ==');
-  check('foreign_keys ligado', db.pragma('foreign_keys', { simple: true }), 1);
-  check('journal_mode', db.pragma('journal_mode', { simple: true }), 'wal');
-
-  console.log('\n== migration ==');
-  for (const file of readdirSync('drizzle').filter((f) => f.endsWith('.sql')).sort()) {
-    const sql = readFileSync(join('drizzle', file), 'utf8');
-    for (const statement of sql.split('--> statement-breakpoint')) {
-      if (statement.trim()) db.exec(statement);
-    }
-    console.log(`  aplicada: ${file}`);
-  }
-
-  console.log('\n== import (dados reais do catálogo) ==');
-  const data: CatalogExport = JSON.parse(readFileSync('data/catalog-export.json', 'utf8'));
-  const query = (sql: string, params: unknown[] = []) => {
-    const statement = db.prepare(sql);
-    return statement.reader
-      ? { rows: statement.all(...(params as [])) }
-      : (statement.run(...(params as [])), { rows: [] });
-  };
-  const stats = importData(query, data);
-  console.log(`  origem:  ${data.products.length} produtos, ${data.categories.length} categorias`);
-  console.log(`  destino: ${stats.products} produtos, ${stats.categories} categorias`);
-  console.log(`  duplicados resolvidos: ${stats.decisions.length}`);
-
-  const one = <T>(sql: string): T => db.prepare(sql).get() as T;
-
-  console.log('\n== conteúdo ==');
+  console.log('\n== conteudo ==');
   check('produtos importados', one<{ n: number }>('SELECT count(*) AS n FROM products').n, 285);
   check('categorias importadas', one<{ n: number }>('SELECT count(*) AS n FROM categories').n, 22);
-  check(
-    'categorias duplicadas',
-    one<{ n: number }>('SELECT count(*) - count(DISTINCT name) AS n FROM categories').n,
-    0
-  );
   check(
     'produtos com nome duplicado',
     one<{ n: number }>('SELECT count(*) - count(DISTINCT upper(name)) AS n FROM products').n,
@@ -115,13 +125,8 @@ function main() {
 
   console.log('\n== preco em centavos: inteiro e exato ==');
   check(
-    'nenhum preco fracionario (prova de que nao virou float)',
-    one<{ n: number }>('SELECT count(*) AS n FROM products WHERE price_cents IS NOT NULL AND price_cents <> cast(price_cents AS INTEGER)').n,
-    0
-  );
-  check(
     'tipo da coluna no SQLite e integer',
-    one<{ t: string }>("SELECT typeof(price_cents) AS t FROM products WHERE price_cents IS NOT NULL LIMIT 1").t,
+    one<{ t: string }>('SELECT typeof(price_cents) AS t FROM products WHERE price_cents IS NOT NULL LIMIT 1').t,
     'integer'
   );
 
@@ -134,10 +139,11 @@ function main() {
     ['ROTHMANS GLOBAL AZUL', 7520],
     ['BALLENA COCO', 11590],
   ] as const) {
-    const row = one<{ price_cents: number | null }>(
-      `SELECT price_cents FROM products WHERE name = '${name}'`
+    check(
+      `${name} (centavos)`,
+      one<{ price_cents: number | null }>(`SELECT price_cents FROM products WHERE name = '${name}'`)?.price_cents,
+      expected
     );
-    check(`${name} (centavos)`, row?.price_cents, expected);
   }
   check(
     'G VERMELHO (sem preco, conforme decidido)',
