@@ -32,6 +32,8 @@ next-env.d.ts
 .env.*
 !.env.example
 
-# Banco local do `npm run dev:db` (arquivos binários do PGlite).
-# data/firestore-export.json É versionado: é a origem dos dados em Postgres.
-/data/dev-db
+# Banco SQLite local — dados, nao codigo. Em producao vive num volume.
+# data/catalog-export.json E versionado: e a origem da carga inicial.
+/data/*.db
+/data/*.db-wal
+/data/*.db-shm

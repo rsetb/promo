@@ -25,7 +25,8 @@ export type CatalogExport = {
 export type CleanProduct = {
   name: string;
   description: string;
-  price: number | null;
+  /** Centavos (13780 = R$ 137,80), ou null para "Consulte". */
+  priceCents: number | null;
   category: string;
 };
 
@@ -48,13 +49,15 @@ export function normalizeCategory(name: string): string {
 }
 
 /**
+ * Converte o preço do export (reais, ponto flutuante) para centavos inteiros.
+ *
  * No banco antigo, "sem preço" tinha duas representações: null e 0 — ambas
- * exibidas como "Consulte". No Postgres passa a ser só NULL.
+ * exibidas como "Consulte". Aqui passa a ser só NULL.
  */
-export function normalizePrice(price: number | null | undefined): number | null {
+export function normalizePriceToCents(price: number | null | undefined): number | null {
   if (price === null || price === undefined) return null;
   if (!Number.isFinite(price) || price <= 0) return null;
-  return Math.round(price * 100) / 100;
+  return Math.round(price * 100);
 }
 
 /**
@@ -126,7 +129,7 @@ export function buildProducts(data: CatalogExport): {
       .map((p) => ({
         name: normalizeName(p.name),
         description: (p.description ?? '').trim(),
-        price: normalizePrice(p.price),
+        priceCents: normalizePriceToCents(p.price),
         category: normalizeCategory(p.category),
       }))
       .sort((a, b) => a.name.localeCompare(b.name, 'pt-BR')),

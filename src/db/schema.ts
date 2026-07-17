@@ -1,4 +1,4 @@
-import { pgTable, serial, text, numeric, integer, timestamp, check } from 'drizzle-orm/pg-core';
+import { sqliteTable, integer, text, check } from 'drizzle-orm/sqlite-core';
 import { relations, sql } from 'drizzle-orm';
 
 /**
@@ -8,34 +8,44 @@ import { relations, sql } from 'drizzle-orm';
  * e sem verificação, o que produziu 80 registros para 23 categorias reais. Aqui
  * o banco recusa a duplicata.
  */
-export const categories = pgTable('categories', {
-  id: serial('id').primaryKey(),
+export const categories = sqliteTable('categories', {
+  id: integer('id').primaryKey({ autoIncrement: true }),
   name: text('name').notNull().unique(),
-  createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
+  createdAt: integer('created_at', { mode: 'timestamp' })
+    .notNull()
+    .default(sql`(unixepoch())`),
 });
 
 /**
  * Produtos.
  *
- * `price` é NULL quando não há preço definido — a UI mostra "Consulte". No banco
- * antigo esse estado tinha duas representações (null e 0); aqui só existe uma.
- * Usamos numeric(10,2) em vez de float: preço em ponto flutuante acumula erro.
+ * `price_cents` guarda o preço em CENTAVOS, como inteiro. SQLite não tem tipo
+ * decimal — sobrariam REAL (ponto flutuante, que acumula erro em dinheiro) ou
+ * TEXT (sem aritmética nem ordenação numérica). Inteiro em centavos é exato:
+ * R$ 137,80 vira 13780.
+ *
+ * NULL significa "sem preço definido" e a UI mostra "Consulte". No banco antigo
+ * esse estado tinha duas representações (null e 0); aqui só existe uma.
  */
-export const products = pgTable(
+export const products = sqliteTable(
   'products',
   {
-    id: serial('id').primaryKey(),
+    id: integer('id').primaryKey({ autoIncrement: true }),
     name: text('name').notNull(),
     description: text('description').notNull().default(''),
-    price: numeric('price', { precision: 10, scale: 2, mode: 'number' }),
+    priceCents: integer('price_cents'),
     categoryId: integer('category_id')
       .notNull()
       .references(() => categories.id, { onDelete: 'restrict' }),
-    createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
-    updatedAt: timestamp('updated_at', { withTimezone: true }).notNull().defaultNow(),
+    createdAt: integer('created_at', { mode: 'timestamp' })
+      .notNull()
+      .default(sql`(unixepoch())`),
+    updatedAt: integer('updated_at', { mode: 'timestamp' })
+      .notNull()
+      .default(sql`(unixepoch())`),
   },
   (t) => [
-    check('price_non_negative', sql`${t.price} IS NULL OR ${t.price} >= 0`),
+    check('price_non_negative', sql`${t.priceCents} IS NULL OR ${t.priceCents} >= 0`),
     check('name_not_empty', sql`length(trim(${t.name})) > 0`),
   ]
 );
@@ -44,7 +54,7 @@ export const products = pgTable(
  * Textos e telefones do site. Tabela de linha única: o CHECK em `id` garante
  * que nunca exista uma segunda linha para o app escolher.
  */
-export const siteInfo = pgTable(
+export const siteInfo = sqliteTable(
   'site_info',
   {
     id: integer('id').primaryKey().default(1),
@@ -58,7 +68,9 @@ export const siteInfo = pgTable(
     heroLocation2: text('hero_location_2').notNull(),
     heroPhone2: text('hero_phone_2').notNull(),
     heroPhoneDisplay2: text('hero_phone_display_2').notNull(),
-    updatedAt: timestamp('updated_at', { withTimezone: true }).notNull().defaultNow(),
+    updatedAt: integer('updated_at', { mode: 'timestamp' })
+      .notNull()
+      .default(sql`(unixepoch())`),
   },
   (t) => [check('single_row', sql`${t.id} = 1`)]
 );

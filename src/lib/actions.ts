@@ -15,6 +15,7 @@ import {
   isAdmin,
   verifyPassword,
 } from '@/lib/auth';
+import { parsePriceToCents } from '@/lib/format';
 import type { ActionResult } from '@/lib/types';
 
 /**
@@ -30,15 +31,6 @@ async function requireAdmin(): Promise<void> {
   }
 }
 
-/** Converte "1.234,56" ou "1234.56" para número. Vazio vira null ("Consulte"). */
-function parsePrice(input: string): number | null {
-  const cleaned = input.trim();
-  if (!cleaned) return null;
-  const normalized = cleaned.replace(/\./g, '').replace(',', '.');
-  const value = Number(normalized);
-  if (!Number.isFinite(value) || value < 0) return null;
-  return Math.round(value * 100) / 100;
-}
 
 // ---------------------------------------------------------------------------
 // Autenticação
@@ -94,7 +86,7 @@ export async function createProduct(formData: FormData): Promise<ActionResult> {
 
   await db.insert(products).values({
     name: parsed.data.name,
-    price: parsePrice(parsed.data.price),
+    priceCents: parsePriceToCents(parsed.data.price),
     categoryId: parsed.data.categoryId,
     description: '',
   });
@@ -119,7 +111,7 @@ export async function updateProduct(id: number, formData: FormData): Promise<Act
     .update(products)
     .set({
       name: parsed.data.name,
-      price: parsePrice(parsed.data.price),
+      priceCents: parsePriceToCents(parsed.data.price),
       categoryId: parsed.data.categoryId,
       updatedAt: new Date(),
     })
@@ -261,14 +253,19 @@ export async function updateSiteField(formData: FormData): Promise<ActionResult>
 
 // ---------------------------------------------------------------------------
 
-function hasPgCode(error: unknown, code: string): boolean {
+function hasSqliteCode(error: unknown, code: string): boolean {
   return typeof error === 'object' && error !== null && 'code' in error && error.code === code;
 }
 
+/** Nome de categoria repetido (índice UNIQUE em categories.name). */
 function isUniqueViolation(error: unknown): boolean {
-  return hasPgCode(error, '23505');
+  return hasSqliteCode(error, 'SQLITE_CONSTRAINT_UNIQUE');
 }
 
+/**
+ * Categoria ainda referenciada por produtos (FK com onDelete: 'restrict').
+ * Só dispara porque a conexão liga `PRAGMA foreign_keys = ON` — ver src/db.
+ */
 function isForeignKeyViolation(error: unknown): boolean {
-  return hasPgCode(error, '23503');
+  return hasSqliteCode(error, 'SQLITE_CONSTRAINT_FOREIGNKEY');
 }

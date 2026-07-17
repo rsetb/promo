@@ -1,16 +1,16 @@
 # MR Bebidas Distribuidora — catálogo
 
 Vitrine de produtos com edição pelo próprio site. Next.js 15 (App Router) +
-Postgres via Drizzle.
+SQLite via Drizzle.
 
 ## Como funciona
 
 O navegador nunca fala com o banco. As páginas são Server Components: leem o
-Postgres no servidor e mandam HTML pronto. Escritas passam por Server Actions,
+SQLite no servidor e mandam HTML pronto. Escritas passam por Server Actions,
 que verificam a sessão antes de tocar no banco.
 
 ```
-Browser ──HTML──> Server Component ──SQL──> Postgres
+Browser ──HTML──> Server Component ──SQL──> SQLite (arquivo)
    └────Server Action (checa sessão)────┘
 ```
 
@@ -18,61 +18,70 @@ Não há cadastro: existe uma senha de administrador, em `ADMIN_PASSWORD`. Quem
 entra com ela recebe um cookie de sessão assinado (HMAC-SHA256) e passa a ver os
 controles de edição.
 
+O banco é **um arquivo** (`DATABASE_PATH`). Não há serviço de banco separado —
+para 285 produtos e um admin, SQLite sobra.
+
 | Diretório | O quê |
 | --- | --- |
 | `src/app` | Rotas (home, login, admin/categories) |
 | `src/components` | UI — só é client component o que precisa de interação |
-| `src/db` | Schema Drizzle e conexão |
+| `src/db` | Schema Drizzle, `open.ts` (conexão + PRAGMAs) |
 | `src/lib` | `auth.ts` (sessão), `actions.ts` (escritas), `queries.ts` (leituras) |
 | `drizzle` | Migrations SQL versionadas |
-| `scripts` | Import do catálogo, banco local, verificação |
+| `scripts` | Migrate, import do catálogo, verificação |
+
+### Duas decisões que valem saber
+
+**Preço em centavos.** SQLite não tem tipo decimal. As opções seriam REAL
+(ponto flutuante, que acumula erro em dinheiro) ou TEXT (sem aritmética). A
+coluna `price_cents` é um inteiro: R$ 137,80 vira `13780`. Converta só na
+fronteira, com os helpers de `src/lib/format.ts` — não divida por 100 espalhado
+pela UI.
+
+**`PRAGMA foreign_keys = ON` não é opcional.** O SQLite ignora foreign keys por
+padrão, e o PRAGMA vale por conexão (não fica no arquivo). Sem ele, excluir uma
+categoria que ainda tem produtos passaria batido. Por isso toda abertura de
+banco — app e scripts — passa por `src/db/open.ts`, e `db:verify` confere que o
+PRAGMA está ligado.
 
 ## Desenvolvimento
 
-Precisa de um Postgres. Se não tiver nenhum à mão, o projeto sobe um:
-
 ```bash
 npm install
-cp .env.example .env     # ajuste os valores
-npm run dev:db           # Postgres local (PGlite/WASM) na porta 54329 — deixe rodando
-npm run dev              # em outro terminal
+cp .env.example .env    # ajuste os valores
+npm run db:import       # cria data/app.db e carrega o catálogo
+npm run dev
 ```
 
-`dev:db` aplica as migrations e importa `data/catalog-export.json` na primeira
-execução; os dados ficam em `data/dev-db/`.
-
-> **Limitação do `dev:db`:** o PGlite atende **uma conexão por vez**. Com o app
-> conectado, qualquer outro cliente (ex.: `node scripts/probe-db.mjs`) derruba a
-> conexão. Por isso o `.env` de desenvolvimento usa `DB_POOL_MAX=1`. Para usar
-> mais de um cliente ao mesmo tempo, aponte a `DATABASE_URL` para um Postgres de
-> verdade.
+Sem serviço de banco para subir: o arquivo é o banco.
 
 ## Verificação
 
 ```bash
-npm run db:verify   # roda migrations + import num Postgres real (WASM) e confere o resultado
+npm run db:verify   # migration + import num SQLite descartável, e confere o resultado
 npm run typecheck
 npm run build
 ```
 
-`db:verify` usa o mesmo SQL e o mesmo código de import da migração de produção,
-com os dados reais exportados — 24 checagens, incluindo as restrições do banco
-(preço negativo, categoria duplicada, exclusão de categoria com produtos).
+`db:verify` usa o mesmo SQL, a mesma abertura de conexão e o mesmo código de
+import que rodam em produção, com os dados reais — 28 checagens, incluindo os
+PRAGMAs e as restrições do banco (preço negativo, categoria duplicada, exclusão
+de categoria com produtos).
 
 ## Deploy no EasyPanel
 
-Crie **dois serviços**:
+Um serviço só: um **App** apontando para este repositório (o `Dockerfile` na
+raiz é detectado sozinho).
 
-**1. Postgres.** Use o template de Postgres do EasyPanel. Não exponha a porta
-5432 para a internet — o app acessa pela rede interna do Docker.
+**O volume é obrigatório.** Monte um volume em **`/data`**. O banco inteiro é o
+arquivo `/data/app.db`; sem volume ele fica na camada gravável do container e
+**o catálogo é perdido no primeiro redeploy**.
 
-**2. App.** Aponte para este repositório; o `Dockerfile` na raiz é detectado
-sozinho. Variáveis de ambiente:
+Variáveis de ambiente:
 
 | Variável | Valor |
 | --- | --- |
-| `DATABASE_URL` | `postgres://usuario:senha@<host-interno-do-postgres>:5432/promo` |
-| `DATABASE_SSL` | `false` (rede interna do Docker não tem TLS) |
+| `DATABASE_PATH` | `/data/app.db` (já é o default da imagem) |
 | `ADMIN_PASSWORD` | senha longa e aleatória — quem a tiver edita o catálogo |
 | `SESSION_SECRET` | 32+ caracteres aleatórios; trocar desloga todo mundo |
 
@@ -86,20 +95,33 @@ As migrations rodam sozinhas no start do container (`scripts/migrate.mjs`).
 
 ### Carga inicial dos dados
 
-Depois do primeiro deploy, com o banco vazio, rode o import de dentro da rede da
-VPS (terminal do container do app, ou qualquer lugar com acesso ao Postgres):
+No primeiro deploy o banco sobe vazio (só o schema). Para carregar o catálogo,
+rode uma vez no terminal do container:
 
 ```bash
-npx tsx scripts/import-to-postgres.ts          # aborta se já houver dados
-npx tsx scripts/import-to-postgres.ts --force  # apaga e reimporta
+node scripts/migrate.mjs   # já roda no start, mas não custa
+npx tsx scripts/import-catalog.ts
 ```
+
+> O `db:import` aborta se já houver produtos. Use `--force` só para apagar tudo
+> e reimportar — ele **descarta as edições feitas pelo site**.
+
+### Backup
+
+O banco é um arquivo. Copiar ele (e os `-wal`/`-shm` ao lado) é o backup:
+
+```bash
+sqlite3 /data/app.db ".backup /data/backup-$(date +%F).db"
+```
+
+Use `.backup` em vez de `cp`: ele lida com escritas em andamento.
 
 ## Origem dos dados
 
 O catálogo foi migrado de um banco anterior (Firestore, já descontinuado neste
 projeto). `data/catalog-export.json` é o export bruto — 294 produtos, 80
-categorias — e fica versionado como prova de origem: é dele que o
-`db:import` carrega o Postgres.
+categorias — e fica versionado como prova de origem: é dele que o `db:import`
+carrega o banco.
 
 A transformação, em `scripts/lib/transform.ts`, aplicou:
 
@@ -116,4 +138,4 @@ A transformação, em `scripts/lib/transform.ts`, aplicou:
 
 Esse export é um retrato do momento da migração e não é atualizável: as
 ferramentas do banco antigo foram removidas do projeto. A partir daqui, a fonte
-de verdade é o Postgres.
+de verdade é o SQLite.

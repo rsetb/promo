@@ -1,56 +1,36 @@
 import 'server-only';
 
-import { drizzle, type NodePgDatabase } from 'drizzle-orm/node-postgres';
-import { Pool } from 'pg';
+import { drizzle, type BetterSQLite3Database } from 'drizzle-orm/better-sqlite3';
+import type Database from 'better-sqlite3';
+import { getDatabasePath, openDatabase } from './open';
 import * as schema from './schema';
 
-/**
- * O Pool é guardado no globalThis porque o hot reload do Next recria os módulos
- * a cada alteração; sem isso o dev server abre uma conexão nova por reload até
- * estourar o limite do Postgres.
- */
 const globalForDb = globalThis as unknown as {
-  pool?: Pool;
-  db?: NodePgDatabase<typeof schema>;
+  sqlite?: Database.Database;
+  db?: BetterSQLite3Database<typeof schema>;
 };
 
-function createDb(): NodePgDatabase<typeof schema> {
-  if (!process.env.DATABASE_URL) {
-    throw new Error('DATABASE_URL não definida. Copie .env.example para .env e preencha.');
-  }
-
-  const pool =
-    globalForDb.pool ??
-    new Pool({
-      connectionString: process.env.DATABASE_URL,
-      // O Postgres de produção aguenta o pool inteiro. O banco local do
-      // `npm run dev:db` (PGlite) atende uma conexão por vez, então lá o .env
-      // define DB_POOL_MAX=1.
-      max: Number(process.env.DB_POOL_MAX ?? 10),
-      idleTimeoutMillis: 30_000,
-      // EasyPanel liga o app ao Postgres pela rede interna do Docker, onde não
-      // há TLS. Em qualquer host externo, exija SSL.
-      ssl: process.env.DATABASE_SSL === 'true' ? { rejectUnauthorized: false } : undefined,
-    });
-
-  if (process.env.NODE_ENV !== 'production') globalForDb.pool = pool;
-
-  return drizzle(pool, { schema });
+function createDb(): BetterSQLite3Database<typeof schema> {
+  const sqlite = globalForDb.sqlite ?? openDatabase(getDatabasePath());
+  // O hot reload do Next recria os módulos a cada alteração; sem guardar a
+  // conexão no globalThis, o dev server abre um handle novo por reload.
+  if (process.env.NODE_ENV !== 'production') globalForDb.sqlite = sqlite;
+  return drizzle(sqlite, { schema });
 }
 
-function getDb(): NodePgDatabase<typeof schema> {
+function getDb(): BetterSQLite3Database<typeof schema> {
   if (!globalForDb.db) globalForDb.db = createDb();
   return globalForDb.db;
 }
 
 /**
- * Conexão preguiçosa: só abre no primeiro uso real.
+ * Conexão preguiçosa: só abre o arquivo no primeiro uso real.
  *
- * `next build` importa os módulos de rota para analisá-las. Se a conexão fosse
- * criada no topo do módulo, o build exigiria um Postgres acessível — o que
- * quebraria a build da imagem Docker, onde o banco não existe ainda.
+ * `next build` importa os módulos de rota para analisá-las. Abrir o banco no
+ * topo do módulo criaria um arquivo vazio durante a build da imagem Docker —
+ * numa camada que é descartada, mascarando erro de configuração.
  */
-export const db = new Proxy({} as NodePgDatabase<typeof schema>, {
+export const db = new Proxy({} as BetterSQLite3Database<typeof schema>, {
   get(_target, prop) {
     const real = getDb() as unknown as Record<string | symbol, unknown>;
     const value = real[prop];
@@ -58,4 +38,4 @@ export const db = new Proxy({} as NodePgDatabase<typeof schema>, {
   },
 });
 
-export { schema };
+export { schema, getDatabasePath };

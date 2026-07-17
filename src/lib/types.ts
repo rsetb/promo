@@ -1,4 +1,4 @@
-import type { Category, SiteInfo } from '@/db/schema';
+import type { SiteInfo } from '@/db/schema';
 
 export type { Category } from '@/db/schema';
 
@@ -6,13 +6,15 @@ export type { Category } from '@/db/schema';
  * Produto como a UI consome: já com o nome da categoria resolvido pelo join,
  * em vez do category_id cru.
  *
- * `price` é null quando não há preço definido — a UI mostra "Consulte".
+ * `priceCents` é o preço em centavos (13780 = R$ 137,80), ou null quando não há
+ * preço definido — a UI mostra "Consulte". Use os helpers de `lib/format` para
+ * converter; não divida por 100 espalhado pela UI.
  */
 export type ProductView = {
   id: number;
   name: string;
   description: string;
-  price: number | null;
+  priceCents: number | null;
   categoryId: number;
   category: string;
 };

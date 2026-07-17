@@ -1,13 +1,12 @@
 /**
- * Núcleo do import, independente de driver.
+ * Núcleo do import, independente de como o SQLite é aberto.
  *
- * Recebe uma função de query compatível tanto com `pg` (Postgres real) quanto
- * com PGlite (Postgres em WASM, usado na verificação). Assim o teste exercita
- * exatamente o mesmo caminho de código da migração de produção.
+ * Recebe uma função de query para que o import de produção e o teste de
+ * verificação usem exatamente o mesmo caminho de código.
  */
 import { buildCategories, buildProducts, type CatalogExport, type DedupeDecision } from './transform';
 
-export type QueryFn = (sql: string, params?: unknown[]) => Promise<{ rows: any[] }>;
+export type QueryFn = (sql: string, params?: unknown[]) => { rows: any[] };
 
 export const DEFAULT_SITE_INFO = {
   siteName: 'MR Bebidas',
@@ -28,52 +27,50 @@ export type ImportStats = {
   decisions: DedupeDecision[];
 };
 
-export async function importData(query: QueryFn, data: CatalogExport): Promise<ImportStats> {
+export function importData(query: QueryFn, data: CatalogExport): ImportStats {
   const categoryNames = buildCategories(data);
   const { products, decisions } = buildProducts(data);
 
   const categoryIds = new Map<string, number>();
   for (const name of categoryNames) {
-    const result = await query(
-      `INSERT INTO categories (name) VALUES ($1)
-       ON CONFLICT (name) DO UPDATE SET name = EXCLUDED.name
-       RETURNING id`,
-      [name]
-    );
-    categoryIds.set(name, result.rows[0].id);
+    // RETURNING existe no SQLite moderno, mas ler de volta por nome é simples e
+    // funciona igual quando a categoria já existe.
+    query(`INSERT OR IGNORE INTO categories (name) VALUES (?)`, [name]);
+    const { rows } = query(`SELECT id FROM categories WHERE name = ?`, [name]);
+    categoryIds.set(name, rows[0].id);
   }
 
   for (const product of products) {
     const categoryId = categoryIds.get(product.category);
     if (!categoryId) throw new Error(`Categoria não encontrada: ${product.category}`);
 
-    await query(`INSERT INTO products (name, description, price, category_id) VALUES ($1, $2, $3, $4)`, [
+    query(`INSERT INTO products (name, description, price_cents, category_id) VALUES (?, ?, ?, ?)`, [
       product.name,
       product.description,
-      product.price,
+      product.priceCents,
       categoryId,
     ]);
   }
 
   const siteInfo = { ...DEFAULT_SITE_INFO, ...(data.siteInfo ?? {}) };
-  await query(
+  query(
     `INSERT INTO site_info (
        id, site_name, hero_title_1, hero_title_2, hero_slogan,
        hero_location, hero_phone, hero_phone_display,
        hero_location_2, hero_phone_2, hero_phone_display_2
-     ) VALUES (1, $1, $2, $3, $4, $5, $6, $7, $8, $9, $10)
+     ) VALUES (1, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
      ON CONFLICT (id) DO UPDATE SET
-       site_name = EXCLUDED.site_name,
-       hero_title_1 = EXCLUDED.hero_title_1,
-       hero_title_2 = EXCLUDED.hero_title_2,
-       hero_slogan = EXCLUDED.hero_slogan,
-       hero_location = EXCLUDED.hero_location,
-       hero_phone = EXCLUDED.hero_phone,
-       hero_phone_display = EXCLUDED.hero_phone_display,
-       hero_location_2 = EXCLUDED.hero_location_2,
-       hero_phone_2 = EXCLUDED.hero_phone_2,
-       hero_phone_display_2 = EXCLUDED.hero_phone_display_2,
-       updated_at = now()`,
+       site_name = excluded.site_name,
+       hero_title_1 = excluded.hero_title_1,
+       hero_title_2 = excluded.hero_title_2,
+       hero_slogan = excluded.hero_slogan,
+       hero_location = excluded.hero_location,
+       hero_phone = excluded.hero_phone,
+       hero_phone_display = excluded.hero_phone_display,
+       hero_location_2 = excluded.hero_location_2,
+       hero_phone_2 = excluded.hero_phone_2,
+       hero_phone_display_2 = excluded.hero_phone_display_2,
+       updated_at = unixepoch()`,
     [
       siteInfo.siteName,
       siteInfo.heroTitle1,

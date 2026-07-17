@@ -28,7 +28,7 @@ export async function getProducts(): Promise<ProductView[]> {
       id: products.id,
       name: products.name,
       description: products.description,
-      price: products.price,
+      priceCents: products.priceCents,
       categoryId: products.categoryId,
       category: categories.name,
     })

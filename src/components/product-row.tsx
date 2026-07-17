@@ -33,14 +33,14 @@ type ProductRowProps = {
 export function ProductRow({ product, categories, canEdit, onRequestDelete }: ProductRowProps) {
   const [isEditing, setIsEditing] = useState(false);
   const [name, setName] = useState(product.name);
-  const [price, setPrice] = useState(priceToInput(product.price));
+  const [price, setPrice] = useState(priceToInput(product.priceCents));
   const [categoryId, setCategoryId] = useState(String(product.categoryId));
   const [isPending, startTransition] = useTransition();
   const { toast } = useToast();
 
   const startEditing = () => {
     setName(product.name);
-    setPrice(priceToInput(product.price));
+    setPrice(priceToInput(product.priceCents));
     setCategoryId(String(product.categoryId));
     setIsEditing(true);
   };
@@ -125,7 +125,7 @@ export function ProductRow({ product, categories, canEdit, onRequestDelete }: Pr
               </>
             ) : (
               <>
-                <p className="whitespace-nowrap text-xl font-bold">{formatPrice(product.price)}</p>
+                <p className="whitespace-nowrap text-xl font-bold">{formatPrice(product.priceCents)}</p>
                 {canEdit && (
                   <>
                     <Button onClick={startEditing} variant="ghost" size="icon" className="h-9 w-9" aria-label="Editar produto">
