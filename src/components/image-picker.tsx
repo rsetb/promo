@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
-import { ImagePlus, X } from 'lucide-react';
+import { ImagePlus, Search, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { imageUrl } from '@/lib/types';
@@ -18,6 +18,8 @@ type ImagePickerProps = {
   /** True quando o admin removeu a foto existente. */
   removed: boolean;
   onRemovedChange: (removed: boolean) => void;
+  /** Nome do produto — usado para buscar a foto no Google Imagens. */
+  searchQuery?: string;
   disabled?: boolean;
 };
 
@@ -35,6 +37,7 @@ export function ImagePicker({
   onUrlChange,
   removed,
   onRemovedChange,
+  searchQuery,
   disabled,
 }: ImagePickerProps) {
   const inputRef = useRef<HTMLInputElement>(null);
@@ -106,15 +109,43 @@ export function ImagePicker({
         </div>
       )}
 
-        <Button
-          type="button"
-          variant="outline"
-          size="sm"
-          onClick={() => inputRef.current?.click()}
-          disabled={disabled}
-        >
-          {shown ? 'Trocar foto' : 'Escolher foto'}
-        </Button>
+        <div className="flex flex-col gap-2">
+          <Button
+            type="button"
+            variant="outline"
+            size="sm"
+            onClick={() => inputRef.current?.click()}
+            disabled={disabled}
+          >
+            {shown ? 'Trocar foto' : 'Escolher foto'}
+          </Button>
+
+          {/*
+            Abre o Google Imagens já pesquisando o nome do produto. Não dá para
+            trazer os resultados para dentro do app: o Google não tem API aberta
+            de busca de imagens, e raspar a página viola os termos e quebra
+            sozinho quando eles mudam o HTML. Daí o caminho ser buscar lá,
+            copiar o endereço da imagem e colar no campo abaixo.
+          */}
+          {searchQuery?.trim() && (
+            <Button
+              type="button"
+              variant="ghost"
+              size="sm"
+              disabled={disabled}
+              onClick={() =>
+                window.open(
+                  `https://www.google.com/search?tbm=isch&q=${encodeURIComponent(searchQuery.trim())}`,
+                  '_blank',
+                  'noopener,noreferrer'
+                )
+              }
+            >
+              <Search className="mr-2 h-3 w-3" />
+              Buscar no Google
+            </Button>
+          )}
+        </div>
       </div>
 
       {/*

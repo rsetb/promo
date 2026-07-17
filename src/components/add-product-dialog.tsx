@@ -138,6 +138,7 @@ export function AddProductDialog({ isOpen, onOpenChange, categories }: AddProduc
               onUrlChange={setImageUrlInput}
               removed={false}
               onRemovedChange={() => {}}
+              searchQuery={name}
               disabled={isPending}
             />
           </div>

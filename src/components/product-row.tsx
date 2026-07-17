@@ -135,6 +135,7 @@ export function ProductRow({ product, categories, canEdit, onRequestDelete }: Pr
                     onUrlChange={setImageUrlInput}
                     removed={imageRemoved}
                     onRemovedChange={setImageRemoved}
+                    searchQuery={name}
                     disabled={isPending}
                   />
                 </div>
