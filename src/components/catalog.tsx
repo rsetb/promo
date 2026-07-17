@@ -1,6 +1,7 @@
 'use client';
 
 import { useMemo, useState, useTransition } from 'react';
+import { useRouter } from 'next/navigation';
 import { PlusCircle, Search } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -43,6 +44,7 @@ export function Catalog({ products, categories, canEdit }: CatalogProps) {
   const [productToDelete, setProductToDelete] = useState<ProductView | null>(null);
   const [isPending, startTransition] = useTransition();
   const { toast } = useToast();
+  const router = useRouter();
 
   const filtered = useMemo(() => {
     const needle = fold(searchTerm.trim());
@@ -58,6 +60,7 @@ export function Catalog({ products, categories, canEdit }: CatalogProps) {
     startTransition(async () => {
       const result = await deleteProduct(productToDelete.id);
       if (result.ok) {
+        router.refresh();
         toast({ title: 'Excluído', description: 'O produto foi removido do catálogo.' });
       } else {
         toast({ variant: 'destructive', title: 'Erro', description: result.error });

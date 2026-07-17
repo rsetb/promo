@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useTransition } from 'react';
+import { useRouter } from 'next/navigation';
 import { Edit, PlusCircle, Save, Trash2, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -26,6 +27,7 @@ export function CategoriesManager({ categories }: { categories: Category[] }) {
   const [toDelete, setToDelete] = useState<Category | null>(null);
   const [isPending, startTransition] = useTransition();
   const { toast } = useToast();
+  const router = useRouter();
 
   const add = (event: React.FormEvent) => {
     event.preventDefault();
@@ -35,6 +37,7 @@ export function CategoriesManager({ categories }: { categories: Category[] }) {
       const result = await createCategory(formData);
       if (result.ok) {
         setNewName('');
+        router.refresh();
         toast({ title: 'Sucesso!', description: 'Nova categoria adicionada.' });
       } else {
         toast({ variant: 'destructive', title: 'Erro', description: result.error });
@@ -49,6 +52,7 @@ export function CategoriesManager({ categories }: { categories: Category[] }) {
       const result = await updateCategory(id, formData);
       if (result.ok) {
         setEditingId(null);
+        router.refresh();
         toast({ title: 'Sucesso!', description: 'Categoria atualizada.' });
       } else {
         toast({ variant: 'destructive', title: 'Erro', description: result.error });
@@ -61,6 +65,7 @@ export function CategoriesManager({ categories }: { categories: Category[] }) {
     startTransition(async () => {
       const result = await deleteCategory(toDelete.id);
       if (result.ok) {
+        router.refresh();
         toast({ title: 'Excluída', description: 'A categoria foi removida.' });
       } else {
         toast({ variant: 'destructive', title: 'Não foi possível excluir', description: result.error });

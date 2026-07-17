@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useTransition } from 'react';
+import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import {
   Dialog,
@@ -21,6 +22,7 @@ import {
 } from '@/components/ui/select';
 import { useToast } from '@/hooks/use-toast';
 import { createProduct } from '@/lib/actions';
+import { maskPriceInput } from '@/lib/format';
 import type { Category } from '@/lib/types';
 
 type AddProductDialogProps = {
@@ -35,6 +37,7 @@ export function AddProductDialog({ isOpen, onOpenChange, categories }: AddProduc
   const [categoryId, setCategoryId] = useState('');
   const [isPending, startTransition] = useTransition();
   const { toast } = useToast();
+  const router = useRouter();
 
   const reset = () => {
     setName('');
@@ -52,6 +55,7 @@ export function AddProductDialog({ isOpen, onOpenChange, categories }: AddProduc
 
       const result = await createProduct(formData);
       if (result.ok) {
+        router.refresh();
         toast({ title: 'Adicionado!', description: 'Novo produto no catálogo.' });
         reset();
         onOpenChange(false);
@@ -96,9 +100,9 @@ export function AddProductDialog({ isOpen, onOpenChange, categories }: AddProduc
               id="product-price"
               placeholder="0,00"
               value={price}
-              onChange={(e) => setPrice(e.target.value.replace(/[^0-9,.]/g, ''))}
+              onChange={(e) => setPrice(maskPriceInput(e.target.value))}
               disabled={isPending}
-              inputMode="decimal"
+              inputMode="numeric"
             />
           </div>
 

@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useTransition } from 'react';
+import { useRouter } from 'next/navigation';
 import { Edit, MoreVertical, Save, Trash2, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardHeader, CardTitle } from '@/components/ui/card';
@@ -20,7 +21,7 @@ import {
 } from '@/components/ui/select';
 import { useToast } from '@/hooks/use-toast';
 import { updateProduct } from '@/lib/actions';
-import { formatPrice, priceToInput } from '@/lib/format';
+import { formatPrice, maskPriceInput, priceToInput } from '@/lib/format';
 import type { Category, ProductView } from '@/lib/types';
 
 type ProductRowProps = {
@@ -37,6 +38,7 @@ export function ProductRow({ product, categories, canEdit, onRequestDelete }: Pr
   const [categoryId, setCategoryId] = useState(String(product.categoryId));
   const [isPending, startTransition] = useTransition();
   const { toast } = useToast();
+  const router = useRouter();
 
   const startEditing = () => {
     setName(product.name);
@@ -55,6 +57,10 @@ export function ProductRow({ product, categories, canEdit, onRequestDelete }: Pr
       const result = await updateProduct(product.id, formData);
       if (result.ok) {
         setIsEditing(false);
+        // Sem isto a tela só mostra o valor novo depois de um F5: as rotas são
+        // force-dynamic, então não há cache para o revalidatePath da action
+        // invalidar, e o router nunca refaz a busca sozinho.
+        router.refresh();
         toast({ title: 'Salvo!', description: 'O produto foi atualizado.' });
       } else {
         toast({ variant: 'destructive', title: 'Erro', description: result.error });
@@ -104,11 +110,12 @@ export function ProductRow({ product, categories, canEdit, onRequestDelete }: Pr
               <>
                 <Input
                   value={price}
-                  onChange={(e) => setPrice(e.target.value.replace(/[^0-9,.]/g, ''))}
+                  onChange={(e) => setPrice(maskPriceInput(e.target.value))}
                   className="w-32 text-base"
-                  placeholder="0,00 (vazio = Consulte)"
+                  placeholder="0,00"
                   disabled={isPending}
-                  aria-label="Preço"
+                  inputMode="numeric"
+                  aria-label="Preço (vazio = Consulte)"
                 />
                 <Button onClick={save} size="icon" className="h-9 w-9" disabled={isPending}>
                   <Save className="h-4 w-4" />

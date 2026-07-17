@@ -16,12 +16,43 @@ export function formatPrice(priceCents: number | null): string {
 /** Valor para o input de edição: 13780 -> "137,80"; null -> "". */
 export function priceToInput(priceCents: number | null): string {
   if (priceCents === null) return '';
-  return (priceCents / 100).toFixed(2).replace('.', ',');
+  return maskPriceInput(String(priceCents));
+}
+
+/**
+ * Máscara de digitação: os dígitos entram pela direita, como numa maquininha.
+ *
+ *   ""      -> ""
+ *   "6"     -> "0,06"
+ *   "66"    -> "0,66"
+ *   "6699"  -> "66,99"
+ *   "123456"-> "1.234,56"
+ *
+ * Recebe qualquer coisa e considera só os dígitos, então serve tanto para o que
+ * o usuário digita quanto para colar "R$ 1.234,56" de outro lugar.
+ */
+export function maskPriceInput(raw: string): string {
+  const digits = raw.replace(/\D/g, '');
+  if (!digits) return '';
+
+  const cents = Number(digits);
+  // Zero volta vazio para o campo não mentir: parsePriceToCents trata 0 como
+  // "sem preço", então mostrar "0,00" prometeria um preço que não seria salvo.
+  if (!Number.isFinite(cents) || cents === 0) return '';
+
+  return (cents / 100).toLocaleString('pt-BR', {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  });
 }
 
 /**
  * Converte o que o admin digitou ("1.234,56", "1234.56", "99") em centavos.
- * Vazio ou inválido vira null ("Consulte").
+ *
+ * Vazio, inválido OU zero viram null ("Consulte"). Zero cair em null é
+ * proposital: "sem preço" tem uma representação só, igual ao que a migração
+ * fez com os 44 produtos que tinham preço 0. Sem isso, dava para recriar pela
+ * tela justamente o estado ambíguo que o banco eliminou.
  *
  * O arredondamento acontece uma vez, aqui, na fronteira: depois disso o valor
  * é inteiro e não sofre mais erro de representação.
@@ -36,7 +67,7 @@ export function parsePriceToCents(input: string): number | null {
     : cleaned;
 
   const value = Number(normalized);
-  if (!Number.isFinite(value) || value < 0) return null;
+  if (!Number.isFinite(value) || value <= 0) return null;
 
   return Math.round(value * 100);
 }

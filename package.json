@@ -12,7 +12,9 @@
     "db:studio": "drizzle-kit studio",
     "db:verify": "tsx scripts/verify-migration.ts",
     "db:seed": "tsx scripts/build-seed.ts",
-    "db:setup": "tsx scripts/build-seed.ts && node scripts/migrate.mjs"
+    "db:setup": "tsx scripts/build-seed.ts && node scripts/migrate.mjs",
+    "verify:format": "tsx scripts/verify-format.ts",
+    "verify": "tsx scripts/verify-format.ts && tsx scripts/verify-migration.ts"
   },
   "dependencies": {
     "@radix-ui/react-alert-dialog": "^1.1.6",

@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useTransition } from 'react';
+import { useRouter } from 'next/navigation';
 import { Edit, Save, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -25,6 +26,7 @@ export function EditableText({ field, value, className, canEdit, centered }: Edi
   const [draft, setDraft] = useState(value);
   const [isPending, startTransition] = useTransition();
   const { toast } = useToast();
+  const router = useRouter();
 
   const save = () => {
     startTransition(async () => {
@@ -35,6 +37,7 @@ export function EditableText({ field, value, className, canEdit, centered }: Edi
       const result = await updateSiteField(formData);
       if (result.ok) {
         setIsEditing(false);
+        router.refresh();
         toast({ title: 'Salvo!', description: 'A informação do site foi atualizada.' });
       } else {
         toast({ variant: 'destructive', title: 'Erro', description: result.error });
