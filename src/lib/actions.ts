@@ -15,6 +15,7 @@ import {
   isAdmin,
   verifyPassword,
 } from '@/lib/auth';
+import { notifyCatalogChange } from '@/lib/events';
 import { parsePriceToCents } from '@/lib/format';
 import type { ActionResult } from '@/lib/types';
 
@@ -29,6 +30,24 @@ async function requireAdmin(): Promise<void> {
   if (!(await isAdmin())) {
     throw new Error('Não autorizado.');
   }
+}
+
+/**
+ * Fecha toda escrita: invalida os caminhos e avisa as abas abertas.
+ *
+ * Existe para que "avisar" não seja um passo que se esquece. Uma escrita que
+ * não chame isto continua salvando certo — e fica muda: a tela de quem estiver
+ * com a página aberta em outro dispositivo não se atualiza, e o bug aparece só
+ * naquele ponto.
+ */
+function publishChange(scope: 'catalog' | 'site'): void {
+  if (scope === 'site') {
+    revalidatePath('/', 'layout');
+  } else {
+    revalidatePath('/');
+    revalidatePath('/admin/categories');
+  }
+  notifyCatalogChange();
 }
 
 
@@ -91,7 +110,7 @@ export async function createProduct(formData: FormData): Promise<ActionResult> {
     description: '',
   });
 
-  revalidatePath('/');
+  publishChange('catalog');
   return { ok: true };
 }
 
@@ -117,14 +136,14 @@ export async function updateProduct(id: number, formData: FormData): Promise<Act
     })
     .where(eq(products.id, id));
 
-  revalidatePath('/');
+  publishChange('catalog');
   return { ok: true };
 }
 
 export async function deleteProduct(id: number): Promise<ActionResult> {
   await requireAdmin();
   await db.delete(products).where(eq(products.id, id));
-  revalidatePath('/');
+  publishChange('catalog');
   return { ok: true };
 }
 
@@ -149,16 +168,15 @@ export async function createCategory(formData: FormData): Promise<ActionResult> 
   try {
     await db.insert(categories).values({ name });
   } catch (error) {
-    // 23505 = unique_violation. O banco é quem garante a unicidade; aqui só
-    // traduzimos para uma mensagem legível.
+    // O banco é quem garante a unicidade; aqui só traduzimos para uma
+    // mensagem legível.
     if (isUniqueViolation(error)) {
       return { ok: false, error: `A categoria "${name}" já existe.` };
     }
     throw error;
   }
 
-  revalidatePath('/');
-  revalidatePath('/admin/categories');
+  publishChange('catalog');
   return { ok: true };
 }
 
@@ -181,8 +199,7 @@ export async function updateCategory(id: number, formData: FormData): Promise<Ac
     throw error;
   }
 
-  revalidatePath('/');
-  revalidatePath('/admin/categories');
+  publishChange('catalog');
   return { ok: true };
 }
 
@@ -192,8 +209,8 @@ export async function deleteCategory(id: number): Promise<ActionResult> {
   try {
     await db.delete(categories).where(eq(categories.id, id));
   } catch (error) {
-    // 23503 = foreign_key_violation: a categoria ainda tem produtos. O FK com
-    // onDelete: 'restrict' impede que produtos fiquem órfãos.
+    // A categoria ainda tem produtos: o FK com onDelete: 'restrict' impede
+    // que eles fiquem órfãos.
     if (isForeignKeyViolation(error)) {
       return {
         ok: false,
@@ -203,8 +220,7 @@ export async function deleteCategory(id: number): Promise<ActionResult> {
     throw error;
   }
 
-  revalidatePath('/');
-  revalidatePath('/admin/categories');
+  publishChange('catalog');
   return { ok: true };
 }
 
@@ -247,7 +263,7 @@ export async function updateSiteField(formData: FormData): Promise<ActionResult>
 
   await db.update(siteInfo).set(patch).where(eq(siteInfo.id, 1));
 
-  revalidatePath('/', 'layout');
+  publishChange('site');
   return { ok: true };
 }
 

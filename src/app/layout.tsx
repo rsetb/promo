@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import './globals.css';
 import { Toaster } from '@/components/ui/toaster';
 import Header from '@/components/header';
+import { LiveUpdates } from '@/components/live-updates';
 
 export const metadata: Metadata = {
   title: 'MR Bebidas Distribuidora',
@@ -34,6 +35,7 @@ export default function RootLayout({
         />
       </head>
       <body className="bg-background font-body antialiased">
+        <LiveUpdates />
         <div className="relative flex min-h-screen flex-col">
           <Header />
           <main className="flex-1">{children}</main>
