@@ -43,6 +43,13 @@
       "when": 1784263504366,
       "tag": "0005_preco_caixa_e_quantidades",
       "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "6",
+      "when": 1784301756978,
+      "tag": "0006_mostrar_segunda_unidade",
+      "breakpoints": true
     }
   ]
 }

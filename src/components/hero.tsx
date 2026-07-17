@@ -1,6 +1,7 @@
 import { MapPin } from 'lucide-react';
 import { EditableText } from '@/components/editable-text';
 import { EditableLogo } from '@/components/editable-logo';
+import { BranchVisibilityToggle } from '@/components/branch-visibility-toggle';
 import { WhatsappIcon } from '@/components/whatsapp-icon';
 import type { SiteInfoView } from '@/lib/types';
 
@@ -20,6 +21,7 @@ function Branch({
   phoneDisplay,
   phoneField,
   canEdit,
+  dimmed,
 }: {
   location: string;
   locationField: 'heroLocation' | 'heroLocation2';
@@ -27,13 +29,15 @@ function Branch({
   phoneDisplay: string;
   phoneField: 'heroPhoneDisplay' | 'heroPhoneDisplay2';
   canEdit: boolean;
+  /** Escurece a linha: unidade desligada do site, mas o admin ainda edita. */
+  dimmed?: boolean;
 }) {
   return (
     <>
       {/* min-w-0: sem isto a coluna não encolhe, e numa tela de 375px a soma de
           ícone + texto + lápis (sempre visível desde que deixou de depender de
           hover) passava da largura da tela — só não aparecia em telas ≥412px. */}
-      <div className="flex min-w-0 items-center gap-1.5 justify-self-start text-left">
+      <div className={`flex min-w-0 items-center gap-1.5 justify-self-start text-left ${dimmed ? 'opacity-40' : ''}`}>
         <MapPin className="h-4 w-4 flex-shrink-0 text-muted-foreground" />
         <EditableText
           field={locationField}
@@ -42,7 +46,7 @@ function Branch({
           className="truncate text-xs font-semibold text-muted-foreground sm:whitespace-nowrap sm:text-lg"
         />
       </div>
-      <div className="flex min-w-0 items-center gap-1.5 justify-self-end text-right">
+      <div className={`flex min-w-0 items-center gap-1.5 justify-self-end text-right ${dimmed ? 'opacity-40' : ''}`}>
         <a
           href={`https://wa.me/${phone}`}
           target="_blank"
@@ -110,14 +114,24 @@ export function Hero({ siteInfo, canEdit }: HeroProps) {
             phoneField="heroPhoneDisplay"
             canEdit={canEdit}
           />
-          <Branch
-            location={siteInfo.heroLocation2}
-            locationField="heroLocation2"
-            phone={siteInfo.heroPhone2}
-            phoneDisplay={siteInfo.heroPhoneDisplay2}
-            phoneField="heroPhoneDisplay2"
-            canEdit={canEdit}
-          />
+          {/*
+            Visitante: some de vez quando desligado. Admin: continua vendo
+            (esmaecida) para poder editar o texto e religar sem redigitar.
+          */}
+          {(canEdit || siteInfo.showBranch2) && (
+            <Branch
+              location={siteInfo.heroLocation2}
+              locationField="heroLocation2"
+              phone={siteInfo.heroPhone2}
+              phoneDisplay={siteInfo.heroPhoneDisplay2}
+              phoneField="heroPhoneDisplay2"
+              canEdit={canEdit}
+              dimmed={canEdit && !siteInfo.showBranch2}
+            />
+          )}
+          {canEdit && (
+            <BranchVisibilityToggle label={siteInfo.heroLocation2} initialVisible={siteInfo.showBranch2} />
+          )}
         </div>
       </div>
 

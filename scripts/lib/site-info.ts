@@ -10,4 +10,5 @@ export const DEFAULT_SITE_INFO = {
   heroLocation2: 'CUMBUCO',
   heroPhone2: '5585992234683',
   heroPhoneDisplay2: '(85) 99223-4683',
+  showBranch2: true,
 };

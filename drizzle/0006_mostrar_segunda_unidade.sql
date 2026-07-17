@@ -1,0 +1,1 @@
+ALTER TABLE `site_info` ADD `show_branch_2` integer DEFAULT true NOT NULL;

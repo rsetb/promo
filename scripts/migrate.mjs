@@ -56,8 +56,8 @@ export function seedIfEmpty(db, seedPath = './data/seed.json') {
     INSERT INTO site_info (
       id, site_name, hero_title_1, hero_title_2, hero_slogan,
       hero_location, hero_phone, hero_phone_display,
-      hero_location_2, hero_phone_2, hero_phone_display_2
-    ) VALUES (1, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+      hero_location_2, hero_phone_2, hero_phone_display_2, show_branch_2
+    ) VALUES (1, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     ON CONFLICT (id) DO NOTHING
   `);
 
@@ -85,7 +85,8 @@ export function seedIfEmpty(db, seedPath = './data/seed.json') {
       s.heroPhoneDisplay,
       s.heroLocation2,
       s.heroPhone2,
-      s.heroPhoneDisplay2
+      s.heroPhoneDisplay2,
+      s.showBranch2 ? 1 : 0
     );
   });
 

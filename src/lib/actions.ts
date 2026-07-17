@@ -449,6 +449,24 @@ export async function updateSiteField(formData: FormData): Promise<ActionResult>
   return { ok: true };
 }
 
+/**
+ * Mostra ou esconde a segunda cidade/telefone no site.
+ *
+ * Não apaga heroLocation2/heroPhone2 — só deixa de exibi-los. O admin liga de
+ * volta sem precisar redigitar nada.
+ */
+export async function setSecondBranchVisible(visible: boolean): Promise<ActionResult> {
+  await requireAdmin();
+
+  await db
+    .update(siteInfo)
+    .set({ showBranch2: visible, updatedAt: new Date() })
+    .where(eq(siteInfo.id, 1));
+
+  publishChange('site');
+  return { ok: true };
+}
+
 // ---------------------------------------------------------------------------
 
 /**

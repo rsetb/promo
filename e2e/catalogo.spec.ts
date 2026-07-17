@@ -185,6 +185,41 @@ test.describe('admin', () => {
 
     await expect(page.getByText(/já existe/).first()).toBeVisible({ timeout: 15_000 });
   });
+
+  /**
+   * Pedido do usuário: poder deixar só uma cidade/telefone no site. Precisa
+   * funcionar nas duas pontas — sumir para o visitante, mas continuar editável
+   * para o admin (senão religar exige redigitar location/telefone do zero).
+   */
+  test('esconder a segunda unidade some para o visitante e some esmaecida para o admin', async ({
+    page,
+  }) => {
+    await entrar(page);
+    await page.goto('/');
+    await expect(page.getByText('CUMBUCO', { exact: true })).toBeVisible();
+
+    await page.getByRole('switch', { name: /Mostrar CUMBUCO/ }).click();
+    await expect(page.getByRole('switch', { name: /Mostrar CUMBUCO/ })).not.toBeChecked({
+      timeout: 15_000,
+    });
+    // Admin ainda vê a linha (para poder editar/religar), só que esmaecida.
+    await expect(page.getByText('CUMBUCO', { exact: true })).toBeVisible();
+
+    await page.getByRole('button', { name: 'Menu do administrador' }).click();
+    await page.getByRole('menuitem', { name: /Sair/ }).click();
+    await expect(page.getByRole('link', { name: 'Login' })).toBeVisible();
+    // Visitante: sumiu de vez.
+    await expect(page.getByText('CUMBUCO', { exact: true })).toHaveCount(0);
+    await expect(page.getByText('FORTALEZA')).toBeVisible();
+
+    // Religa, para o banco compartilhado não atrapalhar os outros testes.
+    await entrar(page);
+    await page.goto('/');
+    await page.getByRole('switch', { name: /Mostrar CUMBUCO/ }).click();
+    await expect(page.getByRole('switch', { name: /Mostrar CUMBUCO/ })).toBeChecked({
+      timeout: 15_000,
+    });
+  });
 });
 
 /**

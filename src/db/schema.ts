@@ -102,6 +102,12 @@ export const siteInfo = sqliteTable(
     heroLocation2: text('hero_location_2').notNull(),
     heroPhone2: text('hero_phone_2').notNull(),
     heroPhoneDisplay2: text('hero_phone_display_2').notNull(),
+    /**
+     * Mostra a segunda cidade/telefone no site. Default true para não afetar
+     * sites que já existem. Desligar não apaga heroLocation2/heroPhone2 — o
+     * admin pode religar sem redigitar nada.
+     */
+    showBranch2: integer('show_branch_2', { mode: 'boolean' }).notNull().default(true),
     updatedAt: integer('updated_at', { mode: 'timestamp' })
       .notNull()
       .default(sql`(unixepoch())`),
