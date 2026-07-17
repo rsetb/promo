@@ -71,10 +71,10 @@ export function AdminMenu() {
       <ChangePasswordDialog isOpen={isChangePasswordOpen} onOpenChange={setIsChangePasswordOpen} />
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="ghost" className="relative h-10 w-10 rounded-full" aria-label="Menu do administrador">
-          <span className="flex h-10 w-10 items-center justify-center rounded-full bg-muted">
-            <UserIcon className="h-5 w-5" />
-          </span>
+        {/* Mesmo variant e tamanho do ShareButton: os dois ficam lado a lado no
+            header e precisam parecer o mesmo tipo de botão. */}
+        <Button variant="outline" size="icon" aria-label="Menu do administrador">
+          <UserIcon className="h-5 w-5" />
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-56" align="end">
