@@ -1,0 +1,1 @@
+ALTER TABLE `products` ADD `image_file` text;

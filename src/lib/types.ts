@@ -17,7 +17,14 @@ export type ProductView = {
   priceCents: number | null;
   categoryId: number;
   category: string;
+  /** Nome do arquivo da foto, ou null. A URL sai de imageUrl(). */
+  imageFile: string | null;
 };
+
+/** URL pública da foto. Serve pela rota que lê o volume — ver /api/images. */
+export function imageUrl(imageFile: string | null): string | null {
+  return imageFile ? `/api/images/${imageFile}` : null;
+}
 
 /** site_info sem as colunas de controle (id, updatedAt). */
 export type SiteInfoView = Omit<SiteInfo, 'id' | 'updatedAt'>;

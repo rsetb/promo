@@ -34,6 +34,12 @@ export const products = sqliteTable(
     name: text('name').notNull(),
     description: text('description').notNull().default(''),
     priceCents: integer('price_cents'),
+    /**
+     * Nome do arquivo da foto no volume (ex.: "a1b2...f9.webp"), ou NULL.
+     * Só o nome, nunca um caminho: quem resolve o diretório é src/lib/uploads.ts,
+     * e assim um valor no banco não consegue apontar para fora dele.
+     */
+    imageFile: text('image_file'),
     categoryId: integer('category_id')
       .notNull()
       .references(() => categories.id, { onDelete: 'restrict' }),

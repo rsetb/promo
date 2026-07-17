@@ -47,11 +47,12 @@ COPY --from=builder --chown=nextjs:nodejs /app/data/seed.json ./data/seed.json
 # um deles, então trazemos o pacote completo do drizzle-orm.
 COPY --from=deps --chown=nextjs:nodejs /app/node_modules/drizzle-orm ./node_modules/drizzle-orm
 
-# O BANCO VIVE AQUI. Este diretório PRECISA ser um volume no EasyPanel — sem
-# volume, o arquivo fica na camada gravável do container e o catálogo inteiro é
-# perdido no primeiro redeploy.
+# O BANCO E AS FOTOS VIVEM AQUI. Este diretório PRECISA ser um volume no
+# EasyPanel — sem volume, os arquivos ficam na camada gravável do container e o
+# catálogo inteiro (com as fotos) é perdido no primeiro redeploy.
 ENV DATABASE_PATH=/data/app.db
-RUN mkdir -p /data && chown nextjs:nodejs /data
+ENV UPLOADS_PATH=/data/uploads
+RUN mkdir -p /data/uploads && chown -R nextjs:nodejs /data
 VOLUME /data
 
 USER nextjs

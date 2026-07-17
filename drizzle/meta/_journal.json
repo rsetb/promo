@@ -8,6 +8,13 @@
       "when": 1784249482708,
       "tag": "0000_tense_lilandra",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "6",
+      "when": 1784255673726,
+      "tag": "0001_striped_true_believers",
+      "breakpoints": true
     }
   ]
 }

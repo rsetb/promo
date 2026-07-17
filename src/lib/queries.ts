@@ -31,6 +31,7 @@ export async function getProducts(): Promise<ProductView[]> {
       priceCents: products.priceCents,
       categoryId: products.categoryId,
       category: categories.name,
+      imageFile: products.imageFile,
     })
     .from(products)
     .innerJoin(categories, eq(products.categoryId, categories.id))

@@ -17,6 +17,7 @@ import {
 } from '@/lib/auth';
 import { notifyCatalogChange } from '@/lib/events';
 import { parsePriceToCents } from '@/lib/format';
+import { deleteProductImage, saveProductImage } from '@/lib/uploads';
 import type { ActionResult } from '@/lib/types';
 
 /**
@@ -40,6 +41,18 @@ async function requireAdmin(): Promise<void> {
  * com a página aberta em outro dispositivo não se atualiza, e o bug aparece só
  * naquele ponto.
  */
+/**
+ * Extrai a foto do formulário, se houver uma.
+ *
+ * O input de arquivo manda um File de tamanho 0 quando nada foi escolhido —
+ * por isso a checagem de size, e não só de presença.
+ */
+function getImageFile(formData: FormData): File | null {
+  const value = formData.get('image');
+  if (value instanceof File && value.size > 0) return value;
+  return null;
+}
+
 function publishChange(scope: 'catalog' | 'site'): void {
   if (scope === 'site') {
     revalidatePath('/', 'layout');
@@ -103,11 +116,20 @@ export async function createProduct(formData: FormData): Promise<ActionResult> {
     return { ok: false, error: parsed.error.issues[0].message };
   }
 
+  const image = getImageFile(formData);
+  let imageFile: string | null = null;
+  if (image) {
+    const saved = await saveProductImage(image);
+    if (!saved.ok) return { ok: false, error: saved.error };
+    imageFile = saved.file;
+  }
+
   await db.insert(products).values({
     name: parsed.data.name,
     priceCents: parsePriceToCents(parsed.data.price),
     categoryId: parsed.data.categoryId,
     description: '',
+    imageFile,
   });
 
   publishChange('catalog');
@@ -126,15 +148,42 @@ export async function updateProduct(id: number, formData: FormData): Promise<Act
     return { ok: false, error: parsed.error.issues[0].message };
   }
 
+  const [current] = await db
+    .select({ imageFile: products.imageFile })
+    .from(products)
+    .where(eq(products.id, id))
+    .limit(1);
+  if (!current) return { ok: false, error: 'Produto não encontrado.' };
+
+  const image = getImageFile(formData);
+  const removeImage = formData.get('removeImage') === '1';
+
+  let imageFile = current.imageFile;
+  if (image) {
+    const saved = await saveProductImage(image);
+    if (!saved.ok) return { ok: false, error: saved.error };
+    imageFile = saved.file;
+  } else if (removeImage) {
+    imageFile = null;
+  }
+
   await db
     .update(products)
     .set({
       name: parsed.data.name,
       priceCents: parsePriceToCents(parsed.data.price),
       categoryId: parsed.data.categoryId,
+      imageFile,
       updatedAt: new Date(),
     })
     .where(eq(products.id, id));
+
+  // Só apaga o arquivo antigo DEPOIS do banco confirmar a troca. Na ordem
+  // inversa, uma falha no update deixaria o produto apontando para uma foto
+  // que já não existe.
+  if (current.imageFile && current.imageFile !== imageFile) {
+    await deleteProductImage(current.imageFile);
+  }
 
   publishChange('catalog');
   return { ok: true };
@@ -142,7 +191,17 @@ export async function updateProduct(id: number, formData: FormData): Promise<Act
 
 export async function deleteProduct(id: number): Promise<ActionResult> {
   await requireAdmin();
+
+  const [current] = await db
+    .select({ imageFile: products.imageFile })
+    .from(products)
+    .where(eq(products.id, id))
+    .limit(1);
+
   await db.delete(products).where(eq(products.id, id));
+  // Sem isto, cada produto excluído deixaria a foto no volume para sempre.
+  await deleteProductImage(current?.imageFile ?? null);
+
   publishChange('catalog');
   return { ok: true };
 }

@@ -40,3 +40,6 @@ next-env.d.ts
 
 # Gerado pelo build (scripts/build-seed.ts) a partir do catalog-export.
 /data/seed.json
+
+# Fotos enviadas pelo admin — dados, nao codigo. Em producao ficam no volume.
+/data/uploads/

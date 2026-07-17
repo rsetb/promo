@@ -2,7 +2,8 @@
 
 import { useState, useTransition } from 'react';
 import { useRouter } from 'next/navigation';
-import { Edit, MoreVertical, Save, Trash2, X } from 'lucide-react';
+import Image from 'next/image';
+import { Edit, ImageOff, MoreVertical, Save, Trash2, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Card, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -19,10 +20,11 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
+import { ImagePicker } from '@/components/image-picker';
 import { useToast } from '@/hooks/use-toast';
 import { updateProduct } from '@/lib/actions';
 import { formatPrice, maskPriceInput, priceToInput } from '@/lib/format';
-import type { Category, ProductView } from '@/lib/types';
+import { imageUrl, type Category, type ProductView } from '@/lib/types';
 
 type ProductRowProps = {
   product: ProductView;
@@ -36,6 +38,8 @@ export function ProductRow({ product, categories, canEdit, onRequestDelete }: Pr
   const [name, setName] = useState(product.name);
   const [price, setPrice] = useState(priceToInput(product.priceCents));
   const [categoryId, setCategoryId] = useState(String(product.categoryId));
+  const [imageFile, setImageFile] = useState<File | null>(null);
+  const [imageRemoved, setImageRemoved] = useState(false);
   const [isPending, startTransition] = useTransition();
   const { toast } = useToast();
   const router = useRouter();
@@ -44,6 +48,8 @@ export function ProductRow({ product, categories, canEdit, onRequestDelete }: Pr
     setName(product.name);
     setPrice(priceToInput(product.priceCents));
     setCategoryId(String(product.categoryId));
+    setImageFile(null);
+    setImageRemoved(false);
     setIsEditing(true);
   };
 
@@ -53,6 +59,8 @@ export function ProductRow({ product, categories, canEdit, onRequestDelete }: Pr
       formData.set('name', name);
       formData.set('price', price);
       formData.set('categoryId', categoryId);
+      if (imageFile) formData.set('image', imageFile);
+      if (imageRemoved && !imageFile) formData.set('removeImage', '1');
 
       const result = await updateProduct(product.id, formData);
       if (result.ok) {
@@ -82,6 +90,8 @@ export function ProductRow({ product, categories, canEdit, onRequestDelete }: Pr
       setIsEditing(false);
     }
   };
+
+  const thumb = imageUrl(product.imageFile);
 
   return (
     <Card className="border transition-all duration-300 hover:border-primary hover:shadow-lg">
@@ -113,12 +123,37 @@ export function ProductRow({ product, categories, canEdit, onRequestDelete }: Pr
                     </SelectContent>
                   </Select>
                 </div>
+                <div className="mt-3">
+                  <ImagePicker
+                    currentFile={product.imageFile}
+                    file={imageFile}
+                    onFileChange={setImageFile}
+                    removed={imageRemoved}
+                    onRemovedChange={setImageRemoved}
+                    disabled={isPending}
+                  />
+                </div>
               </>
             ) : (
-              <>
-                <CardTitle className="text-md font-semibold">{product.name}</CardTitle>
-                <p className="mt-1 text-sm text-muted-foreground">{product.category}</p>
-              </>
+              <div className="flex items-center gap-3">
+                {thumb ? (
+                  <Image
+                    src={thumb}
+                    alt=""
+                    width={56}
+                    height={56}
+                    className="h-14 w-14 shrink-0 rounded-md border object-cover"
+                  />
+                ) : (
+                  <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-md border border-dashed text-muted-foreground">
+                    <ImageOff className="h-4 w-4" />
+                  </div>
+                )}
+                <div className="min-w-0">
+                  <CardTitle className="text-md font-semibold">{product.name}</CardTitle>
+                  <p className="mt-1 text-sm text-muted-foreground">{product.category}</p>
+                </div>
+              </div>
             )}
           </div>
 

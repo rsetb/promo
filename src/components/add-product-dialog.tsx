@@ -20,6 +20,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
+import { ImagePicker } from '@/components/image-picker';
 import { useToast } from '@/hooks/use-toast';
 import { createProduct } from '@/lib/actions';
 import { maskPriceInput } from '@/lib/format';
@@ -35,6 +36,7 @@ export function AddProductDialog({ isOpen, onOpenChange, categories }: AddProduc
   const [name, setName] = useState('');
   const [price, setPrice] = useState('');
   const [categoryId, setCategoryId] = useState('');
+  const [image, setImage] = useState<File | null>(null);
   const [isPending, startTransition] = useTransition();
   const { toast } = useToast();
   const router = useRouter();
@@ -43,6 +45,7 @@ export function AddProductDialog({ isOpen, onOpenChange, categories }: AddProduc
     setName('');
     setPrice('');
     setCategoryId('');
+    setImage(null);
   };
 
   const submit = (event: React.FormEvent) => {
@@ -52,6 +55,7 @@ export function AddProductDialog({ isOpen, onOpenChange, categories }: AddProduc
       formData.set('name', name);
       formData.set('price', price);
       formData.set('categoryId', categoryId);
+      if (image) formData.set('image', image);
 
       const result = await createProduct(formData);
       if (result.ok) {
@@ -120,6 +124,17 @@ export function AddProductDialog({ isOpen, onOpenChange, categories }: AddProduc
                 ))}
               </SelectContent>
             </Select>
+          </div>
+
+          <div className="grid gap-2">
+            <Label>Foto</Label>
+            <ImagePicker
+              file={image}
+              onFileChange={setImage}
+              removed={false}
+              onRemovedChange={() => {}}
+              disabled={isPending}
+            />
           </div>
 
           <DialogFooter>
