@@ -375,6 +375,39 @@ const siteFieldSchema = z.object({
   value: z.string().trim().min(1, 'O valor não pode ficar vazio.').max(300),
 });
 
+/**
+ * Troca o logo do site. Aceita arquivo ou endereço, igual às fotos de produto,
+ * e passa pelo mesmo processamento (sharp valida, corrige EXIF, redimensiona).
+ */
+export async function updateSiteLogo(formData: FormData): Promise<ActionResult> {
+  await requireAdmin();
+
+  const incoming = await resolveIncomingImage(formData);
+  if (!incoming.ok) return incoming;
+
+  const [current] = await db
+    .select({ logoFile: siteInfo.logoFile })
+    .from(siteInfo)
+    .where(eq(siteInfo.id, 1))
+    .limit(1);
+
+  const remove = formData.get('removeImage') === '1';
+  if (!incoming.file && !remove) {
+    return { ok: false, error: 'Escolha um arquivo ou cole um endereço.' };
+  }
+
+  const logoFile = incoming.file ?? null;
+  await db.update(siteInfo).set({ logoFile, updatedAt: new Date() }).where(eq(siteInfo.id, 1));
+
+  // Só apaga o antigo depois do banco confirmar — ver updateProduct.
+  if (current?.logoFile && current.logoFile !== logoFile) {
+    await deleteProductImage(current.logoFile);
+  }
+
+  publishChange('site');
+  return { ok: true };
+}
+
 export async function updateSiteField(formData: FormData): Promise<ActionResult> {
   await requireAdmin();
 

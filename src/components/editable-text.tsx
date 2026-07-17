@@ -85,6 +85,11 @@ export function EditableText({ field, value, className, canEdit, centered }: Edi
   return (
     <div className={`group relative flex w-full items-center gap-2 ${centered ? 'justify-center' : ''}`}>
       <span className={className}>{value}</span>
+      {/*
+        Sempre visível, não só no hover: quem vê este botão já é admin, e no
+        celular não existe hover — o lápis escondido tornava os textos do
+        cabeçalho impossíveis de editar justamente no aparelho mais usado.
+      */}
       <Button
         onClick={() => {
           setDraft(value);
@@ -92,7 +97,7 @@ export function EditableText({ field, value, className, canEdit, centered }: Edi
         }}
         variant="ghost"
         size="icon"
-        className="h-9 w-9 shrink-0 opacity-0 transition-opacity group-hover:opacity-100 focus-visible:opacity-100"
+        className="h-9 w-9 shrink-0 opacity-60 transition-opacity hover:opacity-100 focus-visible:opacity-100"
         aria-label={`Editar ${field}`}
       >
         <Edit className="h-4 w-4" />

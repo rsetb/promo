@@ -26,6 +26,14 @@ export function imageUrl(imageFile: string | null): string | null {
   return imageFile ? `/api/images/${imageFile}` : null;
 }
 
+/**
+ * URL do logo. Cai no /logo.png que vem na imagem Docker enquanto o admin não
+ * subir um — assim o site nunca fica sem logo, nem em banco recém-criado.
+ */
+export function logoUrl(logoFile: string | null): string {
+  return logoFile ? `/api/images/${logoFile}` : '/logo.png';
+}
+
 /** site_info sem as colunas de controle (id, updatedAt). */
 export type SiteInfoView = Omit<SiteInfo, 'id' | 'updatedAt'>;
 

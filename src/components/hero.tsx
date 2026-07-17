@@ -1,6 +1,6 @@
-import Image from 'next/image';
 import { MapPin } from 'lucide-react';
 import { EditableText } from '@/components/editable-text';
+import { EditableLogo } from '@/components/editable-logo';
 import { WhatsappIcon } from '@/components/whatsapp-icon';
 import type { SiteInfoView } from '@/lib/types';
 
@@ -70,12 +70,12 @@ export function Hero({ siteInfo, canEdit }: HeroProps) {
   return (
     <div className="px-4 pb-12 pt-8 text-center sm:px-6 lg:px-8">
       <div className="mb-4 flex items-center justify-center pt-4">
-        <Image
-          src="/logo.png"
-          alt="MR Bebidas Distribuidora"
-          width={160}
-          height={160}
-          className="rounded-full"
+        <EditableLogo
+          logoFile={siteInfo.logoFile}
+          siteName={siteInfo.siteName}
+          canEdit={canEdit}
+          size={160}
+          className="h-40 w-40 rounded-full object-contain"
           priority
         />
       </div>

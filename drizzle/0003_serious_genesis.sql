@@ -1,0 +1,1 @@
+ALTER TABLE `site_info` ADD `logo_file` text;

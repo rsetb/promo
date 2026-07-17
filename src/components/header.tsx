@@ -4,6 +4,7 @@ import { EditableText } from '@/components/editable-text';
 import { AdminMenu, LoginButton, ShareButton } from '@/components/header-actions';
 import { isAdmin } from '@/lib/auth';
 import { getSiteInfo } from '@/lib/queries';
+import { logoUrl } from '@/lib/types';
 
 export default async function Header() {
   const [siteInfo, admin] = await Promise.all([getSiteInfo(), isAdmin()]);
@@ -12,8 +13,16 @@ export default async function Header() {
     <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="container mx-auto flex h-16 items-center px-4 sm:px-6 lg:px-8">
         <div className="mr-auto flex items-center gap-2">
+          {/* Só o logo troca aqui; a edição fica no hero, onde ele é grande. */}
           <Link href="/" className="flex items-center gap-2">
-            <Image src="/logo.png" alt="MR Bebidas" width={40} height={40} className="rounded-full" />
+            <Image
+              src={logoUrl(siteInfo.logoFile)}
+              alt={siteInfo.siteName}
+              width={40}
+              height={40}
+              className="h-10 w-10 rounded-full object-contain"
+              unoptimized={!!siteInfo.logoFile}
+            />
           </Link>
           {admin ? (
             <EditableText

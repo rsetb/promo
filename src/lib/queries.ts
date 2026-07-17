@@ -10,6 +10,8 @@ import type { ProductView, SiteInfoView } from '@/lib/types';
  * boot, antes de rodar o seed).
  */
 export const DEFAULT_SITE_INFO: SiteInfoView = {
+  // null = usa o /logo.png que vem na imagem, até o admin subir um.
+  logoFile: null,
   siteName: 'MR Bebidas',
   heroTitle1: 'MR BEBIDAS',
   heroTitle2: 'DISTRIBUIDORA',

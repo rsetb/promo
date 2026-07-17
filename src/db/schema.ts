@@ -65,6 +65,11 @@ export const siteInfo = sqliteTable(
   {
     id: integer('id').primaryKey().default(1),
     siteName: text('site_name').notNull(),
+    /**
+     * Nome do arquivo do logo no volume, ou NULL para usar o /logo.png que vem
+     * na imagem. Mesmo formato e mesma pasta das fotos de produto.
+     */
+    logoFile: text('logo_file'),
     heroTitle1: text('hero_title_1').notNull(),
     heroTitle2: text('hero_title_2').notNull(),
     heroSlogan: text('hero_slogan').notNull(),
