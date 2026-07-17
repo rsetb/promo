@@ -18,6 +18,23 @@ type EditableTextProps = {
 };
 
 /**
+ * Nome de cada campo em português.
+ *
+ * O aria-label saía como "Editar heroPhoneDisplay2" — nome de variável, lido
+ * em voz alta por leitor de tela.
+ */
+const FIELD_LABELS: Record<EditableSiteField, string> = {
+  siteName: 'nome do site',
+  heroTitle1: 'título principal',
+  heroTitle2: 'subtítulo',
+  heroSlogan: 'slogan',
+  heroLocation: 'primeira cidade',
+  heroPhoneDisplay: 'telefone da primeira cidade',
+  heroLocation2: 'segunda cidade',
+  heroPhoneDisplay2: 'telefone da segunda cidade',
+};
+
+/**
  * Texto do site editável no lugar. Quando `canEdit` é falso renderiza apenas o
  * texto — mas quem garante a permissão é a Server Action, não este componente.
  */
@@ -98,7 +115,7 @@ export function EditableText({ field, value, className, canEdit, centered }: Edi
         variant="ghost"
         size="icon"
         className="h-9 w-9 shrink-0 opacity-60 transition-opacity hover:opacity-100 focus-visible:opacity-100"
-        aria-label={`Editar ${field}`}
+        aria-label={`Editar ${FIELD_LABELS[field]}`}
       >
         <Edit className="h-4 w-4" />
       </Button>

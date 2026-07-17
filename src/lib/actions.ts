@@ -435,19 +435,41 @@ export async function updateSiteField(formData: FormData): Promise<ActionResult>
 
 // ---------------------------------------------------------------------------
 
-function hasSqliteCode(error: unknown, code: string): boolean {
-  return typeof error === 'object' && error !== null && 'code' in error && error.code === code;
+/**
+ * Extrai o código de erro do SQLite.
+ *
+ * O drizzle embrulha a exceção original num DrizzleError, então o `code` fica
+ * em `cause`, não no erro de cima — olhar só o topo devolvia `undefined`
+ * sempre, nenhum catch casava, e o app quebrava com tela de erro em vez de
+ * explicar o problema. Olhamos os dois níveis para não depender de detalhe
+ * interno do drizzle.
+ */
+function sqliteCode(error: unknown): string | undefined {
+  const pick = (e: unknown): string | undefined =>
+    typeof e === 'object' && e !== null && 'code' in e && typeof (e as { code: unknown }).code === 'string'
+      ? ((e as { code: string }).code)
+      : undefined;
+
+  const cause = typeof error === 'object' && error !== null ? (error as { cause?: unknown }).cause : undefined;
+  return pick(error) ?? pick(cause);
 }
 
 /** Nome de categoria repetido (índice UNIQUE em categories.name). */
 function isUniqueViolation(error: unknown): boolean {
-  return hasSqliteCode(error, 'SQLITE_CONSTRAINT_UNIQUE');
+  return sqliteCode(error) === 'SQLITE_CONSTRAINT_UNIQUE';
 }
 
 /**
  * Categoria ainda referenciada por produtos (FK com onDelete: 'restrict').
- * Só dispara porque a conexão liga `PRAGMA foreign_keys = ON` — ver src/db.
+ *
+ * O SQLite implementa as ações de FK internamente com triggers, então o código
+ * que chega é SQLITE_CONSTRAINT_TRIGGER — e não o SQLITE_CONSTRAINT_FOREIGNKEY
+ * que o nome sugeriria. Aceitamos os dois: FOREIGNKEY é o que vem quando a
+ * violação não passa por ação de FK (ex.: inserir com category_id inexistente).
+ *
+ * Só dispara porque a conexão liga `PRAGMA foreign_keys = ON` — ver src/db/open.
  */
 function isForeignKeyViolation(error: unknown): boolean {
-  return hasSqliteCode(error, 'SQLITE_CONSTRAINT_FOREIGNKEY');
+  const code = sqliteCode(error);
+  return code === 'SQLITE_CONSTRAINT_TRIGGER' || code === 'SQLITE_CONSTRAINT_FOREIGNKEY';
 }

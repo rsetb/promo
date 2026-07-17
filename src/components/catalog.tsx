@@ -58,7 +58,11 @@ export function Catalog({ products, categories, canEdit }: CatalogProps) {
   const filtered = useMemo(() => {
     const needle = fold(searchTerm.trim());
     return products.filter((product) => {
-      const matchesSearch = !needle || fold(product.name).includes(needle);
+      // Busca também na categoria: quem digita "energeticos" quer ver os
+      // energéticos, e nenhum produto se chama assim — o nome da categoria é
+      // o termo que a pessoa conhece.
+      const matchesSearch =
+        !needle || fold(product.name).includes(needle) || fold(product.category).includes(needle);
       const matchesCategory = selectedCategory === ALL || product.category === selectedCategory;
       return matchesSearch && matchesCategory;
     });

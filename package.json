@@ -16,7 +16,9 @@
     "verify:format": "tsx scripts/verify-format.ts",
     "verify": "tsx scripts/verify-format.ts && tsx scripts/verify-uploads.ts && tsx scripts/verify-auth.ts && tsx scripts/verify-migration.ts",
     "verify:uploads": "tsx scripts/verify-uploads.ts",
-    "verify:auth": "tsx scripts/verify-auth.ts"
+    "verify:auth": "tsx scripts/verify-auth.ts",
+    "e2e": "playwright test",
+    "e2e:setup": "tsx scripts/build-seed.ts && node scripts/migrate.mjs"
   },
   "dependencies": {
     "@radix-ui/react-alert-dialog": "^1.1.6",
@@ -41,6 +43,7 @@
     "zod": "^3.24.2"
   },
   "devDependencies": {
+    "@playwright/test": "^1.61.1",
     "@types/better-sqlite3": "^7.6.13",
     "@types/node": "^20",
     "@types/react": "^19.2.1",
