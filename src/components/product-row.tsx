@@ -39,6 +39,7 @@ export function ProductRow({ product, categories, canEdit, onRequestDelete }: Pr
   const [price, setPrice] = useState(priceToInput(product.priceCents));
   const [categoryId, setCategoryId] = useState(String(product.categoryId));
   const [imageFile, setImageFile] = useState<File | null>(null);
+  const [imageUrlInput, setImageUrlInput] = useState('');
   const [imageRemoved, setImageRemoved] = useState(false);
   const [isPending, startTransition] = useTransition();
   const { toast } = useToast();
@@ -49,6 +50,7 @@ export function ProductRow({ product, categories, canEdit, onRequestDelete }: Pr
     setPrice(priceToInput(product.priceCents));
     setCategoryId(String(product.categoryId));
     setImageFile(null);
+    setImageUrlInput('');
     setImageRemoved(false);
     setIsEditing(true);
   };
@@ -60,7 +62,8 @@ export function ProductRow({ product, categories, canEdit, onRequestDelete }: Pr
       formData.set('price', price);
       formData.set('categoryId', categoryId);
       if (imageFile) formData.set('image', imageFile);
-      if (imageRemoved && !imageFile) formData.set('removeImage', '1');
+      if (imageUrlInput.trim()) formData.set('imageUrl', imageUrlInput.trim());
+      if (imageRemoved && !imageFile && !imageUrlInput.trim()) formData.set('removeImage', '1');
 
       const result = await updateProduct(product.id, formData);
       if (result.ok) {
@@ -128,6 +131,8 @@ export function ProductRow({ product, categories, canEdit, onRequestDelete }: Pr
                     currentFile={product.imageFile}
                     file={imageFile}
                     onFileChange={setImageFile}
+                    url={imageUrlInput}
+                    onUrlChange={setImageUrlInput}
                     removed={imageRemoved}
                     onRemovedChange={setImageRemoved}
                     disabled={isPending}

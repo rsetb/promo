@@ -59,8 +59,17 @@ export async function saveProductImage(file: File): Promise<SaveResult> {
     return { ok: false, error: 'A imagem passa de 10 MB. Use uma foto menor.' };
   }
 
-  const input = Buffer.from(await file.arrayBuffer());
+  return processAndStore(Buffer.from(await file.arrayBuffer()));
+}
 
+/**
+ * Caminho único de processamento: upload e URL passam os dois por aqui.
+ *
+ * Ter uma função só garante que as duas origens recebam a mesma validação, o
+ * mesmo redimensionamento e a mesma remoção de EXIF — em vez de uma delas
+ * ficar para trás quando alguém mexer numa e esquecer da outra.
+ */
+async function processAndStore(input: Buffer): Promise<SaveResult> {
   let output: Buffer;
   try {
     output = await sharp(input)
@@ -69,7 +78,7 @@ export async function saveProductImage(file: File): Promise<SaveResult> {
       .webp({ quality: WEBP_QUALITY })
       .toBuffer();
   } catch {
-    return { ok: false, error: 'Não consegui ler esse arquivo como imagem.' };
+    return { ok: false, error: 'Não consegui ler isso como imagem.' };
   }
 
   const name = `${randomBytes(16).toString('hex')}.webp`;
@@ -78,6 +87,100 @@ export async function saveProductImage(file: File): Promise<SaveResult> {
   await writeFileAtomic(join(dir, name), output);
 
   return { ok: true, file: name };
+}
+
+/**
+ * Baixa a imagem de uma URL e guarda como se fosse upload.
+ *
+ * Guardamos o arquivo em vez do link: um link quebra quando o site de origem
+ * sai do ar, troca o endereço ou bloqueia hotlink — e aí a foto some do
+ * catálogo sem ninguém mexer em nada.
+ */
+export async function saveProductImageFromUrl(rawUrl: string): Promise<SaveResult> {
+  const url = parsePublicHttpUrl(rawUrl);
+  if (!url) return { ok: false, error: 'Endereço inválido. Use um link http:// ou https://.' };
+
+  const blocked = await resolvesToPrivateAddress(url.hostname);
+  if (blocked) {
+    // SSRF: sem esta checagem, colar "http://localhost:3000" ou um IP interno
+    // faria o servidor buscar na PRÓPRIA rede da VPS e devolver o resultado.
+    return { ok: false, error: 'Esse endereço aponta para a rede interna do servidor.' };
+  }
+
+  let response: Response;
+  try {
+    response = await fetch(url, {
+      redirect: 'follow',
+      signal: AbortSignal.timeout(15_000),
+      headers: { Accept: 'image/*' },
+    });
+  } catch {
+    return { ok: false, error: 'Não consegui baixar a imagem desse endereço.' };
+  }
+
+  if (!response.ok) {
+    return { ok: false, error: `O site respondeu ${response.status} ao pedir a imagem.` };
+  }
+
+  const declared = Number(response.headers.get('content-length') ?? 0);
+  if (declared > MAX_UPLOAD_BYTES) {
+    return { ok: false, error: 'A imagem passa de 10 MB. Escolha outra.' };
+  }
+
+  const buffer = Buffer.from(await response.arrayBuffer());
+  // O content-length pode mentir ou nem vir; conferimos o tamanho real também.
+  if (buffer.length === 0) return { ok: false, error: 'O endereço não devolveu nenhum dado.' };
+  if (buffer.length > MAX_UPLOAD_BYTES) {
+    return { ok: false, error: 'A imagem passa de 10 MB. Escolha outra.' };
+  }
+
+  // Daqui em diante é o mesmo caminho do upload: o sharp valida, corrige
+  // orientação, redimensiona e descarta o EXIF.
+  return processAndStore(buffer);
+}
+
+/** Aceita só http/https. Descarta file://, data:, gopher:// e afins. */
+function parsePublicHttpUrl(raw: string): URL | null {
+  let url: URL;
+  try {
+    url = new URL(raw.trim());
+  } catch {
+    return null;
+  }
+  if (url.protocol !== 'http:' && url.protocol !== 'https:') return null;
+  return url;
+}
+
+/**
+ * Resolve o hostname e recusa endereços que não são da internet pública.
+ *
+ * Cobre localhost, 10.x, 172.16-31.x, 192.168.x, link-local (169.254.x — que
+ * inclui o endpoint de metadados das nuvens) e os equivalentes em IPv6.
+ */
+async function resolvesToPrivateAddress(hostname: string): Promise<boolean> {
+  const { lookup } = await import('node:dns/promises');
+  try {
+    const results = await lookup(hostname, { all: true });
+    return results.some(({ address }) => isPrivateAddress(address));
+  } catch {
+    // Não resolveu: o fetch falharia de qualquer forma.
+    return true;
+  }
+}
+
+function isPrivateAddress(address: string): boolean {
+  if (address === '::1' || address.startsWith('fc') || address.startsWith('fd') || address.startsWith('fe80')) {
+    return true;
+  }
+  const parts = address.split('.').map(Number);
+  if (parts.length !== 4 || parts.some(Number.isNaN)) return false;
+
+  const [a, b] = parts;
+  if (a === 127 || a === 0 || a === 10) return true;
+  if (a === 172 && b >= 16 && b <= 31) return true;
+  if (a === 192 && b === 168) return true;
+  if (a === 169 && b === 254) return true; // metadados de nuvem
+  return false;
 }
 
 export async function readProductImage(name: string): Promise<Buffer | null> {

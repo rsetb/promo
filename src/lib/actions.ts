@@ -17,7 +17,7 @@ import {
 } from '@/lib/auth';
 import { notifyCatalogChange } from '@/lib/events';
 import { parsePriceToCents } from '@/lib/format';
-import { deleteProductImage, saveProductImage } from '@/lib/uploads';
+import { deleteProductImage, saveProductImage, saveProductImageFromUrl } from '@/lib/uploads';
 import type { ActionResult } from '@/lib/types';
 
 /**
@@ -51,6 +51,28 @@ function getImageFile(formData: FormData): File | null {
   const value = formData.get('image');
   if (value instanceof File && value.size > 0) return value;
   return null;
+}
+
+/**
+ * Resolve a foto vinda do formulário: arquivo enviado ou endereço colado.
+ * Retorna o nome do arquivo salvo, null quando não veio foto, ou um erro.
+ */
+async function resolveIncomingImage(
+  formData: FormData
+): Promise<{ ok: true; file: string | null } | { ok: false; error: string }> {
+  const file = getImageFile(formData);
+  if (file) {
+    const saved = await saveProductImage(file);
+    return saved.ok ? { ok: true, file: saved.file } : saved;
+  }
+
+  const url = String(formData.get('imageUrl') ?? '').trim();
+  if (url) {
+    const saved = await saveProductImageFromUrl(url);
+    return saved.ok ? { ok: true, file: saved.file } : saved;
+  }
+
+  return { ok: true, file: null };
 }
 
 function publishChange(scope: 'catalog' | 'site'): void {
@@ -116,20 +138,15 @@ export async function createProduct(formData: FormData): Promise<ActionResult> {
     return { ok: false, error: parsed.error.issues[0].message };
   }
 
-  const image = getImageFile(formData);
-  let imageFile: string | null = null;
-  if (image) {
-    const saved = await saveProductImage(image);
-    if (!saved.ok) return { ok: false, error: saved.error };
-    imageFile = saved.file;
-  }
+  const incoming = await resolveIncomingImage(formData);
+  if (!incoming.ok) return incoming;
 
   await db.insert(products).values({
     name: parsed.data.name,
     priceCents: parsePriceToCents(parsed.data.price),
     categoryId: parsed.data.categoryId,
     description: '',
-    imageFile,
+    imageFile: incoming.file,
   });
 
   publishChange('catalog');
@@ -155,15 +172,13 @@ export async function updateProduct(id: number, formData: FormData): Promise<Act
     .limit(1);
   if (!current) return { ok: false, error: 'Produto não encontrado.' };
 
-  const image = getImageFile(formData);
-  const removeImage = formData.get('removeImage') === '1';
+  const incoming = await resolveIncomingImage(formData);
+  if (!incoming.ok) return incoming;
 
   let imageFile = current.imageFile;
-  if (image) {
-    const saved = await saveProductImage(image);
-    if (!saved.ok) return { ok: false, error: saved.error };
-    imageFile = saved.file;
-  } else if (removeImage) {
+  if (incoming.file) {
+    imageFile = incoming.file;
+  } else if (formData.get('removeImage') === '1') {
     imageFile = null;
   }
 

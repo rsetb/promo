@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { ImagePlus, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
 import { imageUrl } from '@/lib/types';
 
 type ImagePickerProps = {
@@ -11,6 +12,9 @@ type ImagePickerProps = {
   /** Arquivo escolhido agora; null = nenhum. */
   file: File | null;
   onFileChange: (file: File | null) => void;
+  /** Endereço colado; o servidor baixa e guarda no volume. */
+  url: string;
+  onUrlChange: (url: string) => void;
   /** True quando o admin removeu a foto existente. */
   removed: boolean;
   onRemovedChange: (removed: boolean) => void;
@@ -27,6 +31,8 @@ export function ImagePicker({
   currentFile,
   file,
   onFileChange,
+  url,
+  onUrlChange,
   removed,
   onRemovedChange,
   disabled,
@@ -49,12 +55,14 @@ export function ImagePicker({
 
   const clear = () => {
     onFileChange(null);
+    onUrlChange('');
     onRemovedChange(true);
     if (inputRef.current) inputRef.current.value = '';
   };
 
   return (
-    <div className="flex items-center gap-3">
+    <div className="space-y-2">
+      <div className="flex items-center gap-3">
       <input
         ref={inputRef}
         type="file"
@@ -64,7 +72,10 @@ export function ImagePicker({
         onChange={(e) => {
           const chosen = e.target.files?.[0] ?? null;
           onFileChange(chosen);
-          if (chosen) onRemovedChange(false);
+          if (chosen) {
+            onUrlChange('');
+            onRemovedChange(false);
+          }
         }}
       />
 
@@ -95,15 +106,38 @@ export function ImagePicker({
         </div>
       )}
 
-      <Button
-        type="button"
-        variant="outline"
-        size="sm"
-        onClick={() => inputRef.current?.click()}
-        disabled={disabled}
-      >
-        {shown ? 'Trocar foto' : 'Escolher foto'}
-      </Button>
+        <Button
+          type="button"
+          variant="outline"
+          size="sm"
+          onClick={() => inputRef.current?.click()}
+          disabled={disabled}
+        >
+          {shown ? 'Trocar foto' : 'Escolher foto'}
+        </Button>
+      </div>
+
+      {/*
+        A imagem da URL é baixada e guardada no volume, não apenas apontada:
+        um link quebra quando o site de origem sai do ar ou bloqueia hotlink.
+        Por isso não há prévia aqui — ela só aparece depois de salvar.
+      */}
+      <Input
+        type="url"
+        inputMode="url"
+        placeholder="ou cole o endereço de uma imagem"
+        value={url}
+        onChange={(e) => {
+          onUrlChange(e.target.value);
+          if (e.target.value) {
+            onFileChange(null);
+            onRemovedChange(false);
+          }
+        }}
+        disabled={disabled || !!file}
+        className="h-8 text-xs"
+        aria-label="Endereço da imagem"
+      />
     </div>
   );
 }

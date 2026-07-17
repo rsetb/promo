@@ -114,6 +114,25 @@ async function main() {
   console.log('\n== leitura de nome invalido ==');
   check('readProductImage("../app.db")', await readProductImage('../app.db'), null);
 
+  console.log('\n== URL: recusa a rede interna (SSRF) ==');
+  // O servidor busca a URL que o admin colar. Sem estas checagens, o app
+  // viraria uma ponte para a rede interna da VPS e para os metadados da nuvem.
+  const { saveProductImageFromUrl } = await import('../src/lib/uploads');
+  for (const [label, url] of [
+    ['localhost', 'http://localhost:3000/x.png'],
+    ['127.0.0.1', 'http://127.0.0.1/x.png'],
+    ['10.x (rede privada)', 'http://10.0.0.5/x.png'],
+    ['192.168.x', 'http://192.168.0.1/x.png'],
+    ['172.16.x', 'http://172.16.0.1/x.png'],
+    ['169.254.169.254 (metadados da nuvem)', 'http://169.254.169.254/latest/meta-data/'],
+    ['file://', 'file:///etc/passwd'],
+    ['data:', 'data:image/png;base64,iVBORw0KGgo='],
+    ['nao e URL', 'nao-e-url'],
+  ] as const) {
+    const result = await saveProductImageFromUrl(url);
+    check(label, result.ok, false);
+  }
+
   rmSync(dir, { recursive: true, force: true });
 
   console.log(`\n${'-'.repeat(46)}`);

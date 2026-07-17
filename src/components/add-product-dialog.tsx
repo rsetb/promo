@@ -37,6 +37,7 @@ export function AddProductDialog({ isOpen, onOpenChange, categories }: AddProduc
   const [price, setPrice] = useState('');
   const [categoryId, setCategoryId] = useState('');
   const [image, setImage] = useState<File | null>(null);
+  const [imageUrlInput, setImageUrlInput] = useState('');
   const [isPending, startTransition] = useTransition();
   const { toast } = useToast();
   const router = useRouter();
@@ -46,6 +47,7 @@ export function AddProductDialog({ isOpen, onOpenChange, categories }: AddProduc
     setPrice('');
     setCategoryId('');
     setImage(null);
+    setImageUrlInput('');
   };
 
   const submit = (event: React.FormEvent) => {
@@ -56,6 +58,7 @@ export function AddProductDialog({ isOpen, onOpenChange, categories }: AddProduc
       formData.set('price', price);
       formData.set('categoryId', categoryId);
       if (image) formData.set('image', image);
+      if (imageUrlInput.trim()) formData.set('imageUrl', imageUrlInput.trim());
 
       const result = await createProduct(formData);
       if (result.ok) {
@@ -131,6 +134,8 @@ export function AddProductDialog({ isOpen, onOpenChange, categories }: AddProduc
             <ImagePicker
               file={image}
               onFileChange={setImage}
+              url={imageUrlInput}
+              onUrlChange={setImageUrlInput}
               removed={false}
               onRemovedChange={() => {}}
               disabled={isPending}
