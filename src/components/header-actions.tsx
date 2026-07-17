@@ -1,8 +1,9 @@
 'use client';
 
-import { useTransition } from 'react';
+import { useState, useTransition } from 'react';
 import Link from 'next/link';
-import { LayoutGrid, LogIn, LogOut, Share2, User as UserIcon } from 'lucide-react';
+import { KeyRound, LayoutGrid, LogIn, LogOut, Share2, User as UserIcon } from 'lucide-react';
+import { ChangePasswordDialog } from '@/components/change-password-dialog';
 import { Button } from '@/components/ui/button';
 import {
   DropdownMenu,
@@ -63,8 +64,11 @@ export function ShareButton({ siteName }: { siteName: string }) {
 
 export function AdminMenu() {
   const [isPending, startTransition] = useTransition();
+  const [isChangePasswordOpen, setIsChangePasswordOpen] = useState(false);
 
   return (
+    <>
+      <ChangePasswordDialog isOpen={isChangePasswordOpen} onOpenChange={setIsChangePasswordOpen} />
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <Button variant="ghost" className="relative h-10 w-10 rounded-full" aria-label="Menu do administrador">
@@ -85,6 +89,10 @@ export function AdminMenu() {
             <span>Gerenciar Categorias</span>
           </Link>
         </DropdownMenuItem>
+        <DropdownMenuItem onSelect={() => setIsChangePasswordOpen(true)}>
+          <KeyRound className="mr-2 h-4 w-4" />
+          <span>Alterar senha</span>
+        </DropdownMenuItem>
         <DropdownMenuSeparator />
         <DropdownMenuItem
           disabled={isPending}
@@ -100,6 +108,7 @@ export function AdminMenu() {
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
+    </>
   );
 }
 

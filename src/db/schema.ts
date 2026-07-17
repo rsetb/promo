@@ -81,6 +81,21 @@ export const siteInfo = sqliteTable(
   (t) => [check('single_row', sql`${t.id} = 1`)]
 );
 
+/**
+ * Configurações que o admin muda pela tela e que não cabem em site_info —
+ * hoje só o hash da senha.
+ *
+ * Tabela chave/valor porque é um punhado de valores soltos, sem relação entre
+ * si: uma coluna por item exigiria migration a cada novo ajuste.
+ */
+export const settings = sqliteTable('settings', {
+  key: text('key').primaryKey(),
+  value: text('value').notNull(),
+  updatedAt: integer('updated_at', { mode: 'timestamp' })
+    .notNull()
+    .default(sql`(unixepoch())`),
+});
+
 export const categoriesRelations = relations(categories, ({ many }) => ({
   products: many(products),
 }));

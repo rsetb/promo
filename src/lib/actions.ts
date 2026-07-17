@@ -13,6 +13,7 @@ import {
   createSession,
   destroySession,
   isAdmin,
+  setAdminPassword,
   verifyPassword,
 } from '@/lib/auth';
 import { notifyCatalogChange } from '@/lib/events';
@@ -100,7 +101,7 @@ export async function login(_prev: ActionResult | null, formData: FormData): Pro
     return { ok: false, error: 'Muitas tentativas. Aguarde 15 minutos e tente novamente.' };
   }
 
-  if (!password || !verifyPassword(password)) {
+  if (!password || !(await verifyPassword(password))) {
     // Mensagem genérica de propósito: não confirma nem nega nada além do óbvio.
     return { ok: false, error: 'Senha incorreta.' };
   }
@@ -114,6 +115,64 @@ export async function logout(): Promise<void> {
   await destroySession();
   revalidatePath('/', 'layout');
   redirect('/');
+}
+
+const changePasswordSchema = z
+  .object({
+    current: z.string().min(1, 'Informe a senha atual.'),
+    next: z.string().min(8, 'A senha nova precisa ter pelo menos 8 caracteres.').max(200),
+    confirm: z.string(),
+  })
+  .refine((d) => d.next === d.confirm, {
+    message: 'A confirmação não bate com a senha nova.',
+  })
+  .refine((d) => d.next !== d.current, {
+    message: 'A senha nova é igual à atual.',
+  });
+
+/**
+ * Troca a senha do admin.
+ *
+ * Exige a senha ATUAL mesmo já havendo sessão válida: sem isso, uma aba
+ * esquecida aberta num balcão — ou um XSS — trocaria a senha e tomaria o
+ * catálogo. Sessão prova "entrou em algum momento"; senha atual prova "é você
+ * agora".
+ */
+export async function changePassword(
+  _prev: ActionResult | null,
+  formData: FormData
+): Promise<ActionResult> {
+  await requireAdmin();
+
+  const parsed = changePasswordSchema.safeParse({
+    current: formData.get('current') ?? '',
+    next: formData.get('next') ?? '',
+    confirm: formData.get('confirm') ?? '',
+  });
+  if (!parsed.success) {
+    return { ok: false, error: parsed.error.issues[0].message };
+  }
+
+  const headerList = await headers();
+  const ip = headerList.get('x-forwarded-for')?.split(',')[0]?.trim() ?? 'local';
+  if (!checkRateLimit(`pw:${ip}`)) {
+    return { ok: false, error: 'Muitas tentativas. Aguarde 15 minutos e tente novamente.' };
+  }
+
+  if (!(await verifyPassword(parsed.data.current))) {
+    return { ok: false, error: 'A senha atual está incorreta.' };
+  }
+  clearRateLimit(`pw:${ip}`);
+
+  await setAdminPassword(parsed.data.next);
+
+  // Trocar a senha invalida TODA sessão aberta, inclusive a desta aba — a
+  // assinatura do cookie deriva da senha vigente. Emitimos uma nova aqui para
+  // quem acabou de provar que sabe a senha não ser deslogado por tabela.
+  await createSession();
+
+  revalidatePath('/', 'layout');
+  return { ok: true };
 }
 
 // ---------------------------------------------------------------------------

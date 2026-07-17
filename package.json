@@ -14,8 +14,9 @@
     "db:seed": "tsx scripts/build-seed.ts",
     "db:setup": "tsx scripts/build-seed.ts && node scripts/migrate.mjs",
     "verify:format": "tsx scripts/verify-format.ts",
-    "verify": "tsx scripts/verify-format.ts && tsx scripts/verify-uploads.ts && tsx scripts/verify-migration.ts",
-    "verify:uploads": "tsx scripts/verify-uploads.ts"
+    "verify": "tsx scripts/verify-format.ts && tsx scripts/verify-uploads.ts && tsx scripts/verify-auth.ts && tsx scripts/verify-migration.ts",
+    "verify:uploads": "tsx scripts/verify-uploads.ts",
+    "verify:auth": "tsx scripts/verify-auth.ts"
   },
   "dependencies": {
     "@radix-ui/react-alert-dialog": "^1.1.6",

@@ -15,6 +15,13 @@
       "when": 1784255673726,
       "tag": "0001_striped_true_believers",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "6",
+      "when": 1784257528068,
+      "tag": "0002_lean_boomer",
+      "breakpoints": true
     }
   ]
 }

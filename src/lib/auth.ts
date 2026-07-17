@@ -1,7 +1,10 @@
 import 'server-only';
 
 import { cookies } from 'next/headers';
-import { createHmac, timingSafeEqual, randomBytes, createHash } from 'node:crypto';
+import { createHmac, randomBytes } from 'node:crypto';
+import { getPasswordFingerprint, safeEqual } from '@/lib/password';
+
+export { verifyPassword, setAdminPassword } from '@/lib/password';
 
 const COOKIE_NAME = 'mr_session';
 const MAX_AGE_SECONDS = 60 * 60 * 24 * 7; // 7 dias
@@ -16,39 +19,34 @@ function getSecret(): string {
   return secret;
 }
 
-function sign(payload: string): string {
-  return createHmac('sha256', getSecret()).update(payload).digest('base64url');
-}
-
 /**
- * Compara dois valores sem vazar informação pelo tempo de execução.
- * Passa por SHA-256 antes porque timingSafeEqual exige buffers do mesmo
- * tamanho — e o próprio comprimento da senha seria um vazamento.
+ * A chave de assinatura mistura o SESSION_SECRET com a impressão digital da
+ * senha vigente. Por isso trocar a senha invalida todos os cookies emitidos
+ * antes — ver src/lib/password.ts.
  */
-function safeEqual(a: string, b: string): boolean {
-  const ha = createHash('sha256').update(a).digest();
-  const hb = createHash('sha256').update(b).digest();
-  return timingSafeEqual(ha, hb);
+async function sign(payload: string): Promise<string> {
+  const key = `${getSecret()}:${await getPasswordFingerprint()}`;
+  return createHmac('sha256', key).update(payload).digest('base64url');
 }
 
 /**
  * Token: `<expiraEm>.<nonce>.<assinatura>`. O nonce impede que dois logins no
  * mesmo segundo gerem tokens idênticos.
  */
-function createToken(): string {
+async function createToken(): Promise<string> {
   const exp = Date.now() + MAX_AGE_SECONDS * 1000;
   const nonce = randomBytes(16).toString('base64url');
   const payload = `${exp}.${nonce}`;
-  return `${payload}.${sign(payload)}`;
+  return `${payload}.${await sign(payload)}`;
 }
 
-function verifyToken(token: string | undefined): boolean {
+async function verifyToken(token: string | undefined): Promise<boolean> {
   if (!token) return false;
   const parts = token.split('.');
   if (parts.length !== 3) return false;
 
   const [exp, nonce, signature] = parts;
-  if (!safeEqual(sign(`${exp}.${nonce}`), signature)) return false;
+  if (!safeEqual(await sign(`${exp}.${nonce}`), signature)) return false;
 
   const expiresAt = Number(exp);
   return Number.isFinite(expiresAt) && expiresAt > Date.now();
@@ -59,8 +57,7 @@ function verifyToken(token: string | undefined): boolean {
  *
  * Com uma senha única, o login é o único alvo de força bruta que existe.
  * Rodando uma instância só (o caso no EasyPanel) isso basta; se um dia houver
- * réplicas, cada uma terá seu próprio contador e o limite precisa ir para o
- * Postgres ou Redis.
+ * réplicas, cada uma terá seu contador e o limite precisa ir para o banco.
  */
 const attempts = new Map<string, { count: number; firstAt: number }>();
 const WINDOW_MS = 15 * 60 * 1000;
@@ -82,17 +79,9 @@ export function clearRateLimit(key: string): void {
   attempts.delete(key);
 }
 
-export function verifyPassword(password: string): boolean {
-  const expected = process.env.ADMIN_PASSWORD;
-  if (!expected) {
-    throw new Error('ADMIN_PASSWORD não definida no ambiente.');
-  }
-  return safeEqual(password, expected);
-}
-
 export async function createSession(): Promise<void> {
   const cookieStore = await cookies();
-  cookieStore.set(COOKIE_NAME, createToken(), {
+  cookieStore.set(COOKIE_NAME, await createToken(), {
     httpOnly: true, // fora do alcance de JavaScript, inclusive de um XSS
     secure: process.env.NODE_ENV === 'production',
     sameSite: 'lax',
