@@ -25,10 +25,36 @@ export type CatalogExport = {
 export type CleanProduct = {
   name: string;
   description: string;
-  /** Centavos (13780 = R$ 137,80), ou null para "Consulte". */
-  priceCents: number | null;
+  /** Centavos (13780 = R$ 137,80), ou null. */
+  pricePackCents: number | null;
+  priceUnitCents: number | null;
   category: string;
 };
+
+/**
+ * Categorias vendidas por garrafa; o resto é fardo.
+ *
+ * O export antigo tinha um preço só, sem dizer qual era. A separação veio das
+ * médias por categoria e foi confirmada pelo dono do catálogo: CERVEJAS LATAS a
+ * R$ 36 de média não é o preço de uma lata, é a caixa; ABSOLUT a R$ 66,90 é uma
+ * garrafa.
+ *
+ * A MESMA regra está em drizzle/0004_precos_fardo_unidade.sql, que trata do
+ * banco que já existe. As duas precisam concordar, senão um deploy novo (seed)
+ * fica diferente da VPS (migration) — o scripts/verify-migration.ts confere.
+ */
+export const UNIT_PRICED_CATEGORIES = [
+  'VODKAS',
+  'WHISKYS',
+  'GIN',
+  'LICORES',
+  'VINHOS',
+  'DESTILADOS',
+] as const;
+
+export function isUnitPriced(category: string): boolean {
+  return (UNIT_PRICED_CATEGORIES as readonly string[]).includes(category);
+}
 
 /**
  * Correções de digitação em categorias. 'CIGARRO NACIONAL' foi criada por engano
@@ -126,12 +152,18 @@ export function buildProducts(data: CatalogExport): {
   const { products, decisions } = dedupeProducts(data.products);
   return {
     products: products
-      .map((p) => ({
-        name: normalizeName(p.name),
-        description: (p.description ?? '').trim(),
-        priceCents: normalizePriceToCents(p.price),
-        category: normalizeCategory(p.category),
-      }))
+      .map((p) => {
+        const category = normalizeCategory(p.category);
+        const cents = normalizePriceToCents(p.price);
+        const unit = isUnitPriced(category);
+        return {
+          name: normalizeName(p.name),
+          description: (p.description ?? '').trim(),
+          pricePackCents: unit ? null : cents,
+          priceUnitCents: unit ? cents : null,
+          category,
+        };
+      })
       .sort((a, b) => a.name.localeCompare(b.name, 'pt-BR')),
     decisions,
   };

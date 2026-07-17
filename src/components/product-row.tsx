@@ -23,7 +23,8 @@ import {
 import { ImagePicker } from '@/components/image-picker';
 import { useToast } from '@/hooks/use-toast';
 import { updateProduct } from '@/lib/actions';
-import { formatPrice, maskPriceInput, priceToInput } from '@/lib/format';
+import { ProductPrices } from '@/components/product-prices';
+import { maskPriceInput, priceToInput } from '@/lib/format';
 import { imageUrl, type Category, type ProductView } from '@/lib/types';
 
 type ProductRowProps = {
@@ -36,7 +37,8 @@ type ProductRowProps = {
 export function ProductRow({ product, categories, canEdit, onRequestDelete }: ProductRowProps) {
   const [isEditing, setIsEditing] = useState(false);
   const [name, setName] = useState(product.name);
-  const [price, setPrice] = useState(priceToInput(product.priceCents));
+  const [pricePack, setPricePack] = useState(priceToInput(product.pricePackCents));
+  const [priceUnit, setPriceUnit] = useState(priceToInput(product.priceUnitCents));
   const [categoryId, setCategoryId] = useState(String(product.categoryId));
   const [imageFile, setImageFile] = useState<File | null>(null);
   const [imageUrlInput, setImageUrlInput] = useState('');
@@ -47,7 +49,8 @@ export function ProductRow({ product, categories, canEdit, onRequestDelete }: Pr
 
   const startEditing = () => {
     setName(product.name);
-    setPrice(priceToInput(product.priceCents));
+    setPricePack(priceToInput(product.pricePackCents));
+    setPriceUnit(priceToInput(product.priceUnitCents));
     setCategoryId(String(product.categoryId));
     setImageFile(null);
     setImageUrlInput('');
@@ -59,7 +62,8 @@ export function ProductRow({ product, categories, canEdit, onRequestDelete }: Pr
     startTransition(async () => {
       const formData = new FormData();
       formData.set('name', name);
-      formData.set('price', price);
+      formData.set('pricePack', pricePack);
+      formData.set('priceUnit', priceUnit);
       formData.set('categoryId', categoryId);
       if (imageFile) formData.set('image', imageFile);
       if (imageUrlInput.trim()) formData.set('imageUrl', imageUrlInput.trim());
@@ -166,16 +170,28 @@ export function ProductRow({ product, categories, canEdit, onRequestDelete }: Pr
           <div className="flex items-center gap-2 self-start text-right sm:self-center">
             {isEditing ? (
               <>
-                <Input
-                  value={price}
-                  onChange={(e) => setPrice(maskPriceInput(e.target.value))}
-                  onKeyDown={handleKeyDown}
-                  className="w-32 text-base"
-                  placeholder="0,00"
-                  disabled={isPending}
-                  inputMode="numeric"
-                  aria-label="Preço (vazio = Consulte)"
-                />
+                <div className="flex flex-col gap-1">
+                  <Input
+                    value={pricePack}
+                    onChange={(e) => setPricePack(maskPriceInput(e.target.value))}
+                    onKeyDown={handleKeyDown}
+                    className="w-32 text-base"
+                    placeholder="Fardo"
+                    disabled={isPending}
+                    inputMode="numeric"
+                    aria-label="Preço do fardo"
+                  />
+                  <Input
+                    value={priceUnit}
+                    onChange={(e) => setPriceUnit(maskPriceInput(e.target.value))}
+                    onKeyDown={handleKeyDown}
+                    className="w-32 text-base"
+                    placeholder="Unidade"
+                    disabled={isPending}
+                    inputMode="numeric"
+                    aria-label="Preço da unidade"
+                  />
+                </div>
                 <Button onClick={save} size="icon" className="h-9 w-9" disabled={isPending}>
                   <Save className="h-4 w-4" />
                 </Button>
@@ -191,7 +207,7 @@ export function ProductRow({ product, categories, canEdit, onRequestDelete }: Pr
               </>
             ) : (
               <>
-                <p className="whitespace-nowrap text-xl font-bold">{formatPrice(product.priceCents)}</p>
+                <ProductPrices product={product} />
                 {canEdit && (
                   <>
                     <Button onClick={startEditing} variant="ghost" size="icon" className="h-9 w-9" aria-label="Editar produto">

@@ -113,42 +113,92 @@ function main() {
   // BALLENA COCO do seed, tinha preço 0 e foi descartado na deduplicação em
   // favor da versão de R$ 115,90 — daí 70, e não 71.
   check(
-    'produtos sem preco (NULL = "Consulte")',
-    one<{ n: number }>('SELECT count(*) AS n FROM products WHERE price_cents IS NULL').n,
+    'produtos sem preco nenhum (= "Consulte")',
+    one<{ n: number }>(
+      'SELECT count(*) AS n FROM products WHERE price_pack_cents IS NULL AND price_unit_cents IS NULL'
+    ).n,
     70
   );
   check(
     'precos zerados remanescentes',
-    one<{ n: number }>('SELECT count(*) AS n FROM products WHERE price_cents = 0').n,
+    one<{ n: number }>(
+      'SELECT count(*) AS n FROM products WHERE price_pack_cents = 0 OR price_unit_cents = 0'
+    ).n,
+    0
+  );
+
+  console.log('\n== fardo x unidade ==');
+  check(
+    'com preco de fardo',
+    one<{ n: number }>('SELECT count(*) AS n FROM products WHERE price_pack_cents IS NOT NULL').n,
+    166
+  );
+  check(
+    'com preco de unidade',
+    one<{ n: number }>('SELECT count(*) AS n FROM products WHERE price_unit_cents IS NOT NULL').n,
+    49
+  );
+  // Nenhum produto do catalogo antigo tinha os dois: o export trazia um preco
+  // so. Se aparecerem dois, a regra de separacao duplicou em vez de mover.
+  check(
+    'com os DOIS precos (o export so tinha um)',
+    one<{ n: number }>(
+      'SELECT count(*) AS n FROM products WHERE price_pack_cents IS NOT NULL AND price_unit_cents IS NOT NULL'
+    ).n,
+    0
+  );
+  check(
+    'destilado com preco de fardo (regra furou)',
+    one<{ n: number }>(
+      `SELECT count(*) AS n FROM products p JOIN categories c ON c.id = p.category_id
+       WHERE c.name IN ('VODKAS','WHISKYS','GIN','LICORES','VINHOS','DESTILADOS')
+         AND p.price_pack_cents IS NOT NULL`
+    ).n,
+    0
+  );
+  check(
+    'nao-destilado com preco de unidade (regra furou)',
+    one<{ n: number }>(
+      `SELECT count(*) AS n FROM products p JOIN categories c ON c.id = p.category_id
+       WHERE c.name NOT IN ('VODKAS','WHISKYS','GIN','LICORES','VINHOS','DESTILADOS')
+         AND p.price_unit_cents IS NOT NULL`
+    ).n,
     0
   );
 
   console.log('\n== preco em centavos: inteiro e exato ==');
   check(
     'tipo da coluna no SQLite e integer',
-    one<{ t: string }>('SELECT typeof(price_cents) AS t FROM products WHERE price_cents IS NOT NULL LIMIT 1').t,
+    one<{ t: string }>(
+      'SELECT typeof(price_pack_cents) AS t FROM products WHERE price_pack_cents IS NOT NULL LIMIT 1'
+    ).t,
     'integer'
   );
 
   console.log('\n== duplicados: venceu a versao editada no site ==');
-  for (const [name, expected] of [
-    ['DUNHILL DOUBLE', 14250],
-    ['KENT PRATA', 11775],
-    ['FUMO TREVO', 9030],
-    ['G BRANCO', 2750],
-    ['ROTHMANS GLOBAL AZUL', 7520],
-    ['BALLENA COCO', 11590],
+  // A coluna esperada muda com a categoria: BALLENA COCO e LICORES (unidade),
+  // os cigarros sao fardo.
+  for (const [name, coluna, expected] of [
+    ['DUNHILL DOUBLE', 'price_pack_cents', 14250],
+    ['KENT PRATA', 'price_pack_cents', 11775],
+    ['FUMO TREVO', 'price_pack_cents', 9030],
+    ['G BRANCO', 'price_pack_cents', 2750],
+    ['ROTHMANS GLOBAL AZUL', 'price_pack_cents', 7520],
+    ['BALLENA COCO', 'price_unit_cents', 11590],
   ] as const) {
     check(
-      `${name} (centavos)`,
-      one<{ price_cents: number | null }>(`SELECT price_cents FROM products WHERE name = '${name}'`)?.price_cents,
+      `${name} (${coluna === 'price_pack_cents' ? 'fardo' : 'unidade'})`,
+      (one<Record<string, number | null>>(`SELECT ${coluna} FROM products WHERE name = '${name}'`))?.[coluna],
       expected
     );
   }
   check(
     'G VERMELHO (sem preco, conforme decidido)',
-    one<{ price_cents: number | null }>(`SELECT price_cents FROM products WHERE name = 'G VERMELHO'`)?.price_cents,
-    null
+    one<{ n: number }>(
+      `SELECT count(*) AS n FROM products WHERE name = 'G VERMELHO'
+       AND price_pack_cents IS NULL AND price_unit_cents IS NULL`
+    ).n,
+    1
   );
 
   console.log('\n== integridade referencial ==');
@@ -170,7 +220,16 @@ function main() {
   console.log('\n== o banco recusa dados invalidos ==');
   const catId = one<{ id: number }>('SELECT id FROM categories LIMIT 1').id;
   checkRejects('categoria duplicada', `INSERT INTO categories (name) VALUES ('VODKAS')`);
-  checkRejects('preco negativo', `INSERT INTO products (name, category_id, price_cents) VALUES ('X', ${catId}, -1)`);
+  // Os dois CHECKs, separados: um insert numa coluna que nem existe também
+  // "falha", e passaria o teste pelo motivo errado.
+  checkRejects(
+    'preco de fardo negativo',
+    `INSERT INTO products (name, category_id, price_pack_cents) VALUES ('X', ${catId}, -1)`
+  );
+  checkRejects(
+    'preco de unidade negativo',
+    `INSERT INTO products (name, category_id, price_unit_cents) VALUES ('X', ${catId}, -1)`
+  );
   checkRejects('nome vazio', `INSERT INTO products (name, category_id) VALUES ('   ', ${catId})`);
   checkRejects('categoria inexistente', `INSERT INTO products (name, category_id) VALUES ('X', 999999)`);
   checkRejects('excluir categoria com produtos', `DELETE FROM categories WHERE id = ${catId}`);

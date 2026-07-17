@@ -181,18 +181,24 @@ export async function changePassword(
 
 const productSchema = z.object({
   name: z.string().trim().min(1, 'Nome é obrigatório.').max(200),
-  price: z.string(),
+  pricePack: z.string(),
+  priceUnit: z.string(),
   categoryId: z.coerce.number().int().positive('Selecione uma categoria.'),
 });
+
+function readProductForm(formData: FormData) {
+  return productSchema.safeParse({
+    name: formData.get('name'),
+    pricePack: formData.get('pricePack') ?? '',
+    priceUnit: formData.get('priceUnit') ?? '',
+    categoryId: formData.get('categoryId'),
+  });
+}
 
 export async function createProduct(formData: FormData): Promise<ActionResult> {
   await requireAdmin();
 
-  const parsed = productSchema.safeParse({
-    name: formData.get('name'),
-    price: formData.get('price') ?? '',
-    categoryId: formData.get('categoryId'),
-  });
+  const parsed = readProductForm(formData);
   if (!parsed.success) {
     return { ok: false, error: parsed.error.issues[0].message };
   }
@@ -202,7 +208,8 @@ export async function createProduct(formData: FormData): Promise<ActionResult> {
 
   await db.insert(products).values({
     name: parsed.data.name,
-    priceCents: parsePriceToCents(parsed.data.price),
+    pricePackCents: parsePriceToCents(parsed.data.pricePack),
+    priceUnitCents: parsePriceToCents(parsed.data.priceUnit),
     categoryId: parsed.data.categoryId,
     description: '',
     imageFile: incoming.file,
@@ -215,11 +222,7 @@ export async function createProduct(formData: FormData): Promise<ActionResult> {
 export async function updateProduct(id: number, formData: FormData): Promise<ActionResult> {
   await requireAdmin();
 
-  const parsed = productSchema.safeParse({
-    name: formData.get('name'),
-    price: formData.get('price') ?? '',
-    categoryId: formData.get('categoryId'),
-  });
+  const parsed = readProductForm(formData);
   if (!parsed.success) {
     return { ok: false, error: parsed.error.issues[0].message };
   }
@@ -245,7 +248,8 @@ export async function updateProduct(id: number, formData: FormData): Promise<Act
     .update(products)
     .set({
       name: parsed.data.name,
-      priceCents: parsePriceToCents(parsed.data.price),
+      pricePackCents: parsePriceToCents(parsed.data.pricePack),
+      priceUnitCents: parsePriceToCents(parsed.data.priceUnit),
       categoryId: parsed.data.categoryId,
       imageFile,
       updatedAt: new Date(),

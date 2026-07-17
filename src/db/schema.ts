@@ -19,13 +19,13 @@ export const categories = sqliteTable('categories', {
 /**
  * Produtos.
  *
- * `price_cents` guarda o preço em CENTAVOS, como inteiro. SQLite não tem tipo
- * decimal — sobrariam REAL (ponto flutuante, que acumula erro em dinheiro) ou
- * TEXT (sem aritmética nem ordenação numérica). Inteiro em centavos é exato:
- * R$ 137,80 vira 13780.
+ * Dois preços independentes, ambos em CENTAVOS como inteiro: o fardo (caixa) e
+ * a unidade. Cada um é NULL quando não há preço definido — a vitrine mostra só
+ * os que existem, e "Consulte" quando não há nenhum.
  *
- * NULL significa "sem preço definido" e a UI mostra "Consulte". No banco antigo
- * esse estado tinha duas representações (null e 0); aqui só existe uma.
+ * Centavos porque o SQLite não tem tipo decimal: sobrariam REAL (ponto
+ * flutuante, que acumula erro em dinheiro) ou TEXT (sem aritmética nem
+ * ordenação numérica). Inteiro é exato: R$ 137,80 vira 13780.
  */
 export const products = sqliteTable(
   'products',
@@ -33,7 +33,10 @@ export const products = sqliteTable(
     id: integer('id').primaryKey({ autoIncrement: true }),
     name: text('name').notNull(),
     description: text('description').notNull().default(''),
-    priceCents: integer('price_cents'),
+    /** Preço do fardo/caixa, em centavos. NULL = não vendido assim. */
+    pricePackCents: integer('price_pack_cents'),
+    /** Preço da unidade avulsa, em centavos. NULL = não vendido assim. */
+    priceUnitCents: integer('price_unit_cents'),
     /**
      * Nome do arquivo da foto no volume (ex.: "a1b2...f9.webp"), ou NULL.
      * Só o nome, nunca um caminho: quem resolve o diretório é src/lib/uploads.ts,
@@ -51,7 +54,8 @@ export const products = sqliteTable(
       .default(sql`(unixepoch())`),
   },
   (t) => [
-    check('price_non_negative', sql`${t.priceCents} IS NULL OR ${t.priceCents} >= 0`),
+    check('price_pack_non_negative', sql`${t.pricePackCents} IS NULL OR ${t.pricePackCents} >= 0`),
+    check('price_unit_non_negative', sql`${t.priceUnitCents} IS NULL OR ${t.priceUnitCents} >= 0`),
     check('name_not_empty', sql`length(trim(${t.name})) > 0`),
   ]
 );

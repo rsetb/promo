@@ -34,7 +34,8 @@ type AddProductDialogProps = {
 
 export function AddProductDialog({ isOpen, onOpenChange, categories }: AddProductDialogProps) {
   const [name, setName] = useState('');
-  const [price, setPrice] = useState('');
+  const [pricePack, setPricePack] = useState('');
+  const [priceUnit, setPriceUnit] = useState('');
   const [categoryId, setCategoryId] = useState('');
   const [image, setImage] = useState<File | null>(null);
   const [imageUrlInput, setImageUrlInput] = useState('');
@@ -44,7 +45,8 @@ export function AddProductDialog({ isOpen, onOpenChange, categories }: AddProduc
 
   const reset = () => {
     setName('');
-    setPrice('');
+    setPricePack('');
+    setPriceUnit('');
     setCategoryId('');
     setImage(null);
     setImageUrlInput('');
@@ -55,7 +57,8 @@ export function AddProductDialog({ isOpen, onOpenChange, categories }: AddProduc
     startTransition(async () => {
       const formData = new FormData();
       formData.set('name', name);
-      formData.set('price', price);
+      formData.set('pricePack', pricePack);
+      formData.set('priceUnit', priceUnit);
       formData.set('categoryId', categoryId);
       if (image) formData.set('image', image);
       if (imageUrlInput.trim()) formData.set('imageUrl', imageUrlInput.trim());
@@ -85,7 +88,7 @@ export function AddProductDialog({ isOpen, onOpenChange, categories }: AddProduc
         <DialogHeader>
           <DialogTitle>Adicionar Novo Produto</DialogTitle>
           <DialogDescription>
-            Deixe o preço vazio para exibir &quot;Consulte&quot; na vitrine.
+            Preencha só os preços que existem. Sem nenhum, a vitrine mostra &quot;Consulte&quot;.
           </DialogDescription>
         </DialogHeader>
 
@@ -101,16 +104,29 @@ export function AddProductDialog({ isOpen, onOpenChange, categories }: AddProduc
             />
           </div>
 
-          <div className="grid gap-2">
-            <Label htmlFor="product-price">Preço (R$)</Label>
-            <Input
-              id="product-price"
-              placeholder="0,00"
-              value={price}
-              onChange={(e) => setPrice(maskPriceInput(e.target.value))}
-              disabled={isPending}
-              inputMode="numeric"
-            />
+          <div className="grid grid-cols-2 gap-3">
+            <div className="grid gap-2">
+              <Label htmlFor="price-pack">Preço do fardo</Label>
+              <Input
+                id="price-pack"
+                placeholder="0,00"
+                value={pricePack}
+                onChange={(e) => setPricePack(maskPriceInput(e.target.value))}
+                disabled={isPending}
+                inputMode="numeric"
+              />
+            </div>
+            <div className="grid gap-2">
+              <Label htmlFor="price-unit">Preço da unidade</Label>
+              <Input
+                id="price-unit"
+                placeholder="0,00"
+                value={priceUnit}
+                onChange={(e) => setPriceUnit(maskPriceInput(e.target.value))}
+                disabled={isPending}
+                inputMode="numeric"
+              />
+            </div>
           </div>
 
           <div className="grid gap-2">

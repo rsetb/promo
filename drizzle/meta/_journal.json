@@ -29,6 +29,13 @@
       "when": 1784259412678,
       "tag": "0003_serious_genesis",
       "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "6",
+      "when": 1784262803021,
+      "tag": "0004_precos_fardo_unidade",
+      "breakpoints": true
     }
   ]
 }

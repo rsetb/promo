@@ -77,21 +77,69 @@ test.describe('admin', () => {
     await entrar(page);
     await page.goto('/');
 
+    // ABSOLUT é VODKAS: preço de unidade, sem fardo.
     await page.getByRole('button', { name: 'Editar produto' }).first().click();
-    const preco = page.getByLabel(/Preço/).first();
-    await preco.fill('');
-    await preco.pressSequentially('12345');
-    await preco.press('Enter');
+    const unidade = page.getByLabel('Preço da unidade').first();
+    await unidade.fill('');
+    await unidade.pressSequentially('12345');
+    await unidade.press('Enter');
 
     await expect(page.getByText('R$ 123,45').first()).toBeVisible({ timeout: 15_000 });
 
     // Volta ao valor original, para o teste poder rodar de novo.
     await page.getByRole('button', { name: 'Editar produto' }).first().click();
-    const preco2 = page.getByLabel(/Preço/).first();
-    await preco2.fill('');
-    await preco2.pressSequentially('6690');
-    await preco2.press('Enter');
+    const unidade2 = page.getByLabel('Preço da unidade').first();
+    await unidade2.fill('');
+    await unidade2.pressSequentially('6690');
+    await unidade2.press('Enter');
     await expect(page.getByText('R$ 66,90').first()).toBeVisible({ timeout: 15_000 });
+  });
+
+  /**
+   * O catálogo tem fardo e unidade. "R$ 35,70" sem rótulo deixa o cliente sem
+   * saber o que está comprando — e o produto só pode mostrar o preço que tem.
+   */
+  test('vitrine rotula fardo e unidade, e mostra só o que existe', async ({ page }) => {
+    await page.goto('/');
+
+    // AMSTEL é CERVEJAS LATAS: fardo.
+    const amstel = page.locator('div').filter({ hasText: /^AMSTELCERVEJAS LATAS$/ }).first();
+    await expect(page.getByText('Fardo').first()).toBeVisible();
+
+    // ABSOLUT é VODKAS: unidade.
+    await expect(page.getByText('Un.').first()).toBeVisible();
+
+    // Produto sem nenhum preço continua "Consulte".
+    await page.getByLabel('Buscar produtos').fill('AMSTEL ULTRA LONG NECK');
+    await expect(page.getByText('Consulte').first()).toBeVisible();
+  });
+
+  test('produto pode ter os dois preços ao mesmo tempo', async ({ page }) => {
+    await entrar(page);
+    await page.goto('/');
+    await page.getByLabel('Buscar produtos').fill('AMSTEL ULTRA LONG NECK');
+
+    await page.getByRole('button', { name: 'Editar produto' }).first().click();
+    const fardo = page.getByLabel('Preço do fardo').first();
+    await fardo.fill('');
+    await fardo.pressSequentially('9900');
+    const un = page.getByLabel('Preço da unidade').first();
+    await un.fill('');
+    await un.pressSequentially('850');
+    await un.press('Enter');
+
+    await expect(page.getByText('R$ 99,00').first()).toBeVisible({ timeout: 15_000 });
+    await expect(page.getByText('R$ 8,50').first()).toBeVisible();
+
+    // Limpa: este produto é o "sem preço" de outro teste, e o banco é
+    // compartilhado entre os projetos desktop e celular. Sem devolver ao
+    // estado original, o outro teste falha por causa deste.
+    await page.getByRole('button', { name: 'Editar produto' }).first().click();
+    await page.getByLabel('Preço do fardo').first().fill('');
+    const un2 = page.getByLabel('Preço da unidade').first();
+    await un2.fill('');
+    await un2.press('Enter');
+    await expect(page.getByText('Consulte').first()).toBeVisible({ timeout: 15_000 });
   });
 
   /** BUG REAL: a página de categorias não tinha caminho de volta. */
