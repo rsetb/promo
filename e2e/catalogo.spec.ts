@@ -209,4 +209,61 @@ test.describe('celular', () => {
     await page.goto('/');
     await expect(page.getByLabel('Filtrar por categoria')).toBeVisible();
   });
+
+  /**
+   * O preço fica ao lado do nome, não embaixo — empilhar desperdiçava metade da
+   * largura da tela. O risco de colocar lado a lado é um nome longo empurrar o
+   * preço para fora; este teste é o que prova que não acontece.
+   */
+  test('preço fica ao lado do nome, sem rolagem lateral', async ({ page }) => {
+    await page.goto('/');
+    await page.getByLabel('Buscar produtos').fill('AMSTEL ULTRA LONG NECK');
+    await expect(page.getByText('AMSTEL ULTRA LONG NECK 12X275ML')).toBeVisible();
+
+    // Preço e nome na mesma faixa horizontal: se estivesse embaixo, o topo do
+    // preço ficaria abaixo da base do nome.
+    const nome = await page.getByText('AMSTEL ULTRA LONG NECK 12X275ML').boundingBox();
+    const preco = await page.getByText('Consulte').first().boundingBox();
+    expect(nome).not.toBeNull();
+    expect(preco).not.toBeNull();
+    expect(preco!.x, 'o preço fica à direita do nome').toBeGreaterThan(nome!.x);
+    expect(preco!.y, 'o preço não fica abaixo do nome').toBeLessThan(nome!.y + nome!.height);
+  });
+
+  /**
+   * Nome comprido SEM espaços é o caso que realmente quebra o layout: texto com
+   * espaço quebra sozinho, então os nomes do catálogo não provam nada. É este
+   * cenário que o min-w-0/break-words defende — e sem ele, o preço sai da tela.
+   */
+  test('nome comprido sem espaços não empurra o preço para fora', async ({ page }) => {
+    const NOME = 'PRODUTOCOMNOMEABSURDAMENTELONGOSEMESPACOSPARATESTE';
+
+    await entrar(page);
+    await page.goto('/');
+    await page.getByRole('button', { name: 'Adicionar Produto' }).click();
+    await page.getByLabel('Nome do Produto').fill(NOME);
+    await page.getByLabel('Preço da unidade').fill('12345');
+    await page.locator('#product-category').click();
+    await page.getByRole('option').first().click();
+    await page.getByRole('button', { name: 'Adicionar Produto' }).last().click();
+
+    await page.getByLabel('Buscar produtos').fill(NOME);
+    await expect(page.getByText(NOME)).toBeVisible({ timeout: 15_000 });
+
+    const overflow = await page.evaluate(
+      () => document.documentElement.scrollWidth > document.documentElement.clientWidth
+    );
+    expect(overflow, 'a página não pode rolar de lado no celular').toBe(false);
+
+    const preco = await page.getByText('R$ 123,45').first().boundingBox();
+    const largura = page.viewportSize()!.width;
+    expect(preco).not.toBeNull();
+    expect(preco!.x + preco!.width, 'o preço tem que caber na tela').toBeLessThanOrEqual(largura);
+
+    // Limpa: o banco é compartilhado entre os projetos.
+    await page.getByRole('button', { name: 'Mais ações' }).first().click();
+    await page.getByRole('menuitem', { name: 'Excluir' }).click();
+    await page.getByRole('button', { name: 'Excluir', exact: true }).click();
+    await expect(page.getByText(NOME)).toHaveCount(0, { timeout: 15_000 });
+  });
 });

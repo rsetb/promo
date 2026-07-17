@@ -114,8 +114,26 @@ export function ProductRow({ product, categories, canEdit, onRequestDelete }: Pr
   return (
     <Card className="border transition-all duration-300 hover:border-primary hover:shadow-lg">
       <CardHeader className="p-4">
-        <div className="flex flex-col items-start justify-between gap-4 sm:flex-row">
-          <div className="flex-1">
+        {/*
+          Sempre em linha, inclusive no celular: empilhar jogava o preço para
+          baixo do nome e desperdiçava metade da largura da tela.
+
+          `flex-col` só volta durante a edição, onde os campos precisam de
+          largura. Na exibição, quem manda é o par min-w-0/shrink-0 abaixo.
+        */}
+        <div
+          className={
+            isEditing
+              ? 'flex flex-col items-start justify-between gap-4 sm:flex-row'
+              : 'flex flex-row items-center justify-between gap-3'
+          }
+        >
+          {/*
+            min-w-0 é o que faz o nome longo quebrar em vez de empurrar o preço
+            para fora da tela: sem ele, um item flex não encolhe abaixo do
+            tamanho do seu conteúdo.
+          */}
+          <div className={isEditing ? 'flex-1' : 'min-w-0 flex-1'}>
             {isEditing ? (
               <>
                 <Input
@@ -171,14 +189,23 @@ export function ProductRow({ product, categories, canEdit, onRequestDelete }: Pr
                   </div>
                 )}
                 <div className="min-w-0">
-                  <CardTitle className="text-md font-semibold">{product.name}</CardTitle>
+                  {/* break-words: nome comprido quebra em linhas em vez de
+                      estourar a largura e empurrar o preço para fora. */}
+                  <CardTitle className="text-md break-words font-semibold">{product.name}</CardTitle>
                   <p className="mt-1 text-sm text-muted-foreground">{product.category}</p>
                 </div>
               </div>
             )}
           </div>
 
-          <div className="flex items-center gap-2 self-start text-right sm:self-center">
+          {/* shrink-0: o preço nunca é espremido por um nome longo. */}
+          <div
+            className={
+              isEditing
+                ? 'flex items-center gap-2 self-start text-right sm:self-center'
+                : 'flex shrink-0 items-center gap-1 text-right sm:gap-2'
+            }
+          >
             {isEditing ? (
               <>
                 <PriceFields
