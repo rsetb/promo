@@ -115,25 +115,29 @@ export function ProductRow({ product, categories, canEdit, onRequestDelete }: Pr
     <Card className="border transition-all duration-300 hover:border-primary hover:shadow-lg">
       <CardHeader className="p-4">
         {/*
-          Sempre em linha, inclusive no celular: empilhar jogava o preço para
-          baixo do nome e desperdiçava metade da largura da tela.
+          Em linha quando cabe; `flex-wrap` deixa o preço cair para a linha de
+          baixo quando não cabe — em vez de espremer o nome. Sem isto, um
+          produto com 2-3 preços (CAIXA 12UN R$ 802,80 + botões de ação)
+          reduzia o nome a poucos pixels, e break-words passava a quebrar
+          LETRA POR LETRA em vez de por palavra: "ABSOLUT" virava uma coluna de
+          uma letra por linha.
 
           `flex-col` só volta durante a edição, onde os campos precisam de
-          largura. Na exibição, quem manda é o par min-w-0/shrink-0 abaixo.
+          largura.
         */}
         <div
           className={
             isEditing
               ? 'flex flex-col items-start justify-between gap-4 sm:flex-row'
-              : 'flex flex-row items-center justify-between gap-3'
+              : 'flex flex-row flex-wrap items-center justify-between gap-x-3 gap-y-1'
           }
         >
           {/*
-            min-w-0 é o que faz o nome longo quebrar em vez de empurrar o preço
-            para fora da tela: sem ele, um item flex não encolhe abaixo do
-            tamanho do seu conteúdo.
+            min-w-[140px] no lugar de min-w-0: um piso de largura, não zero.
+            Sem piso, o flex-wrap acima nunca chega a agir — o nome encolhe até
+            sumir antes do preço ser forçado à linha de baixo.
           */}
-          <div className={isEditing ? 'flex-1' : 'min-w-0 flex-1'}>
+          <div className={isEditing ? 'flex-1' : 'min-w-[140px] flex-1'}>
             {isEditing ? (
               <>
                 <Input
@@ -198,12 +202,17 @@ export function ProductRow({ product, categories, canEdit, onRequestDelete }: Pr
             )}
           </div>
 
-          {/* shrink-0: o preço nunca é espremido por um nome longo. */}
+          {/*
+            shrink-0: o preço nunca é espremido por um nome longo — ele cai
+            para a linha de baixo antes disso (flex-wrap acima).
+            ml-auto: garante alinhamento à direita mesmo sozinho numa segunda
+            linha, onde justify-between do pai nem sempre posiciona à direita.
+          */}
           <div
             className={
               isEditing
                 ? 'flex items-center gap-2 self-start text-right sm:self-center'
-                : 'flex shrink-0 items-center gap-1 text-right sm:gap-2'
+                : 'ml-auto flex shrink-0 items-center gap-1 text-right sm:gap-2'
             }
           >
             {isEditing ? (

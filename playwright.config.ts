@@ -30,6 +30,14 @@ export default defineConfig({
   projects: [
     { name: 'desktop', use: { ...devices['Desktop Chrome'] } },
     { name: 'celular', use: { ...devices['Pixel 7'] } },
+    {
+      // 375px: a largura de um iPhone comum, que é o aparelho do dono do
+      // catálogo. O Pixel 7 tem 412px e passou num layout que quebrava lá.
+      // Chromium com a largura certa em vez do device iPhone, que exigiria
+      // baixar o WebKit — aqui o que decide o layout é a largura.
+      name: 'celular-estreito',
+      use: { ...devices['Pixel 7'], viewport: { width: 375, height: 812 } },
+    },
   ],
 
   webServer: {

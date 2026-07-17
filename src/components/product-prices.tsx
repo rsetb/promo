@@ -27,11 +27,16 @@ export function ProductPrices({ product }: { product: ProductView }) {
 
         return (
           <p key={kind.id} className="whitespace-nowrap leading-tight">
-            <span className="mr-1 text-xs font-medium uppercase text-muted-foreground">
+            {/*
+              Menor no celular: com "CAIXA 12UN R$ 802,80" em text-xl, o bloco
+              de preço tomava mais da metade de uma tela de 375px e sobrava tão
+              pouco para o nome que "ABSOLUT" quebrava em "ABSO/LUT".
+            */}
+            <span className="mr-1 text-[10px] font-medium uppercase text-muted-foreground sm:text-xs">
               {kind.label}
               {qty !== null && ` ${qty}un`}
             </span>
-            <span className="text-xl font-bold">{formatPrice(cents)}</span>
+            <span className="text-base font-bold sm:text-xl">{formatPrice(cents)}</span>
           </p>
         );
       })}

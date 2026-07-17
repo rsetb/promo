@@ -100,12 +100,18 @@ export function EditableText({ field, value, className, canEdit, centered }: Edi
   }
 
   return (
-    <div className={`group relative flex w-full items-center gap-2 ${centered ? 'justify-center' : ''}`}>
-      <span className={className}>{value}</span>
+    // min-w-0: sem isto o texto com `truncate` não tinha onde encolher — o
+    // flex item não reduz abaixo do seu conteúdo por padrão, e a linha
+    // simplesmente estourava a largura da tela no celular.
+    <div
+      className={`group relative flex w-full min-w-0 items-center gap-1 ${centered ? 'justify-center' : ''}`}
+    >
+      <span className={`min-w-0 ${className}`}>{value}</span>
       {/*
         Sempre visível, não só no hover: quem vê este botão já é admin, e no
         celular não existe hover — o lápis escondido tornava os textos do
         cabeçalho impossíveis de editar justamente no aparelho mais usado.
+        Menor no celular: h-9 ao lado de ícone + número não cabia em 375px.
       */}
       <Button
         onClick={() => {
@@ -114,10 +120,10 @@ export function EditableText({ field, value, className, canEdit, centered }: Edi
         }}
         variant="ghost"
         size="icon"
-        className="h-9 w-9 shrink-0 opacity-60 transition-opacity hover:opacity-100 focus-visible:opacity-100"
+        className="h-7 w-7 shrink-0 opacity-60 transition-opacity hover:opacity-100 focus-visible:opacity-100 sm:h-9 sm:w-9"
         aria-label={`Editar ${FIELD_LABELS[field]}`}
       >
-        <Edit className="h-4 w-4" />
+        <Edit className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
       </Button>
     </div>
   );

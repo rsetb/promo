@@ -30,25 +30,28 @@ function Branch({
 }) {
   return (
     <>
-      <div className="flex items-center gap-1.5 justify-self-start text-left">
+      {/* min-w-0: sem isto a coluna não encolhe, e numa tela de 375px a soma de
+          ícone + texto + lápis (sempre visível desde que deixou de depender de
+          hover) passava da largura da tela — só não aparecia em telas ≥412px. */}
+      <div className="flex min-w-0 items-center gap-1.5 justify-self-start text-left">
         <MapPin className="h-4 w-4 flex-shrink-0 text-muted-foreground" />
         <EditableText
           field={locationField}
           value={location}
           canEdit={canEdit}
-          className="whitespace-nowrap text-sm font-semibold text-muted-foreground sm:text-lg"
+          className="truncate text-xs font-semibold text-muted-foreground sm:whitespace-nowrap sm:text-lg"
         />
       </div>
-      <div className="flex items-center gap-1.5 justify-self-end text-right">
+      <div className="flex min-w-0 items-center gap-1.5 justify-self-end text-right">
         <a
           href={`https://wa.me/${phone}`}
           target="_blank"
           rel="noopener noreferrer"
-          className="group flex items-center gap-2"
+          className="group flex min-w-0 items-center gap-2"
         >
-          <WhatsappIcon />
+          <WhatsappIcon className="h-4 w-4 shrink-0 text-green-500" />
           {!canEdit && (
-            <span className="whitespace-nowrap text-sm font-semibold text-muted-foreground group-hover:underline sm:text-lg">
+            <span className="truncate text-xs font-semibold text-muted-foreground group-hover:underline sm:whitespace-nowrap sm:text-lg">
               {phoneDisplay}
             </span>
           )}
@@ -58,7 +61,7 @@ function Branch({
             field={phoneField}
             value={phoneDisplay}
             canEdit
-            className="whitespace-nowrap text-sm font-semibold text-muted-foreground sm:text-lg"
+            className="truncate text-xs font-semibold text-muted-foreground sm:whitespace-nowrap sm:text-lg"
           />
         )}
       </div>
