@@ -15,6 +15,13 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
 import { AddProductDialog } from '@/components/add-product-dialog';
 import { ProductRow } from '@/components/product-row';
 import { useToast } from '@/hooks/use-toast';
@@ -45,6 +52,8 @@ export function Catalog({ products, categories, canEdit }: CatalogProps) {
   const [isPending, startTransition] = useTransition();
   const { toast } = useToast();
   const router = useRouter();
+
+  const categoryOptions = useMemo(() => [ALL, ...categories.map((c) => c.name)], [categories]);
 
   const filtered = useMemo(() => {
     const needle = fold(searchTerm.trim());
@@ -92,8 +101,28 @@ export function Catalog({ products, categories, canEdit }: CatalogProps) {
           )}
         </div>
 
-        <div className="mt-4 flex flex-wrap gap-2">
-          {[ALL, ...categories.map((c) => c.name)].map((name) => (
+        {/*
+          No celular, 23 chips empurravam os produtos para fora da tela — por
+          isso o dropdown abaixo de `sm`. No desktop os chips continuam: cabem
+          numa olhada e trocar de categoria é um clique, não dois.
+        */}
+        <div className="mt-4 sm:hidden">
+          <Select value={selectedCategory} onValueChange={setSelectedCategory}>
+            <SelectTrigger aria-label="Filtrar por categoria">
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              {categoryOptions.map((name) => (
+                <SelectItem key={name} value={name}>
+                  {name === ALL ? 'Todas as categorias' : name}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
+
+        <div className="mt-4 hidden flex-wrap gap-2 sm:flex">
+          {categoryOptions.map((name) => (
             <Button
               key={name}
               variant={selectedCategory === name ? 'default' : 'secondary'}
